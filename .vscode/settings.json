@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "elog.h": "c",
+        "wiringpi.h": "c",
+        "wiringpii2c.h": "c",
+        "ioctl.h": "c"
+    }
+}

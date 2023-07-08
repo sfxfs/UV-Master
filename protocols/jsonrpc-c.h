@@ -11,6 +11,10 @@
 #include "cJSON.h"
 #include <ev.h>
 
+#ifdef __cplusplus
+extern "C"{
+#endif
+
 /*
  *
  * http://www.jsonrpc.org/specification
@@ -81,5 +85,9 @@ int jrpc_register_procedure(struct jrpc_server *server,
 		jrpc_function function_pointer, char *name, void *data);
 
 int jrpc_deregister_procedure(struct jrpc_server *server, char *name);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

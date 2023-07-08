@@ -18,10 +18,10 @@ add_subdirectory(protocols)
 add_subdirectory(user)
 
 target_link_libraries(rovmaster
-			rovUser
- 			rovDrivers
-			rovProtocols
-			ev
-			wiringPi
-			pthread
-			easylogger)
+						rovUser
+ 						rovDrivers
+						rovProtocols
+						ev
+						wiringPi
+						pthread
+						easylogger)
