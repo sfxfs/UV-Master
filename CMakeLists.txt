@@ -23,7 +23,7 @@ target_link_libraries(rovmaster
 						rovUser
  						rovDrivers
 						rovProtocols
-						ev
-						wiringPi
 						pthread
+						wiringPi
+						ev
 						easylogger)
