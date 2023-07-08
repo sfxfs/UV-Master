@@ -3,7 +3,7 @@ project(ROV-Master)
 
 set(CMAKE_C_STANDARD 11)
 
-set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
+set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR})
 set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 
 if(NOT CMAKE_BUILD_TYPE)
@@ -16,6 +16,8 @@ set(CMAKE_C_FLAGS_RELEASE "-O3 -w")
 add_subdirectory(drivers)
 add_subdirectory(protocols)
 add_subdirectory(user)
+
+add_executable(rovmaster rovmain.c)
 
 target_link_libraries(rovmaster
 						rovUser
