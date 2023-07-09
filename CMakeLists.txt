@@ -3,7 +3,7 @@ project(ROV-Master)
 
 set(CMAKE_C_STANDARD 11)
 
-set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
+set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR})
 set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 
 if(NOT CMAKE_BUILD_TYPE)
@@ -17,11 +17,13 @@ add_subdirectory(drivers)
 add_subdirectory(protocols)
 add_subdirectory(user)
 
+add_executable(rovmaster rovmain.c)
+
 target_link_libraries(rovmaster
 						rovUser
  						rovDrivers
 						rovProtocols
-						ev
-						wiringPi
 						pthread
+						wiringPi
+						ev
 						easylogger)
