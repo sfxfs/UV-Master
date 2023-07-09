@@ -6,6 +6,10 @@ set(CMAKE_C_STANDARD 11)
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR})
 set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 
+include_directories(3rd/easylogger/inc)
+include_directories(3rd/libev)
+include_directories(3rd/WiringNP/wiringPi)
+
 if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Release)
 endif()

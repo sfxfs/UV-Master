@@ -1,6 +1,4 @@
-#define LOG_TAG "driver.ms5837"
-
-#include "ms5837_i2c.h" 
+#include "ms5837.h"
 
 /**
  * @brief chip information definition

@@ -1,5 +1,3 @@
-#define LOG_TAG "driver.pca9685"
-
 #include "pca9685.h"
 #include <math.h>
 

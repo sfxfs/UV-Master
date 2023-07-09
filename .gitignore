@@ -52,5 +52,8 @@ Mkfile.old
 dkms.conf
 
 .vscode/
-.idea
+.idea/
 cmake-build-debug/
+
+build/
+lib/

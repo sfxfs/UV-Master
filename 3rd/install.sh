@@ -6,13 +6,13 @@ install_path=$(cd `dirname $0`; pwd)
 cd $install_path
 
 echo "======================安装WiringNP========================"
-cd WiringNP
+cd WiringNP || exit
 chmod 777 build
 ./build
 cd ..
 
 echo "======================安装easylogger======================"
-cd easylogger
+cd easylogger || exit
 cmake .
 make
 cp lib/libeasylogger.so /usr/lib/
@@ -20,7 +20,7 @@ cp inc/elog.h /usr/include/
 cd ..
 
 echo "======================编译libev==========================="
-cd libev
+cd libev || exit
 chmod 777 ./configure
 ./configure -prefix=/usr
 make

@@ -17,7 +17,7 @@ static pca9685_handle_t gs_handle;        /**< pca9685 handle */
  *            - 1 init failed
  * @note      none
  */
-uint8_t pwm_controller_init(pca9685_address_t addr, uint16_t hz)
+int pwm_controller_init(pca9685_address_t addr, uint16_t hz)
 {
     uint8_t res;
     uint8_t reg;
@@ -40,7 +40,7 @@ uint8_t pwm_controller_init(pca9685_address_t addr, uint16_t hz)
     {
         pca9685_interface_debug_print("pca9685: set addr pin failed.\n");
         
-        return 1;
+        return -1;
     }
     
     /* pca9685 init */
@@ -49,7 +49,7 @@ uint8_t pwm_controller_init(pca9685_address_t addr, uint16_t hz)
     {
         pca9685_interface_debug_print("pca9685: init failed.\n");
         
-        return 1;
+        return -1;
     }
     
     /* inactive */
@@ -59,7 +59,7 @@ uint8_t pwm_controller_init(pca9685_address_t addr, uint16_t hz)
         pca9685_interface_debug_print("pca9685: set active failed.\n");
         (void)pca9685_deinit(&gs_handle);
         
-        return 1;
+        return -1;
     }
     
     /* set sleep mode */
@@ -69,7 +69,7 @@ uint8_t pwm_controller_init(pca9685_address_t addr, uint16_t hz)
         pca9685_interface_debug_print("pca9685: set sleep mode failed.\n");
         (void)pca9685_deinit(&gs_handle);
         
-        return 1;
+        return -1;
     }
     
     /* set frequency */
@@ -79,7 +79,7 @@ uint8_t pwm_controller_init(pca9685_address_t addr, uint16_t hz)
         pca9685_interface_debug_print("pca9685: output frequency convert to register failed.\n");
         (void)pca9685_deinit(&gs_handle);
         
-        return 1;
+        return -1;
     }
     
     /* set pre scale */
@@ -89,7 +89,7 @@ uint8_t pwm_controller_init(pca9685_address_t addr, uint16_t hz)
         pca9685_interface_debug_print("pca9685: set pre scale failed.\n");
         (void)pca9685_deinit(&gs_handle);
         
-        return 1;
+        return -1;
     }
     
     /* disable external clock pin */
@@ -99,7 +99,7 @@ uint8_t pwm_controller_init(pca9685_address_t addr, uint16_t hz)
         pca9685_interface_debug_print("pca9685: set external clock pin failed.\n");
         (void)pca9685_deinit(&gs_handle);
         
-        return 1;
+        return -1;
     }
     
     /* enable auto increment */
@@ -109,7 +109,7 @@ uint8_t pwm_controller_init(pca9685_address_t addr, uint16_t hz)
         pca9685_interface_debug_print("pca9685: set register auto increment failed.\n");
         (void)pca9685_deinit(&gs_handle);
         
-        return 1;
+        return -1;
     }
     
     /* set respond sub address 1 */
@@ -119,7 +119,7 @@ uint8_t pwm_controller_init(pca9685_address_t addr, uint16_t hz)
         pca9685_interface_debug_print("pca9685: set respond sub address 1 failed.\n");
         (void)pca9685_deinit(&gs_handle);
         
-        return 1;
+        return -1;
     }
     
     /* set respond sub address 2 */
@@ -129,7 +129,7 @@ uint8_t pwm_controller_init(pca9685_address_t addr, uint16_t hz)
         pca9685_interface_debug_print("pca9685: set respond sub address 2 failed.\n");
         (void)pca9685_deinit(&gs_handle);
         
-        return 1;
+        return -1;
     }
     
     /* set respond sub address 3 */
@@ -139,7 +139,7 @@ uint8_t pwm_controller_init(pca9685_address_t addr, uint16_t hz)
         pca9685_interface_debug_print("pca9685: set respond sub address 3 failed.\n");
         (void)pca9685_deinit(&gs_handle);
         
-        return 1;
+        return -1;
     }
     
     /* set respond all call */
@@ -149,7 +149,7 @@ uint8_t pwm_controller_init(pca9685_address_t addr, uint16_t hz)
         pca9685_interface_debug_print("pca9685: set respond all call failed.\n");
         (void)pca9685_deinit(&gs_handle);
         
-        return 1;
+        return -1;
     }
     
     /* set output invert */
@@ -159,7 +159,7 @@ uint8_t pwm_controller_init(pca9685_address_t addr, uint16_t hz)
         pca9685_interface_debug_print("pca9685: set output invert failed.\n");
         (void)pca9685_deinit(&gs_handle);
         
-        return 1;
+        return -1;
     }
     
     /* stop output change */
@@ -169,7 +169,7 @@ uint8_t pwm_controller_init(pca9685_address_t addr, uint16_t hz)
         pca9685_interface_debug_print("pca9685: set output change failed.\n");
         (void)pca9685_deinit(&gs_handle);
         
-        return 1;
+        return -1;
     }
     
     /* set output driver */
@@ -179,7 +179,7 @@ uint8_t pwm_controller_init(pca9685_address_t addr, uint16_t hz)
         pca9685_interface_debug_print("pca9685: set output driver failed.\n");
         (void)pca9685_deinit(&gs_handle);
         
-        return 1;
+        return -1;
     }
     
     /* set output disable type */
@@ -189,7 +189,7 @@ uint8_t pwm_controller_init(pca9685_address_t addr, uint16_t hz)
         pca9685_interface_debug_print("pca9685: set output disable type failed.\n");
         (void)pca9685_deinit(&gs_handle);
         
-        return 1;
+        return -1;
     }
     
     /* set sub address 1 */
@@ -199,7 +199,7 @@ uint8_t pwm_controller_init(pca9685_address_t addr, uint16_t hz)
         pca9685_interface_debug_print("pca9685: set sub address 1 failed.\n");
         (void)pca9685_deinit(&gs_handle);
         
-        return 1;
+        return -1;
     }
     
     /* set sub address 2 */
@@ -209,7 +209,7 @@ uint8_t pwm_controller_init(pca9685_address_t addr, uint16_t hz)
         pca9685_interface_debug_print("pca9685: set sub address 2 failed.\n");
         (void)pca9685_deinit(&gs_handle);
         
-        return 1;
+        return -1;
     }
     
     /* set sub address 3 */
@@ -219,7 +219,7 @@ uint8_t pwm_controller_init(pca9685_address_t addr, uint16_t hz)
         pca9685_interface_debug_print("pca9685: set sub address 3 failed.\n");
         (void)pca9685_deinit(&gs_handle);
         
-        return 1;
+        return -1;
     }
     
     /* set all call address */
@@ -229,7 +229,7 @@ uint8_t pwm_controller_init(pca9685_address_t addr, uint16_t hz)
         pca9685_interface_debug_print("pca9685: set all call address failed.\n");
         (void)pca9685_deinit(&gs_handle);
         
-        return 1;
+        return -1;
     }
     
     /* set sleep mode */
@@ -239,7 +239,7 @@ uint8_t pwm_controller_init(pca9685_address_t addr, uint16_t hz)
         pca9685_interface_debug_print("pca9685: set sleep mode failed.\n");
         (void)pca9685_deinit(&gs_handle);
         
-        return 1;
+        return -1;
     }
     
     /* active */
@@ -249,7 +249,7 @@ uint8_t pwm_controller_init(pca9685_address_t addr, uint16_t hz)
         pca9685_interface_debug_print("pca9685: set active failed.\n");
         (void)pca9685_deinit(&gs_handle);
         
-        return 1;
+        return -1;
     }
     
     return 0;
@@ -262,7 +262,7 @@ uint8_t pwm_controller_init(pca9685_address_t addr, uint16_t hz)
  *         - 1 deinit failed
  * @note   none
  */
-uint8_t pwm_controller_deinit(void)
+int pwm_controller_deinit(void)
 {
     uint8_t res;
     
@@ -270,14 +270,14 @@ uint8_t pwm_controller_deinit(void)
     res = pca9685_set_active(&gs_handle, PCA9685_BOOL_FALSE);
     if (res != 0)
     {
-        return 1;
+        return -1;
     }
     
     /* deinit */
     res = pca9685_deinit(&gs_handle);
     if (res != 0)
     {
-        return 1;
+        return -1;
     }
     else
     {
@@ -297,7 +297,7 @@ uint8_t pwm_controller_deinit(void)
  *            0.0 <= delay_percent <= 100.0
  *            0.0 <= high_duty_cycle_percent <= 100.0
  */
-uint8_t pwm_controller_write(pca9685_channel_t channel, float delay_percent, float high_duty_cycle_percent)
+int pwm_controller_write(pca9685_channel_t channel, float delay_percent, float high_duty_cycle_percent)
 {
     uint8_t res;
     uint16_t on_count, off_count;
@@ -306,14 +306,14 @@ uint8_t pwm_controller_write(pca9685_channel_t channel, float delay_percent, flo
     res = pca9685_pwm_convert_to_register(&gs_handle, delay_percent, high_duty_cycle_percent, (uint16_t *)&on_count, (uint16_t *)&off_count);
     if (res != 0)
     {
-        return 1;
+        return -1;
     }
     
     /* write channel */
     res = pca9685_write_channel(&gs_handle, channel, on_count, off_count);
     if (res != 0)
     {
-        return 1;
+        return -1;
     }
     
     return 0;
