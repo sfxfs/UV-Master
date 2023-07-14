@@ -7,21 +7,21 @@
 #include "handler.h"
 #include "server.h"
 
-struct jrpc_server server = {0};
+static struct jrpc_server server = {0};
 
 static void info_handler_reg(struct rov_info* info)
 {
-    jrpc_register_procedure(&server, info_handler, "get_info", NULL);
+    jrpc_register_procedure(&server, info_handler, "get_info", &info->sensor);
 //    jrpc_register_procedure(&server, debug_info, "get_feedbacks", NULL);
 //    jrpc_register_procedure(&server, update, "update_firmware", NULL);
 }
 
 static void control_handler_reg(struct rov_info* info)
 {
-    jrpc_register_procedure(&server, move_asyn_handler, "move_asyn", NULL);
-    jrpc_register_procedure(&server, move_syn_handler, "move", NULL);
-    jrpc_register_procedure(&server, move_absolute_handler, "move_absolute", NULL);
-    jrpc_register_procedure(&server, move_relative_handler, "move_relative", NULL);
+    jrpc_register_procedure(&server, move_asyn_handler, "move_asyn", &info->rocket);
+    jrpc_register_procedure(&server, move_syn_handler, "move", &info->rocket);
+    jrpc_register_procedure(&server, move_absolute_handler, "move_absolute", &info->rocket);
+    jrpc_register_procedure(&server, move_relative_handler, "move_relative", &info->rocket);
 //    jrpc_register_procedure(&server, catcher, "catch", NULL);
 //    jrpc_register_procedure(&server, depth, "depth", NULL);
 //    jrpc_register_procedure(&server, direction_lock, "set_direction_locked", NULL);
@@ -61,7 +61,11 @@ int jsonrpc_server_run(struct rov_info* info, int port)
     }
     log_i("starting thread");
     pthread_t server_tid;
-    pthread_create(&server_tid, NULL, server_thread, info);
+    if (pthread_create(&server_tid, NULL, server_thread, info) != 0)
+    {
+        log_e("thread start failed");
+        return -1;
+    }
     pthread_detach(server_tid);
     return 0;
 }

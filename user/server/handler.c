@@ -19,12 +19,12 @@ cJSON *update_handler(jrpc_context *ctx, cJSON *params, cJSON *id)
 
 cJSON *move_asyn_handler(jrpc_context *ctx, cJSON *params, cJSON *id)
 {
-
+    return move_analysis(params, ctx->data, 0);
 }
 
 cJSON *move_syn_handler(jrpc_context *ctx, cJSON *params, cJSON *id)
 {
-
+    return move_analysis(params, ctx->data, 0);
 }
 
 cJSON *catcher_handler(jrpc_context *ctx, cJSON *params, cJSON *id)
@@ -39,12 +39,12 @@ cJSON *depth_handler(jrpc_context *ctx, cJSON *params, cJSON *id)
 
 cJSON *move_absolute_handler(jrpc_context *ctx, cJSON *params, cJSON *id)
 {
-
+    return move_analysis(params, ctx->data, 1);
 }
 
 cJSON *move_relative_handler(jrpc_context *ctx, cJSON *params, cJSON *id)
 {
-
+    return move_analysis(params, ctx->data, 2);
 }
 
 cJSON *direction_lock_handler(jrpc_context *ctx, cJSON *params, cJSON *id)
