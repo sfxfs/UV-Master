@@ -1,3 +1,5 @@
+#define LOG_TAG "device.depth_sensor"
+
 #include "interface/ms5837_interface.h"
 #include "depth_sensor.h"
 

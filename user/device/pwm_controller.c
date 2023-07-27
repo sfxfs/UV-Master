@@ -1,8 +1,5 @@
 #define LOG_TAG "device.pwm_controller"
 
-#include <elog.h>
-#include <stdio.h>
-
 #include "interface/pca9685_interface.h"
 #include "pwm_controller.h"
 
