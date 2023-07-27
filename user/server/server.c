@@ -53,8 +53,8 @@ static void debug_handler_reg(struct rov_info* info)
 
 /**
  * @brief jsonrpc 线程
- * @param arg
- * @return
+ * @param arg 线程传参
+ * @return 线程返回值
  */
 void *server_thread(void *arg)
 {

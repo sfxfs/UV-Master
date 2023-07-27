@@ -17,7 +17,7 @@ typedef struct rocket
     double x;  //左右
     double y;  //前后
     double z;  //上下
-    double yaw;
+    double yaw;//旋转
 } rocket_t;
 
 typedef struct rov_info {
