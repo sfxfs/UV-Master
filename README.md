@@ -7,6 +7,11 @@
 - 系统：推荐使用基于 **Linux** 的相关系统（如 **Ubuntu** 和 **Manjaro** 等等），**Windows** 请提前安装 *MinGW* 以及 *git*
 - IDE：本项目使用 **CMake** 构建系统，推荐使用 *Jetbrain* 出品的 **CLion** 的 **EAP** 版本，若使用 **VSCode** 请安装 **CMake** 相关插件
 
+### 编译
+
+- 在电脑编译请使用 **arm-cortexa9-linux-gnueabihf-gcc** 工具链，可以在 **nanopi wiki** 下载到
+- 在 **nanopi** 上直接使用自带的 **gcc** 编译器即可
+
 ### 约定
 
 #### 命名
