@@ -30,10 +30,10 @@ static void control_handler_reg(struct rov_info* info)
     jrpc_register_procedure(&server, move_syn_handler, "move", &info->rocket);
     jrpc_register_procedure(&server, move_absolute_handler, "move_absolute", &info->rocket);
     jrpc_register_procedure(&server, move_relative_handler, "move_relative", &info->rocket);
-    jrpc_register_procedure(&server, catcher_handler, "catch", NULL);
-    jrpc_register_procedure(&server, depth_handler, "depth", NULL);
-    jrpc_register_procedure(&server, direction_lock_handler, "set_direction_locked", NULL);
-    jrpc_register_procedure(&server, depth_lock_handler, "set_depth_locked", NULL);
+    jrpc_register_procedure(&server, catcher_handler, "catch", &info->devCtl);
+    jrpc_register_procedure(&server, depth_handler, "depth", &info->devCtl);
+    jrpc_register_procedure(&server, direction_lock_handler, "set_direction_locked", &info->devCtl);
+    jrpc_register_procedure(&server, depth_lock_handler, "set_depth_locked", &info->devCtl);
 }
 
 /**

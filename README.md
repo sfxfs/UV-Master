@@ -5,11 +5,11 @@
 ### 软件
 
 - 系统：推荐使用基于 **Linux** 的相关系统（如 **Ubuntu** 和 **Manjaro** 等等），**Windows** 请提前安装 *MinGW* 以及 *git*
-- IDE：本项目使用 **CMake** 构建系统，推荐使用 *Jetbrain* 出品的 **CLion** 的 **EAP** 版本，若使用 **VSCode** 请安装 **CMake** 相关插件
+- IDE：本项目使用 **CMake** 构建系统，推荐使用 *Jetbrain* 出品的 **CLion**，若使用 **VSCode** 请安装 **CMake** 相关插件
 
 ### 编译
 
-- 在电脑编译请使用 **arm-cortexa9-linux-gnueabihf-gcc** 工具链，可以在 **nanopi wiki** 下载到
+- 在电脑交叉编译请使用 **arm-cortexa9-linux-gnueabihf-gcc** 工具链，可以在 **nanopi wiki** 下载到
 - 在 **nanopi** 上直接使用自带的 **gcc** 编译器即可
 
 ### 约定
@@ -28,7 +28,7 @@
 - 请最好不要多于三层嵌套 `for,while,if`
 - 不需要在多个文件中调用的函数请加 `static` 前缀
 - 创建变量记得赋初值
-- 切记多写注释，每个函数也要有 Doxygen 规范的注释
+- 切记多写注释，每个函数也要有符合 Doxygen 规范的注释
 
 ## 首次安装
 
@@ -40,7 +40,7 @@
 
    
 
-2. 给予 *install.sh* **777** 权限：
+2. 给予 *install.sh* **可执行** 权限：
 
    ```shell
    sudo chmod 777 install.sh

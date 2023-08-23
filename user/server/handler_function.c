@@ -2,6 +2,9 @@
 // Created by fxf on 23-7-9.
 //
 
+#include <stdlib.h>
+#include <stdio.h>
+
 #include "handler_function.h"
 
 static int cjson_value_analysis_int(cJSON *params, const char *str)
@@ -32,24 +35,46 @@ static double cjson_value_analysis_double(cJSON *params,const char *str)
 
 cJSON *get_rov_info(sensor_t *sensor_data)
 {
-    
+    cJSON* cjson_info = NULL;
+    cjson_info = cJSON_CreateObject();
+    char *temp_str = malloc(sizeof(char) * 20);
+    sprintf(temp_str, "%.02f ℃", sensor_data->temperature);
+    cJSON_AddStringToObject(cjson_info, "温度", temp_str);
+    sprintf(temp_str, "%.02f °", sensor_data->yaw);
+    cJSON_AddStringToObject(cjson_info, "航向角", temp_str);
+    sprintf(temp_str, "%.02f cm", sensor_data->depth);
+    cJSON_AddStringToObject(cjson_info, "深度", temp_str);
+    free(temp_str);
+    return cjson_info;
 }
 
-cJSON *move_analysis(cJSON* params, rocket_t* rocket, int mode)
+//cJSON *get_rov_debug_info(pid_t *pid)
+//{
+//    cJSON* cjson_pid_feedbacks = NULL;
+//    cJSON* cjson_pid_control_loops = NULL;
+//    cjson_pid_feedbacks = cJSON_CreateObject();
+//    cjson_pid_control_loops = cJSON_CreateObject();
+//    cJSON_AddNumberToObject(cjson_pid_control_loops, "depth_lock",diffen_dep);
+//    cJSON_AddNumberToObject(cjson_pid_control_loops, "direction_lock",rovInfo.jy901.yaw/360.0f);
+//    cJSON_AddItemToObject(cjson_pid_feedbacks, "control_loops", cjson_pid_control_loops);
+//    return cjson_pid_feedbacks;
+//}
+
+cJSON *move_analysis(cJSON* params, rocket_t* rocket, move_mode_t mode)
 {
     rocket->x = cjson_value_analysis_double(params, "x");
     rocket->y = cjson_value_analysis_double(params, "y");
     rocket->z = cjson_value_analysis_double(params, "z");
     switch (mode)
     {
-        case 0:
-            rocket->yaw = cjson_value_analysis_double(params, "rot") * 127;
+        case rocket_ctl:
+            rocket->yaw = cjson_value_analysis_double(params, "rot");
             break;
-        case 1:
+        case abs_ctl:
             rocket->yaw = 0;
 //            Total_Controller.Yaw_Angle_Control.Expect = -cjson_value_analysis_double(params, "rot");
             break;
-        case 2:
+        case rel_clt:
             rocket->yaw = 0;
 //            expect_rotate_auv = -cjson_value_analysis_double(params, "rot");
             break;
