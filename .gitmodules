@@ -1,0 +1,6 @@
+[submodule "3rd/libgpiod"]
+	path = 3rd/libgpiod
+	url = https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git
+[submodule "3rd/i2c-tools"]
+	path = 3rd/i2c-tools
+	url = https://git.kernel.org/pub/scm/utils/i2c-tools/i2c-tools.git
