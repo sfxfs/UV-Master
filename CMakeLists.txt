@@ -21,7 +21,7 @@ add_subdirectory(drivers)
 add_subdirectory(protocols)
 add_subdirectory(user)
 
-add_executable(rovmaster rovmain.c)
+add_executable(rovmaster user/rovmain.c)
 
 target_link_libraries(rovmaster
 						rovUser
