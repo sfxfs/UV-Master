@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.5)
 
 include_directories(../protocols)
+include_directories(../log-sys)
 include_directories(../drivers)
 
 aux_source_directory(control control_srcs)

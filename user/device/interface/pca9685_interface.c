@@ -4,8 +4,7 @@
 #include <unistd.h>
 #include <stdarg.h>
 #include <i2c/smbus.h>
-#include <wiringPi.h>
-#include <wiringPiI2C.h>
+#include <gpiod.h>
 
 #define PCA9685_I2C_DEV "/dev/i2c-0"        // PCA9685 使用的 I2C设备
 #define PCA9685_I2C_7BIT_ADDR 0x40          // 将A0-A5全部接地，则其器件地址为:0x40

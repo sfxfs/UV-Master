@@ -29,10 +29,11 @@
 #ifndef __ELOG_H__
 #define __ELOG_H__
 
-#include <elog_cfg.h>
 #include <stdint.h>
 #include <stddef.h>
 #include <stdbool.h>
+
+#include "elog_cfg.h"
 
 #ifdef __cplusplus
 extern "C" {

@@ -26,8 +26,9 @@
  * Created on: 2015-04-28
  */
 
-#include <elog.h>
 #include <string.h>
+
+#include "elog.h"
 
 /**
  * another copy string function

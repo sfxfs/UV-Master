@@ -28,10 +28,11 @@
 
 #define LOG_TAG      "elog"
 
-#include <elog.h>
 #include <string.h>
 #include <stdarg.h>
 #include <stdio.h>
+
+#include "elog.h"
 
 #if !defined(ELOG_OUTPUT_LVL)
     #error "Please configure static output log level (in elog_cfg.h)"

@@ -5,7 +5,6 @@
 #define LOG_TAG "interface.ms5837"
 
 #include <elog.h>
-#include <wiringPiI2C.h>
 
 #include "ms5837_interface.h"
 
