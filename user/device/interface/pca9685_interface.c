@@ -3,8 +3,11 @@
 #include <elog.h>
 #include <unistd.h>
 #include <stdarg.h>
+#include <sys/ioctl.h>
+#include <linux/i2c-dev.h>
 #include <i2c/smbus.h>
 #include <gpiod.h>
+#include <fcntl.h>
 
 #define PCA9685_I2C_DEV "/dev/i2c-0"        // PCA9685 使用的 I2C设备
 #define PCA9685_I2C_7BIT_ADDR 0x40          // 将A0-A5全部接地，则其器件地址为:0x40
@@ -14,13 +17,18 @@ static int pca9685_fd;
 
 uint8_t pca9685_interface_iic_init()
 {
-    pca9685_fd = wiringPiI2CSetupInterface(PCA9685_I2C_DEV, PCA9685_I2C_7BIT_ADDR);
-    if (pca9685_fd)
-        return 0;
-    else {
+    pca9685_fd = open(PCA9685_I2C_DEV, O_RDWR);
+    if (!pca9685_fd)
+    {
         log_e("cannot get fd");
         return 1;
     }
+    if(ioctl(pca9685_fd, I2C_SLAVE, PCA9685_I2C_7BIT_ADDR) < 0)
+    {
+        log_e("cannot set to slave mode");
+        return 2;
+    }
+    return 0;
 }
 
 uint8_t pca9685_interface_iic_deinit()
