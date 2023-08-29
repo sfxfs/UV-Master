@@ -1,6 +1,6 @@
 #define LOG_TAG "device.depth_sensor"
 
-#include "interface/ms5837_interface.h"
+#include "../interface/ms5837_interface.h"
 #include "depth_sensor.h"
 
 static ms5837_handle_t gs_handle;        /**< ms5837 handle */
@@ -13,7 +13,7 @@ static ms5837_handle_t gs_handle;        /**< ms5837 handle */
  *            - 1 init failed
  * @note      none
  */
-uint8_t ms5837_basic_init(ms5837_type_t type)
+int ms5837_basic_init(ms5837_type_t type)
 {
     uint8_t res;
 
@@ -32,7 +32,7 @@ uint8_t ms5837_basic_init(ms5837_type_t type)
     {
         ms5837_interface_debug_print("ms5837: init failed.\n");
 
-        return 1;
+        return -1;
     }
 
     /* set the type */
@@ -42,7 +42,7 @@ uint8_t ms5837_basic_init(ms5837_type_t type)
         ms5837_interface_debug_print("ms5837: set type failed.\n");
         (void)ms5837_deinit(&gs_handle);
 
-        return 1;
+        return -1;
     }
 
     /* set temperature osr */
@@ -52,7 +52,7 @@ uint8_t ms5837_basic_init(ms5837_type_t type)
         ms5837_interface_debug_print("ms5837: set temperature osr failed.\n");
         (void)ms5837_deinit(&gs_handle);
 
-        return 1;
+        return -1;
     }
 
     /* set pressure osr */
@@ -62,10 +62,11 @@ uint8_t ms5837_basic_init(ms5837_type_t type)
         ms5837_interface_debug_print("ms5837: set pressure osr failed.\n");
         (void)ms5837_deinit(&gs_handle);
 
-        return 1;
+        return -1;
     }
 
-    return 0;
+    extern int ms5837_fd;
+    return ms5837_fd;
 }
 
 /**
@@ -77,7 +78,7 @@ uint8_t ms5837_basic_init(ms5837_type_t type)
  *             - 1 read failed
  * @note       none
  */
-uint8_t ms5837_basic_read(float *temperature_c, float *pressure_mbar)
+int ms5837_basic_read(float *temperature_c, float *pressure_mbar)
 {
     uint32_t temperature_raw;
     uint32_t pressure_raw;
@@ -85,7 +86,7 @@ uint8_t ms5837_basic_read(float *temperature_c, float *pressure_mbar)
     /* read temperature and pressure */
     if (ms5837_read_temperature_pressure(&gs_handle, &temperature_raw, temperature_c, &pressure_raw, pressure_mbar) != 0)
     {
-        return 1;
+        return -1;
     }
     else
     {
@@ -100,12 +101,12 @@ uint8_t ms5837_basic_read(float *temperature_c, float *pressure_mbar)
  *         - 1 deinit failed
  * @note   none
  */
-uint8_t ms5837_basic_deinit(void)
+int ms5837_basic_deinit(void)
 {
     /* close ms5837 */
     if (ms5837_deinit(&gs_handle) != 0)
     {
-        return 1;
+        return -1;
     }
     else
     {

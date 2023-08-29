@@ -13,7 +13,7 @@
 #define PCA9685_I2C_7BIT_ADDR 0x40          // 将A0-A5全部接地，则其器件地址为:0x40
 #define PCA9685_OE_PIN 7                    // 芯片使能引脚 -> GPIO11引脚序号为 7
 
-static int pca9685_fd;
+int pca9685_fd;
 
 uint8_t pca9685_interface_iic_init()
 {

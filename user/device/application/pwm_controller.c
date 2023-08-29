@@ -1,6 +1,6 @@
 #define LOG_TAG "device.pwm_controller"
 
-#include "interface/pca9685_interface.h"
+#include "../interface/pca9685_interface.h"
 #include "pwm_controller.h"
 
 #define PCA9685_BASIC_DEFAULT_RESPOND_SUBADDRESS_1        PCA9685_BOOL_FALSE                                /**< disable */
@@ -261,8 +261,9 @@ int pwm_controller_init(pca9685_address_t addr, uint16_t hz)
         
         return -1;
     }
-    
-    return 0;
+
+    extern int pca9685_fd;
+    return pca9685_fd;
 }
 
 /**

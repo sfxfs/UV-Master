@@ -11,6 +11,8 @@
 #define MS5837_I2C_DEV "/dev/i2c-0"
 #define MS5837_I2C_7BIT_ADDR 0x40
 
+int ms5837_fd;
+
 /**
  * @brief  interface iic bus init
  * @return status code

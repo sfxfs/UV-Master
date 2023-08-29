@@ -64,7 +64,7 @@ extern "C"{
  *            - 1 init failed
  * @note      none
  */
-uint8_t ms5837_basic_init(ms5837_type_t type);
+int ms5837_basic_init(ms5837_type_t type);
 
 /**
  * @brief  basic example deinit
@@ -73,7 +73,7 @@ uint8_t ms5837_basic_init(ms5837_type_t type);
  *         - 1 deinit failed
  * @note   none
  */
-uint8_t ms5837_basic_deinit(void);
+int ms5837_basic_deinit(void);
 
 /**
  * @brief      basic example read
@@ -84,7 +84,7 @@ uint8_t ms5837_basic_deinit(void);
  *             - 1 read failed
  * @note       none
  */
-uint8_t ms5837_basic_read(float *temperature_c, float *pressure_mbar);
+int ms5837_basic_read(float *temperature_c, float *pressure_mbar);
 
 /**
  * @}

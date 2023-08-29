@@ -5,6 +5,20 @@
 #ifndef DATA_DEFINE_H
 #define DATA_DEFINE_H
 
+typedef struct thread_tid
+{
+    unsigned long rpc_server;
+    unsigned long device;
+    unsigned long control;
+} thread_tid_t;
+
+typedef struct dev_fd
+{
+    int depth_sensor_fd;
+    int motion_sensor_fd;
+    int pwm_controller_fd;
+} dev_fd_t;
+
 typedef struct dev_ctl
 {
     int depth_lock;
@@ -35,6 +49,8 @@ typedef struct rov_info {
     struct rocket rocket;
     struct sensor sensor;
     struct dev_ctl devCtl;
+    struct dev_fd devFd;
+    struct thread_tid threadTid;
 } rov_info_t;
 
 #endif //DATA_DEFINE_H
