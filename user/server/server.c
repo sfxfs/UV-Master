@@ -8,6 +8,7 @@
 #include "server.h"
 
 static struct jrpc_server server = {0};
+static pthread_t server_tid;
 
 /**
  * @brief 注册信息相关的回调函数
@@ -83,7 +84,6 @@ int jsonrpc_server_run(struct rov_info* info, int port)
         return -1;
     }
     log_i("starting thread");
-    pthread_t server_tid;
     if (pthread_create(&server_tid, NULL, server_thread, info) != 0)
     {
         log_e("thread start failed");
