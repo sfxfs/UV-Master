@@ -63,7 +63,7 @@ uint8_t pca9685_interface_iic_read(uint8_t addr, uint8_t reg, uint8_t *buf, uint
 
 uint8_t pca9685_interface_oe_init()
 {
-    pinMode(PCA9685_OE_PIN, OUTPUT);
+//    pinMode(PCA9685_OE_PIN, OUTPUT);
     return 0;
 }
 
@@ -74,13 +74,13 @@ uint8_t pca9685_interface_oe_deinit()
 
 uint8_t pca9685_interface_oe_write(uint8_t value)
 {
-    digitalWrite(PCA9685_OE_PIN, value);
+//    digitalWrite(PCA9685_OE_PIN, value);
     return 0;
 }
 
 void pca9685_interface_delay_ms(uint32_t ms)
 {
-    delay(ms);
+//    delay(ms);
 }
 
 void pca9685_interface_debug_print(const char *const fmt, ...)

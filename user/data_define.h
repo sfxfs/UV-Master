@@ -5,6 +5,30 @@
 #ifndef DATA_DEFINE_H
 #define DATA_DEFINE_H
 
+#include <stdint.h>
+
+struct propeller_parameters
+{
+    uint8_t enabled : 1;
+    uint8_t reversed : 1;
+    float deadzone_upper;
+    float deadzone_lower;
+    double power_negative;
+    double power_positive;
+    float power_cur;
+    float power_last;
+};
+
+typedef struct propeller
+{
+    struct propeller_parameters front_left;
+    struct propeller_parameters front_right;
+    struct propeller_parameters center_left;
+    struct propeller_parameters center_right;
+    struct propeller_parameters back_left;
+    struct propeller_parameters back_right;
+} propeller_t;
+
 typedef struct thread_tid
 {
     unsigned long rpc_server;
@@ -47,6 +71,7 @@ typedef struct rocket
 
 typedef struct rov_info {
     struct rocket rocket;
+    struct propeller propeller;
     struct sensor sensor;
     struct dev_ctl devCtl;
     struct dev_fd devFd;

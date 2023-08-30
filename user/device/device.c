@@ -56,7 +56,7 @@ void *device_thread(void *arg)
 
         }
     }
-    return 0;
+    return NULL;
 }
 
 int rov_device_run(struct rov_info* info)
@@ -86,7 +86,10 @@ int rov_device_run(struct rov_info* info)
 
 int rov_device_stop(struct rov_info* info)
 {
-    pthread_cancel(info->threadTid.device);
+    if (pthread_cancel(info->threadTid.device) != 0)
+    {
+        return -1;
+    }
     close(dev_epoll_fd);
     pwm_controller_deinit();
     return 0;

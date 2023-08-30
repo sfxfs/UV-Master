@@ -67,7 +67,7 @@ void *server_thread(void *arg)
     jrpc_server_run(&server);
     //running...
     jrpc_server_destroy(&server);
-    return 0;
+    return NULL;
 }
 
 /**

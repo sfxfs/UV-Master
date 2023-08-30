@@ -5,7 +5,7 @@
 
 #define constrain(amt,low,high) ((amt)<(low)?(low):((amt)>(high)?(high):(amt))) //限幅函数
 
-typedef struct pid
+typedef struct pid_param
 {
     uint8_t Err_Limit_Flag : 1;            //偏差限幅标志   位定义
     uint8_t Integrate_Limit_Flag : 1;      //积分限幅标志
@@ -38,9 +38,9 @@ typedef struct pid
     float Scale_Kp;
     float Scale_Ki;
     float Scale_Kd;
-} pid_t;
+} pid_param_t;
 
-int pid_parm_init(pid_t *pid);
-float pid_control(pid_t *pid);
+int pid_parm_init(pid_param_t *pid);
+float pid_control(pid_param_t *pid);
 
 #endif

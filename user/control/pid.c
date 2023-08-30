@@ -3,7 +3,7 @@
 
 #include "pid.h"
 
-const pid_t initial_pid = {                   //初始 pid 参数
+const pid_param_t initial_pid = {                   //初始 pid 参数
         .Expect = 0,                          //期望
         .FeedBack = 0,                        //反馈值
         .Err = 0,                             //偏差
@@ -37,9 +37,9 @@ const pid_t initial_pid = {                   //初始 pid 参数
  * @param pid 参数
  * @return 失败返回 -1, 成功返回 0
  */
-int pid_parm_init(pid_t *pid)
+int pid_parm_init(pid_param_t *pid)
 {
-    if (memcpy(pid, &initial_pid, sizeof(pid_t)) == NULL)
+    if (memcpy(pid, &initial_pid, sizeof(pid_param_t)) == NULL)
     {
         return -1;
     }
@@ -51,7 +51,7 @@ int pid_parm_init(pid_t *pid)
  * @param pid 参数
  * @return 返回 pid 的输出
  */
-float pid_control(pid_t *pid)
+float pid_control(pid_param_t *pid)
 {
     /*******偏差计算*********************/
     pid->Last_Err = pid->Err;                     //保存上次偏差
