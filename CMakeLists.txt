@@ -1,7 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 project(ROV-Master)
 
-set(CMAKE_C_COMPILER arm-rockchip830-linux-uclibcgnueabihf-gcc)
 set(CMAKE_VERBOSE_MAKEFILE ON)
 
 set(CMAKE_C_STANDARD 11)
