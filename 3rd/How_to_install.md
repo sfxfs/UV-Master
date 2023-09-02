@@ -25,6 +25,7 @@ make install
 export CC=arm-rockchip830-linux-uclibcgnueabihf-gcc
 export STRIP=arm-rockchip830-linux-uclibcgnueabihf-strip
 export AR=arm-rockchip830-linux-uclibcgnueabihf-ar
+export PREFIX=<安装绝对路径>
 
 make
 make install
