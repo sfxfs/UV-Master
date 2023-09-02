@@ -24,7 +24,7 @@ $ make install
 ```shell
 $ export CC=<交叉编译工具链>-gcc
 
-$  STRIP=<交叉编译工具链>-strip
+$ export STRIP=<交叉编译工具链>-strip
 
 $ export AR=<交叉编译工具链>-ar
 
