@@ -11,7 +11,7 @@ aux_source_directory(device/interface interface_srcs)
 aux_source_directory(server server_srcs)
 
 add_library(rovUser STATIC
-			appmain.c
+        main_app.c
 			${control_srcs}
 			${application_srcs}
 			${device_srcs}

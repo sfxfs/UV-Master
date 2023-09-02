@@ -60,22 +60,24 @@ cJSON *get_rov_info(sensor_t *sensor_data)
 //    return cjson_pid_feedbacks;
 //}
 
-cJSON *move_analysis(cJSON* params, rocket_t* rocket, move_mode_t mode)
+cJSON *move_analysis(cJSON* params, struct rov_info* info, move_mode_t mode)
 {
-    rocket->x = cjson_value_analysis_double(params, "x");
-    rocket->y = cjson_value_analysis_double(params, "y");
-    rocket->z = cjson_value_analysis_double(params, "z");
+    info->devCtl.lose_clt_flag = 0;
+
+    info->rocket.x = cjson_value_analysis_double(params, "x");
+    info->rocket.y = cjson_value_analysis_double(params, "y");
+    info->rocket.z = cjson_value_analysis_double(params, "z");
     switch (mode)
     {
         case rocket_ctl:
-            rocket->yaw = cjson_value_analysis_double(params, "rot");
+            info->rocket.yaw = cjson_value_analysis_double(params, "rot");
             break;
         case abs_ctl:
-            rocket->yaw = 0;
+            info->rocket.yaw = 0;
 //            Total_Controller.Yaw_Angle_Control.Expect = -cjson_value_analysis_double(params, "rot");
             break;
         case rel_clt:
-            rocket->yaw = 0;
+            info->rocket.yaw = 0;
 //            expect_rotate_auv = -cjson_value_analysis_double(params, "rot");
             break;
     }

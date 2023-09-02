@@ -1,14 +1,25 @@
 #include <stdio.h>
+#include <signal.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <sys/stat.h>
 
-extern void setup(void);
+extern void init(void);
+extern void deinit(void);
 extern void loop(void);
+
+static void exit_rov(int sig)
+{
+    deinit();
+    exit(0);
+}
 
 int main(int argc, char **argv)
 {
-    printf("starting rov app...\n");
+    printf("info: starting rov app...\n");
+
+    signal(SIGINT, exit_rov);
+
     char * debug_env = getenv("ROV_DEBUG");
     if (debug_env == NULL) {
         pid_t pid = fork();
@@ -21,17 +32,18 @@ int main(int argc, char **argv)
             close(STDOUT_FILENO);
             close(STDERR_FILENO);;
 
-            setup();
+            init();
             for (;;) {
                 loop();
             }
         }
     } else {
-        setup();
+        init();
         for (;;) {
             loop();
         }
     }
-    printf("rov app failed to create process\n");
+
+    printf("error: rov app failed to create process\n");
     return -1;
 }

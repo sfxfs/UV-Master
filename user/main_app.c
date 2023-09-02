@@ -9,12 +9,17 @@
 
 rov_info_t rovInfo = {0};
 
-void setup()
+void init()
 {
-    jsonrpc_server_run(&rovInfo, 8888);
+    jsonrpc_server_run(&rovInfo, 8888, 10);
 }
 
 void loop()
 {
     sleep(1);
+}
+
+void deinit()
+{
+
 }

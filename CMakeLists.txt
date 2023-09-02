@@ -20,7 +20,7 @@ add_subdirectory(log-sys)
 add_subdirectory(protocols)
 add_subdirectory(user)
 
-add_executable(rovmaster user/rovmain.c)
+add_executable(rovmaster user/main.c)
 
 target_link_libraries(rovmaster
 						rovUser

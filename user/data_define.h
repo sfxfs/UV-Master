@@ -45,11 +45,12 @@ typedef struct dev_fd
 
 typedef struct dev_ctl
 {
-    int depth_lock;
-    int dir_lock;
-    int catcher_clt;
-    int light_clt;
-    int debug_mode_stat;
+    uint8_t depth_lock : 1;
+    uint8_t dir_lock : 1;
+    uint8_t catcher_clt : 2;
+    uint8_t light_clt : 2;
+    uint8_t debug_mode_stat : 1;
+    uint8_t lose_clt_flag : 1;
 } dev_ctl_t;
 
 typedef struct sensor

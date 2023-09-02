@@ -3,6 +3,7 @@
 #include <elog.h>
 #include <pthread.h>
 #include <jsonrpc-c.h>
+#include <sys/time.h>
 
 #include "handler.h"
 #include "server.h"
@@ -26,10 +27,10 @@ static void info_handler_reg(struct rov_info* info)
  */
 static void control_handler_reg(struct rov_info* info)
 {
-    jrpc_register_procedure(&server, move_asyn_handler, "move_asyn", &info->rocket);
-    jrpc_register_procedure(&server, move_syn_handler, "move", &info->rocket);
-    jrpc_register_procedure(&server, move_absolute_handler, "move_absolute", &info->rocket);
-    jrpc_register_procedure(&server, move_relative_handler, "move_relative", &info->rocket);
+    jrpc_register_procedure(&server, move_asyn_handler, "move_asyn", info);
+    jrpc_register_procedure(&server, move_syn_handler, "move", info);
+    jrpc_register_procedure(&server, move_absolute_handler, "move_absolute", info);
+    jrpc_register_procedure(&server, move_relative_handler, "move_relative", info);
     jrpc_register_procedure(&server, catcher_handler, "catch", &info->devCtl);
     jrpc_register_procedure(&server, depth_handler, "depth", &info->devCtl);
     jrpc_register_procedure(&server, direction_lock_handler, "set_direction_locked", &info->devCtl);
@@ -70,13 +71,28 @@ void *server_thread(void *arg)
     return NULL;
 }
 
+static struct rov_info* _info_in_rpc = NULL;
+void check_lose_status(int signo)
+{
+    if (_info_in_rpc->devCtl.lose_clt_flag == 0)
+    {
+        _info_in_rpc->devCtl.lose_clt_flag = 1;
+    } else
+    {
+        _info_in_rpc->rocket.x = 0;
+        _info_in_rpc->rocket.y = 0;
+        _info_in_rpc->rocket.z = 0;
+        _info_in_rpc->rocket.yaw = 0;
+    }
+}
+
 /**
  * @brief 启动 jsonrpc 服务
  * @param info 含有rov信息的结构体
  * @param port http 服务的端口
  * @return 成功返回 0，失败返回 -1
  */
-int jsonrpc_server_run(struct rov_info* info, int port)
+int jsonrpc_server_run(struct rov_info* info, int port, int clt_timeout_value)
 {
     if (jrpc_server_init(&server, port) != 0) {
         log_e("init failed");
@@ -89,6 +105,25 @@ int jsonrpc_server_run(struct rov_info* info, int port)
         return -1;
     }
     pthread_detach(info->threadTid.rpc_server);
+
+    _info_in_rpc = info;
+    signal(SIGALRM, check_lose_status);
+
+    struct itimerval tick = {0};
+    //Timeout to run first time
+    tick.it_value.tv_sec = 10;
+    tick.it_value.tv_usec = 0;
+
+    //After first, the Interval time for clock
+    tick.it_interval.tv_sec = clt_timeout_value;
+    tick.it_interval.tv_usec = 0;
+
+    if(setitimer(ITIMER_REAL, &tick, NULL) < 0)
+    {
+        log_e("failed to start lose status check");
+        return -1;
+    }
+
     return 0;
 }
 
