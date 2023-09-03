@@ -1,0 +1,85 @@
+{
+  "pid_clt_params": {
+    "yaw_lock": {
+      "p": 0.0,
+      "i": 0.0,
+      "d": 0.0
+    },
+    "depth_lock": {
+      "p": 0.0,
+      "i": 0.0,
+      "d": 0.0
+    }
+  },
+  "propeller_params": {
+    "pwm_freq_calibration": 0.0,
+    "front_left": {
+      "enabled": true,
+      "reversed": false,
+      "deadzone_upper": 0.0,
+      "deadzone_lower": 0.0,
+      "power_negative": 0.0,
+      "power_positive": 0.0
+    },
+    "front_right": {
+      "enabled": true,
+      "reversed": false,
+      "deadzone_upper": 0.0,
+      "deadzone_lower": 0.0,
+      "power_negative": 0.0,
+      "power_positive": 0.0
+    },
+    "center_left": {
+      "enabled": true,
+      "reversed": false,
+      "deadzone_upper": 0.0,
+      "deadzone_lower": 0.0,
+      "power_negative": 0.0,
+      "power_positive": 0.0
+    },
+    "center_right": {
+      "enabled": true,
+      "reversed": false,
+      "deadzone_upper": 0.0,
+      "deadzone_lower": 0.0,
+      "power_negative": 0.0,
+      "power_positive": 0.0
+    },
+    "back_left": {
+      "enabled": true,
+      "reversed": false,
+      "deadzone_upper": 0.0,
+      "deadzone_lower": 0.0,
+      "power_negative": 0.0,
+      "power_positive": 0.0
+    },
+    "back_right": {
+      "enabled": true,
+      "reversed": false,
+      "deadzone_upper": 0.0,
+      "deadzone_lower": 0.0,
+      "power_negative": 0.0,
+      "power_positive": 0.0
+    }
+  },
+  "dev-params": {
+    "light": {
+      "pMax": 0,
+      "nMax": 0,
+      "cur": 0,
+      "speed": 0
+    },
+    "yuntai": {
+      "pMax": 0,
+      "nMax": 0,
+      "cur": 0,
+      "speed": 0
+    },
+    "arm": {
+      "pMax": 0,
+      "nMax": 0,
+      "cur": 0,
+      "speed": 0
+    }
+  }
+}

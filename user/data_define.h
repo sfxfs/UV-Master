@@ -11,12 +11,12 @@ struct propeller_parameters
 {
     uint8_t enabled : 1;
     uint8_t reversed : 1;
-    float deadzone_upper;
-    float deadzone_lower;
+    double deadzone_upper;
+    double deadzone_lower;
     double power_negative;
     double power_positive;
-    float power_cur;
-    float power_last;
+    double power_cur;
+    double power_last;
 };
 
 typedef struct propeller
