@@ -111,7 +111,7 @@ int jsonrpc_server_run(struct rov_info* info, int port, int clt_timeout_value)
 
     struct itimerval tick = {0};
     //Timeout to run first time
-    tick.it_value.tv_sec = 10;
+    tick.it_value.tv_sec = 30;
     tick.it_value.tv_usec = 0;
 
     //After first, the Interval time for clock

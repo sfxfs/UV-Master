@@ -28,11 +28,17 @@ static int device_epoll_init(struct rov_info* info)
 
     ev.data.fd = info->devFd.depth_sensor_fd;
     ev.events = EPOLLIN;
-    epoll_ctl(dev_epoll_fd, EPOLL_CTL_ADD, info->devFd.depth_sensor_fd, &ev);
+    if (epoll_ctl(dev_epoll_fd, EPOLL_CTL_ADD, info->devFd.depth_sensor_fd, &ev) < 0)
+    {
+        log_e("cannot add depth sensor to epoll");
+    }
 
     ev.data.fd = info->devFd.motion_sensor_fd;
     ev.events = EPOLLIN;
-    epoll_ctl(dev_epoll_fd, EPOLL_CTL_ADD, info->devFd.motion_sensor_fd, &ev);
+    if (epoll_ctl(dev_epoll_fd, EPOLL_CTL_ADD, info->devFd.motion_sensor_fd, &ev) < 0)
+    {
+        log_e("cannot add motion sensor to epoll");
+    }
 
     return 0;
 }
@@ -62,6 +68,9 @@ void *device_thread(void *arg)
 int rov_device_run(struct rov_info* info)
 {
     info->devFd.pwm_controller_fd = pwm_controller_init(PCA9685_ADDRESS_A111111, 50);
+    info->devFd.depth_sensor_fd = -1;
+    info->devFd.motion_sensor_fd = -1;
+
     if (info->devFd.pwm_controller_fd < 0)
     {
         log_e("pwm controller init failed");
@@ -86,11 +95,13 @@ int rov_device_run(struct rov_info* info)
 
 int rov_device_stop(struct rov_info* info)
 {
+    int res = 0;
     if (pthread_cancel(info->threadTid.device) != 0)
     {
-        return -1;
+        log_e("cannot cancel thread");
+        res = -1;
     }
     close(dev_epoll_fd);
     pwm_controller_deinit();
-    return 0;
+    return res;
 }

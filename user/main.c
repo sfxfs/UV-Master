@@ -4,7 +4,7 @@
 #include <unistd.h>
 #include <sys/stat.h>
 
-extern void init(void);
+extern void init(int debug_mode);
 extern void deinit(void);
 extern void loop(void);
 
@@ -32,13 +32,13 @@ int main(int argc, char **argv)
             close(STDOUT_FILENO);
             close(STDERR_FILENO);;
 
-            init();
+            init(0);
             for (;;) {
                 loop();
             }
         }
     } else {
-        init();
+        init(1);
         for (;;) {
             loop();
         }
