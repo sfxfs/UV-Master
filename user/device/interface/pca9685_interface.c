@@ -11,9 +11,11 @@
 
 #define PCA9685_I2C_DEV "/dev/i2c-0"        // PCA9685 使用的 I2C设备
 #define PCA9685_I2C_7BIT_ADDR 0x40          // 将A0-A5全部接地，则其器件地址为:0x40
-#define PCA9685_OE_PIN 7                    // 芯片使能引脚 -> GPIO11引脚序号为 7
+#define PCA9685_GPIOCHIP "/dev/gpiochip0"
+static const unsigned int pca9685_line_offset = 1;
 
 int pca9685_fd;
+struct gpiod_line_request *request = NULL;
 
 uint8_t pca9685_interface_iic_init()
 {
@@ -25,7 +27,7 @@ uint8_t pca9685_interface_iic_init()
     }
     if(ioctl(pca9685_fd, I2C_SLAVE, PCA9685_I2C_7BIT_ADDR) < 0)
     {
-        log_e("cannot set to slave mode");
+        log_e("cannot set interface to slave mode");
         return 2;
     }
     return 0;
@@ -63,24 +65,64 @@ uint8_t pca9685_interface_iic_read(uint8_t addr, uint8_t reg, uint8_t *buf, uint
 
 uint8_t pca9685_interface_oe_init()
 {
-//    pinMode(PCA9685_OE_PIN, OUTPUT);
+    struct gpiod_request_config *req_cfg = NULL;
+    struct gpiod_line_settings *settings;
+    struct gpiod_line_config *line_cfg;
+    struct gpiod_chip *chip;
+    int ret;
+
+    chip = gpiod_chip_open(PCA9685_GPIOCHIP);
+    if (!chip)
+        return -1;
+
+    settings = gpiod_line_settings_new();
+    if (!settings)
+        goto close_chip;
+
+    gpiod_line_settings_set_direction(settings,
+                                      GPIOD_LINE_DIRECTION_OUTPUT);
+    gpiod_line_settings_set_output_value(settings, GPIOD_LINE_VALUE_ACTIVE);
+
+    line_cfg = gpiod_line_config_new();
+    if (!line_cfg)
+        goto free_settings;
+
+    ret = gpiod_line_config_add_line_settings(line_cfg, &pca9685_line_offset, 1,
+                                              settings);
+    if (ret)
+        goto free_line_config;
+
+    request = gpiod_chip_request_lines(chip, req_cfg, line_cfg);
+
+    gpiod_request_config_free(req_cfg);
+
+free_line_config:
+    gpiod_line_config_free(line_cfg);
+
+free_settings:
+    gpiod_line_settings_free(settings);
+
+close_chip:
+    gpiod_chip_close(chip);
+
     return 0;
 }
 
 uint8_t pca9685_interface_oe_deinit()
 {
+    gpiod_line_request_release(request);
     return 0;
 }
 
 uint8_t pca9685_interface_oe_write(uint8_t value)
 {
-//    digitalWrite(PCA9685_OE_PIN, value);
+    gpiod_line_request_set_value(request, pca9685_line_offset, value);
     return 0;
 }
 
 void pca9685_interface_delay_ms(uint32_t ms)
 {
-//    delay(ms);
+    usleep(ms * 1000);
 }
 
 void pca9685_interface_debug_print(const char *const fmt, ...)
