@@ -74,6 +74,11 @@ void *server_thread(void *arg)
 static struct rov_info* _info_in_rpc = NULL;
 void check_lose_status(int signo)
 {
+    if (_info_in_rpc == NULL)
+    {
+        return;
+    }
+
     if (_info_in_rpc->devCtl.lose_clt_flag == 0)
     {
         _info_in_rpc->devCtl.lose_clt_flag = 1;
@@ -134,5 +139,19 @@ int jsonrpc_server_run(struct rov_info* info, int port, int clt_timeout_value)
 int jsonrpc_server_stop()
 {
     log_i("stop service");
+    struct itimerval tick = {0};
+    //Timeout to run first time
+    tick.it_value.tv_sec = 0;
+    tick.it_value.tv_usec = 0;
+
+    //After first, the Interval time for clock
+    tick.it_interval.tv_sec = 0;
+    tick.it_interval.tv_usec = 0;
+
+    if(setitimer(ITIMER_REAL, &tick, NULL) < 0)
+    {
+        log_e("failed to stop lose status check");
+    }
+
     return jrpc_server_stop(&server);
 }
