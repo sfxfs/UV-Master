@@ -7,6 +7,19 @@
 
 #include <stdint.h>
 
+struct pid_scale_parameters
+{
+    float Kp;
+    float Ki;
+    float Kd;
+};
+
+typedef struct pid_scale
+{
+    struct pid_scale_parameters yaw;
+    struct pid_scale_parameters depth;
+} pid_scale_t;
+
 struct propeller_parameters
 {
     uint8_t enabled : 1;
@@ -21,6 +34,7 @@ struct propeller_parameters
 
 typedef struct propeller
 {
+    double pwm_freq_calibration;
     struct propeller_parameters front_left;
     struct propeller_parameters front_right;
     struct propeller_parameters center_left;
@@ -43,6 +57,14 @@ typedef struct dev_fd
     int pwm_controller_fd;
 } dev_fd_t;
 
+struct pwmDev_parameters
+{
+    int pMax;
+    int nMax;
+    int reset;
+    int speed;
+};
+
 typedef struct dev_ctl
 {
     uint8_t depth_lock : 1;
@@ -51,6 +73,9 @@ typedef struct dev_ctl
     uint8_t light_clt : 2;
     uint8_t debug_mode_stat : 1;
     uint8_t lose_clt_flag : 1;
+    struct pwmDev_parameters light;
+    struct pwmDev_parameters yuntai;
+    struct pwmDev_parameters arm;
 } dev_ctl_t;
 
 typedef struct sensor
@@ -73,6 +98,7 @@ typedef struct rocket
 typedef struct rov_info {
     struct rocket rocket;
     struct propeller propeller;
+    struct pid_scale pidScale;
     struct sensor sensor;
     struct dev_ctl devCtl;
     struct dev_fd devFd;

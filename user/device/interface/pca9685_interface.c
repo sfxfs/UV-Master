@@ -65,7 +65,6 @@ uint8_t pca9685_interface_iic_read(uint8_t addr, uint8_t reg, uint8_t *buf, uint
 
 uint8_t pca9685_interface_oe_init()
 {
-    struct gpiod_request_config *req_cfg = NULL;
     struct gpiod_line_settings *settings;
     struct gpiod_line_config *line_cfg;
     struct gpiod_chip *chip;
@@ -79,8 +78,7 @@ uint8_t pca9685_interface_oe_init()
     if (!settings)
         goto close_chip;
 
-    gpiod_line_settings_set_direction(settings,
-                                      GPIOD_LINE_DIRECTION_OUTPUT);
+    gpiod_line_settings_set_direction(settings, GPIOD_LINE_DIRECTION_OUTPUT);
     gpiod_line_settings_set_output_value(settings, GPIOD_LINE_VALUE_ACTIVE);
 
     line_cfg = gpiod_line_config_new();
@@ -92,9 +90,7 @@ uint8_t pca9685_interface_oe_init()
     if (ret)
         goto free_line_config;
 
-    request = gpiod_chip_request_lines(chip, req_cfg, line_cfg);
-
-    gpiod_request_config_free(req_cfg);
+    request = gpiod_chip_request_lines(chip, NULL, line_cfg);
 
 free_line_config:
     gpiod_line_config_free(line_cfg);

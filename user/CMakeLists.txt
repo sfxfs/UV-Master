@@ -9,11 +9,15 @@ aux_source_directory(device/application application_srcs)
 aux_source_directory(device device_srcs)
 aux_source_directory(device/interface interface_srcs)
 aux_source_directory(server server_srcs)
+aux_source_directory(config config_srcs)
+aux_source_directory(config/parameters parameters_srcs)
 
 add_library(rovUser STATIC
-        main_app.c
+        	main_app.c
 			${control_srcs}
 			${application_srcs}
 			${device_srcs}
 			${interface_srcs}
-			${server_srcs})
+			${server_srcs}
+			${config_srcs}
+			${parameters_srcs})

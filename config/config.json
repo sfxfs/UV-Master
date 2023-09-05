@@ -62,23 +62,23 @@
       "power_positive": 0.0
     }
   },
-  "dev-params": {
+  "dev_params": {
     "light": {
       "pMax": 0,
       "nMax": 0,
-      "cur": 0,
+      "reset": 0,
       "speed": 0
     },
     "yuntai": {
       "pMax": 0,
       "nMax": 0,
-      "cur": 0,
+      "reset": 0,
       "speed": 0
     },
     "arm": {
       "pMax": 0,
       "nMax": 0,
-      "cur": 0,
+      "reset": 0,
       "speed": 0
     }
   }
