@@ -1,85 +1,85 @@
 {
-  "pid_clt_params": {
-    "yaw_lock": {
-      "p": 0.0,
-      "i": 0.0,
-      "d": 0.0
-    },
-    "depth_lock": {
-      "p": 0.0,
-      "i": 0.0,
-      "d": 0.0
-    }
-  },
-  "propeller_params": {
-    "pwm_freq_calibration": 0.0,
-    "front_left": {
-      "enabled": true,
-      "reversed": false,
-      "deadzone_upper": 0.0,
-      "deadzone_lower": 0.0,
-      "power_negative": 0.0,
-      "power_positive": 0.0
-    },
-    "front_right": {
-      "enabled": true,
-      "reversed": false,
-      "deadzone_upper": 0.0,
-      "deadzone_lower": 0.0,
-      "power_negative": 0.0,
-      "power_positive": 0.0
-    },
-    "center_left": {
-      "enabled": true,
-      "reversed": false,
-      "deadzone_upper": 0.0,
-      "deadzone_lower": 0.0,
-      "power_negative": 0.0,
-      "power_positive": 0.0
-    },
-    "center_right": {
-      "enabled": true,
-      "reversed": false,
-      "deadzone_upper": 0.0,
-      "deadzone_lower": 0.0,
-      "power_negative": 0.0,
-      "power_positive": 0.0
-    },
-    "back_left": {
-      "enabled": true,
-      "reversed": false,
-      "deadzone_upper": 0.0,
-      "deadzone_lower": 0.0,
-      "power_negative": 0.0,
-      "power_positive": 0.0
-    },
-    "back_right": {
-      "enabled": true,
-      "reversed": false,
-      "deadzone_upper": 0.0,
-      "deadzone_lower": 0.0,
-      "power_negative": 0.0,
-      "power_positive": 0.0
-    }
-  },
-  "dev_params": {
-    "light": {
-      "pMax": 0,
-      "nMax": 0,
-      "reset": 0,
-      "speed": 0
-    },
-    "yuntai": {
-      "pMax": 0,
-      "nMax": 0,
-      "reset": 0,
-      "speed": 0
-    },
-    "arm": {
-      "pMax": 0,
-      "nMax": 0,
-      "reset": 0,
-      "speed": 0
-    }
-  }
+	"propeller_params":	{
+		"pwm_freq_calibration":	0,
+		"front_right":	{
+			"reversed":	false,
+			"enabled":	true,
+			"deadzone_lower":	0,
+			"deadzone_upper":	0,
+			"power_positive":	0.800000,
+			"power_negative":	0.800000
+		},
+		"front_left":	{
+			"reversed":	false,
+			"enabled":	true,
+			"deadzone_lower":	0,
+			"deadzone_upper":	0,
+			"power_positive":	0.800000,
+			"power_negative":	0.800000
+		},
+		"center_right":	{
+			"reversed":	false,
+			"enabled":	true,
+			"deadzone_lower":	0,
+			"deadzone_upper":	0,
+			"power_positive":	0.800000,
+			"power_negative":	0.800000
+		},
+		"center_left":	{
+			"reversed":	false,
+			"enabled":	true,
+			"deadzone_lower":	0,
+			"deadzone_upper":	0,
+			"power_positive":	0.800000,
+			"power_negative":	0.800000
+		},
+		"back_right":	{
+			"reversed":	false,
+			"enabled":	true,
+			"deadzone_lower":	0,
+			"deadzone_upper":	0,
+			"power_positive":	0.800000,
+			"power_negative":	0.800000
+		},
+		"back_left":	{
+			"reversed":	false,
+			"enabled":	true,
+			"deadzone_lower":	0,
+			"deadzone_upper":	0,
+			"power_positive":	0.800000,
+			"power_negative":	0.800000
+		}
+	},
+	"pid_clt_params":	{
+		"yaw_lock":	{
+			"p":	0.100000,
+			"i":	0,
+			"d":	0
+		},
+		"depth_lock":	{
+			"p":	0.100000,
+			"i":	0,
+			"d":	0
+		}
+	},
+	"dev_ctl_params":	{
+		"light":	{
+			"pMax":	1000,
+			"nMax":	0,
+			"reset":	500,
+			"speed":	50
+		},
+		"yuntai":	{
+			"pMax":	1000,
+			"nMax":	0,
+			"reset":	500,
+			"speed":	50
+		},
+		"arm":	{
+			"pMax":	1000,
+			"nMax":	0,
+			"reset":	500,
+			"speed":	50
+		}
+	}
 }

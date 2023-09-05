@@ -9,12 +9,13 @@
 #include <unistd.h>
 #include "server/server.h"
 #include "device/device.h"
+#include "config/config.h"
+#include "control/control.h"
 
 rov_info_t rovInfo = {0};
 
 void deinit()
 {
-    rov_device_stop(&rovInfo);
     jsonrpc_server_stop();
 }
 
@@ -35,12 +36,17 @@ void init(int debug_mode)
         elog_start();
     }
 
-    if (jsonrpc_server_run(&rovInfo, 8888, 3) < 0)
+    if (rov_config_init(&rovInfo) < 0)
     {
         deinit();
         exit(-1);
     }
-    rov_device_run(&rovInfo);
+
+    if (jsonrpc_server_run(&rovInfo, 8888, 3) < 0)
+    {
+        deinit();
+        exit(-2);
+    }
 }
 
 void loop()

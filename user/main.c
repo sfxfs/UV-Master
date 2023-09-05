@@ -10,6 +10,7 @@ extern void loop(void);
 
 static void exit_rov(int sig)
 {
+    printf("info: closing rov app...\n");
     deinit();
     exit(0);
 }

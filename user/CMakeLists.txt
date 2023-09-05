@@ -5,10 +5,13 @@ include_directories(../log-sys)
 include_directories(../drivers)
 
 aux_source_directory(control control_srcs)
-aux_source_directory(device/application application_srcs)
+
 aux_source_directory(device device_srcs)
+aux_source_directory(device/application application_srcs)
 aux_source_directory(device/interface interface_srcs)
+
 aux_source_directory(server server_srcs)
+
 aux_source_directory(config config_srcs)
 aux_source_directory(config/parameters parameters_srcs)
 

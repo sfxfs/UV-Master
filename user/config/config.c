@@ -17,6 +17,7 @@
 #include "config.h"
 
 #define CONFIG_FILE_PATH "config.json"
+#define CONFIG_FILE_LEN 2048
 
 static void rov_info_write_initial_value(struct rov_info* info)
 {
@@ -138,8 +139,8 @@ int rov_config_read_from_file(struct rov_info* info)
         log_e("file no exist");
         return -1;
     }
-    char buf[2048] = {0};
-    while(fgets(buf, 2048, fp) != NULL);
+    char buf[CONFIG_FILE_LEN] = {0};
+    log_i("read %d bytes of config file", fread(buf, 1, CONFIG_FILE_LEN, fp));
     cJSON *params = cJSON_Parse(buf);
     if (params != NULL) // propeller_parameters 非空，解析
     {
@@ -159,6 +160,7 @@ int rov_config_read_from_file(struct rov_info* info)
 
 int rov_config_init(struct rov_info* info)
 {
+    log_i("load to config file");
     if (0 == access(CONFIG_FILE_PATH, F_OK)) // 0:存在
     {
         if (rov_config_read_from_file(info) < 0)

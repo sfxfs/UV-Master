@@ -77,6 +77,16 @@ int rov_device_run(struct rov_info* info)
         return -1;
     }
 
+    if (info->devFd.depth_sensor_fd < 0)
+    {
+        log_e("depth sensor init failed");
+    }
+
+    if (info->devFd.motion_sensor_fd < 0)
+    {
+        log_e("motion sensor_fd init failed");
+    }
+
     if (device_epoll_init(info) != 0)
     {
         log_e("epoll init failed");
@@ -98,7 +108,7 @@ int rov_device_stop(struct rov_info* info)
     int res = 0;
     if (pthread_cancel(info->threadTid.device) != 0)
     {
-        log_e("cannot cancel thread");
+        log_e("cannot cancel thread (may init failed)");
         res = -1;
     }
     close(dev_epoll_fd);
