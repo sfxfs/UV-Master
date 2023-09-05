@@ -16,6 +16,7 @@ typedef enum move_mode
 } move_mode_t;
 
 cJSON *get_rov_info     (sensor_t *sensor_data);
+cJSON *get_rov_debug_info(pid_scale_t *pid);
 cJSON *move_analysis    (cJSON* params, struct rov_info* info, move_mode_t mode);
 
 #endif //ROV_MASTER_HANDLER_FUNCTION_H

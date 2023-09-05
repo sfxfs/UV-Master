@@ -17,7 +17,7 @@ static struct jrpc_server server = {0};
 static void info_handler_reg(struct rov_info* info)
 {
     jrpc_register_procedure(&server, info_handler, "get_info", &info->sensor);
-    jrpc_register_procedure(&server, debug_info_handler, "get_feedbacks", NULL);
+    jrpc_register_procedure(&server, debug_info_handler, "get_feedbacks", &info->pidScale);
     jrpc_register_procedure(&server, update_handler, "update_firmware", NULL);
 }
 
@@ -32,6 +32,7 @@ static void control_handler_reg(struct rov_info* info)
     jrpc_register_procedure(&server, move_absolute_handler, "move_absolute", info);
     jrpc_register_procedure(&server, move_relative_handler, "move_relative", info);
     jrpc_register_procedure(&server, catcher_handler, "catch", &info->devCtl);
+    jrpc_register_procedure(&server, light_handler, "light", &info->devCtl);
     jrpc_register_procedure(&server, depth_handler, "depth", &info->devCtl);
     jrpc_register_procedure(&server, direction_lock_handler, "set_direction_locked", &info->devCtl);
     jrpc_register_procedure(&server, depth_lock_handler, "set_depth_locked", &info->devCtl);

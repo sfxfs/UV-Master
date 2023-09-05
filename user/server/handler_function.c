@@ -48,17 +48,17 @@ cJSON *get_rov_info(sensor_t *sensor_data)
     return cjson_info;
 }
 
-//cJSON *get_rov_debug_info(pid_t *pid)
-//{
-//    cJSON* cjson_pid_feedbacks = NULL;
-//    cJSON* cjson_pid_control_loops = NULL;
-//    cjson_pid_feedbacks = cJSON_CreateObject();
-//    cjson_pid_control_loops = cJSON_CreateObject();
-//    cJSON_AddNumberToObject(cjson_pid_control_loops, "depth_lock",diffen_dep);
-//    cJSON_AddNumberToObject(cjson_pid_control_loops, "direction_lock",rovInfo.jy901.yaw/360.0f);
-//    cJSON_AddItemToObject(cjson_pid_feedbacks, "control_loops", cjson_pid_control_loops);
-//    return cjson_pid_feedbacks;
-//}
+cJSON *get_rov_debug_info(pid_scale_t *pid)
+{
+    cJSON* cjson_pid_feedbacks = cJSON_CreateObject();
+    cJSON* cjson_pid_control_loops = cJSON_CreateObject();
+
+    cJSON_AddNumberToObject(cjson_pid_control_loops, "depth_lock", pid->depth_diffen);
+    cJSON_AddNumberToObject(cjson_pid_control_loops, "direction_lock", pid->yaw_diffen);
+    cJSON_AddItemToObject(cjson_pid_feedbacks, "control_loops", cjson_pid_control_loops);
+
+    return cjson_pid_feedbacks;
+}
 
 cJSON *move_analysis(cJSON* params, struct rov_info* info, move_mode_t mode)
 {

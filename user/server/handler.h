@@ -10,6 +10,7 @@ cJSON *update_handler                               (jrpc_context *ctx, cJSON *p
 cJSON *move_asyn_handler                            (jrpc_context *ctx, cJSON *params, cJSON *id);
 cJSON *move_syn_handler                             (jrpc_context *ctx, cJSON *params, cJSON *id);
 cJSON *catcher_handler                              (jrpc_context *ctx, cJSON *params, cJSON *id);
+cJSON *light_handler                                (jrpc_context *ctx, cJSON *params, cJSON *id);
 cJSON *depth_handler                                (jrpc_context *ctx, cJSON *params, cJSON *id);
 cJSON *move_absolute_handler                        (jrpc_context *ctx, cJSON *params, cJSON *id);
 cJSON *move_relative_handler                        (jrpc_context *ctx, cJSON *params, cJSON *id);

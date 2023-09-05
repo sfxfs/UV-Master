@@ -16,6 +16,8 @@ struct pid_scale_parameters
 
 typedef struct pid_scale
 {
+    float depth_diffen;
+    float yaw_diffen;
     struct pid_scale_parameters yaw;
     struct pid_scale_parameters depth;
 } pid_scale_t;
