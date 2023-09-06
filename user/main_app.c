@@ -52,5 +52,4 @@ void init(int debug_mode)
 void loop()
 {
     sleep(1);
-    log_i("catch :%d", rovInfo.devCtl.catcher_clt);
 }

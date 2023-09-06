@@ -15,8 +15,18 @@ typedef enum move_mode
     rel_clt,    // 相对
 } move_mode_t;
 
+typedef enum pwm_mode
+{
+    pwm_noAct = 0,
+    pwm_pMove,
+    pwm_nMove,
+} pwm_mode_t;
+
+int cjson_value_analysis_int(cJSON *params, const char *str);
+double cjson_value_analysis_double(cJSON *params,const char *str);
+
 cJSON *get_rov_info     (sensor_t *sensor_data);
-cJSON *get_rov_debug_info(pid_scale_t *pid);
+cJSON *get_rov_debug_info(debug_info_t *info);
 cJSON *move_analysis    (cJSON* params, struct rov_info* info, move_mode_t mode);
 
 #endif //ROV_MASTER_HANDLER_FUNCTION_H

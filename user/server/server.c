@@ -17,7 +17,7 @@ static struct jrpc_server server = {0};
 static void info_handler_reg(struct rov_info* info)
 {
     jrpc_register_procedure(&server, info_handler, "get_info", &info->sensor);
-    jrpc_register_procedure(&server, debug_info_handler, "get_feedbacks", &info->pidScale);
+    jrpc_register_procedure(&server, debug_info_handler, "get_feedbacks", &info->debugInfo);
     jrpc_register_procedure(&server, update_handler, "update_firmware", NULL);
 }
 
@@ -33,7 +33,7 @@ static void control_handler_reg(struct rov_info* info)
     jrpc_register_procedure(&server, move_relative_handler, "move_relative", info);
     jrpc_register_procedure(&server, catcher_handler, "catch", &info->devCtl);
     jrpc_register_procedure(&server, light_handler, "light", &info->devCtl);
-    jrpc_register_procedure(&server, depth_handler, "depth", &info->devCtl);
+    jrpc_register_procedure(&server, depth_handler, "depth", &info->debugInfo);
     jrpc_register_procedure(&server, direction_lock_handler, "set_direction_locked", &info->devCtl);
     jrpc_register_procedure(&server, depth_lock_handler, "set_depth_locked", &info->devCtl);
 }
@@ -44,13 +44,13 @@ static void control_handler_reg(struct rov_info* info)
  */
 static void debug_handler_reg(struct rov_info* info)
 {
-    jrpc_register_procedure(&server, set_debug_mode_enabled_handler, "set_debug_mode_enabled", NULL);
-    jrpc_register_procedure(&server, set_propeller_pwm_freq_calibration_handler, "set_propeller_pwm_freq_calibration", NULL);
-    jrpc_register_procedure(&server, set_propeller_values_handler, "set_propeller_values", NULL);
-    jrpc_register_procedure(&server, set_propeller_parameters_handler, "set_propeller_parameters", NULL);
-    jrpc_register_procedure(&server, set_control_loop_parameters_handler, "set_control_loop_parameters", NULL);
-    jrpc_register_procedure(&server, load_handler, "load_parameters", NULL);
-    jrpc_register_procedure(&server, save_handler, "save_parameters", NULL);
+    jrpc_register_procedure(&server, set_debug_mode_enabled_handler, "set_debug_mode_enabled", &info->devCtl);
+    jrpc_register_procedure(&server, set_propeller_pwm_freq_calibration_handler, "set_propeller_pwm_freq_calibration", &info->propeller);
+    jrpc_register_procedure(&server, set_propeller_values_handler, "set_propeller_values", &info->debugInfo);
+    jrpc_register_procedure(&server, set_propeller_parameters_handler, "set_propeller_parameters", &info->propeller);
+    jrpc_register_procedure(&server, set_control_loop_parameters_handler, "set_control_loop_parameters", &info->pidScale);
+    jrpc_register_procedure(&server, load_handler, "load_parameters", info);
+    jrpc_register_procedure(&server, save_handler, "save_parameters", info);
 }
 
 /**

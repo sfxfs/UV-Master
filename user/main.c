@@ -17,8 +17,6 @@ static void exit_rov(int sig)
 
 int main(int argc, char **argv)
 {
-    printf("info: starting rov app...\n");
-
     signal(SIGINT, exit_rov);
 
     char * debug_env = getenv("ROV_DEBUG");
@@ -39,6 +37,12 @@ int main(int argc, char **argv)
             }
         }
     } else {
+        printf("   ____  ____ _    __   __  ___           __           \n"
+               " / __ \\/ __ \\ |  / /  /  |/  /___ ______/ /____  _____\n"
+               " / /_/ / / / / | / /  / /|_/ / __ `/ ___/ __/ _ \\/ ___/\n"
+               "/ _, _/ /_/ /| |/ /  / /  / / /_/ (__  ) /_/  __/ /    \n"
+               "/_/ |_|\\____/ |___/  /_/  /_/\\__,_/____/\\__/\\___/_/     \n");
+        printf("info: starting rov app...\n");
         init(1);
         for (;;) {
             loop();

@@ -16,8 +16,6 @@ struct pid_scale_parameters
 
 typedef struct pid_scale
 {
-    float depth_diffen;
-    float yaw_diffen;
     struct pid_scale_parameters yaw;
     struct pid_scale_parameters depth;
 } pid_scale_t;
@@ -44,6 +42,19 @@ typedef struct propeller
     struct propeller_parameters back_left;
     struct propeller_parameters back_right;
 } propeller_t;
+
+typedef struct debug_info
+{
+    float auv_expect_depth;
+    float depth_diffen;
+    float yaw_diffen;
+    int propeller_direct_front_left;
+    int propeller_direct_front_right;
+    int propeller_direct_center_left;
+    int propeller_direct_center_right;
+    int propeller_direct_back_left;
+    int propeller_direct_back_right;
+} debug_info_t;
 
 typedef struct thread_tid
 {
@@ -104,6 +115,7 @@ typedef struct rov_info {
     struct sensor sensor;
     struct dev_ctl devCtl;
     struct dev_fd devFd;
+    struct debug_info debugInfo;
     struct thread_tid threadTid;
 } rov_info_t;
 

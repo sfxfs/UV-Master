@@ -7,7 +7,7 @@
 
 #include "handler_function.h"
 
-static int cjson_value_analysis_int(cJSON *params, const char *str)
+int cjson_value_analysis_int(cJSON *params, const char *str)
 {
     cJSON* cjson_temp = NULL;
     int value;
@@ -20,7 +20,7 @@ static int cjson_value_analysis_int(cJSON *params, const char *str)
     return value;
 }
 
-static double cjson_value_analysis_double(cJSON *params,const char *str)
+double cjson_value_analysis_double(cJSON *params,const char *str)
 {
     cJSON* cjson_temp = NULL;
     double value;
@@ -48,13 +48,13 @@ cJSON *get_rov_info(sensor_t *sensor_data)
     return cjson_info;
 }
 
-cJSON *get_rov_debug_info(pid_scale_t *pid)
+cJSON *get_rov_debug_info(debug_info_t *info)
 {
     cJSON* cjson_pid_feedbacks = cJSON_CreateObject();
     cJSON* cjson_pid_control_loops = cJSON_CreateObject();
 
-    cJSON_AddNumberToObject(cjson_pid_control_loops, "depth_lock", pid->depth_diffen);
-    cJSON_AddNumberToObject(cjson_pid_control_loops, "direction_lock", pid->yaw_diffen);
+    cJSON_AddNumberToObject(cjson_pid_control_loops, "depth_lock", info->depth_diffen);
+    cJSON_AddNumberToObject(cjson_pid_control_loops, "direction_lock", info->yaw_diffen);
     cJSON_AddItemToObject(cjson_pid_feedbacks, "control_loops", cjson_pid_control_loops);
 
     return cjson_pid_feedbacks;
