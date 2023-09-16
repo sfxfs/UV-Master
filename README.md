@@ -6,7 +6,7 @@
 
 ### 软件
 
-- 系统：推荐使用基于 **Linux** 的相关系统（如 **Ubuntu** 和 **Manjaro** 等等）
+- 系统：推荐使用基于 **Linux** 的相关系统（如 **Ubuntu** 和 **Manjaro** 等等），如使用 **Windows** 可以在 **WSL** 环境下开发
 - IDE：本项目使用 **CMake** 构建系统，推荐使用 *Jetbrain* 出品的 **CLion**，若使用 **VSCode** 请安装 **CMake** 相关插件
 
 ### 编译
