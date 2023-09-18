@@ -19,6 +19,7 @@ add_subdirectory(drivers)
 add_subdirectory(log-sys)
 add_subdirectory(protocols)
 add_subdirectory(user)
+add_subdirectory(utils)
 
 add_executable(rovmaster user/main.c)
 
@@ -27,6 +28,7 @@ target_link_libraries(rovmaster
  						rovDrivers
 						rovLogSys
 						rovProtocols
+						rovUtils
 						pthread
 						i2c
 						gpiod

@@ -16,8 +16,6 @@ aux_source_directory(server server_srcs)
 aux_source_directory(config config_srcs)
 aux_source_directory(config/parameters parameters_srcs)
 
-aux_source_directory(utils utils_srcs)
-
 add_library(rovUser STATIC
         	main_app.c
 			${control_srcs}
@@ -27,5 +25,4 @@ add_library(rovUser STATIC
 			${interface_srcs}
 			${server_srcs}
 			${config_srcs}
-			${parameters_srcs}
-			${utils_srcs})
+			${parameters_srcs})
