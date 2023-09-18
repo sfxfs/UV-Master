@@ -4,11 +4,9 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <stdarg.h>
-#include <sys/ioctl.h>
-#include <linux/i2c-dev.h>
 
-#include <i2c/smbus.h>
-#include <gpiod.h>
+#include "iic.h"
+#include "gpio_gpiod.h"
 
 #define PCA9685_I2C_DEV "/dev/i2c-0"        // PCA9685 使用的 I2C设备
 #define PCA9685_I2C_7BIT_ADDR 0x40          // 将A0-A5全部接地，则其器件地址为:0x40
@@ -20,23 +18,17 @@ struct gpiod_line_request *request = NULL;
 
 uint8_t pca9685_interface_iic_init()
 {
-    pca9685_fd = open(PCA9685_I2C_DEV, O_RDWR);
-    if (!pca9685_fd)
+    if (rov_i2c_init(PCA9685_I2C_DEV) < 0)
     {
-        log_e("cannot get fd");
-        return 1;
-    }
-    if(ioctl(pca9685_fd, I2C_SLAVE, PCA9685_I2C_7BIT_ADDR) < 0)
-    {
-        log_e("cannot set interface to slave mode");
-        return 2;
+        log_e("iic dev init failed");
+        return -1;
     }
     return 0;
 }
 
 uint8_t pca9685_interface_iic_deinit()
 {
-    if (close(pca9685_fd) < 0) {
+    if (rov_i2c_deinit(pca9685_fd) < 0) {
         log_e("close fd failed");
         return 1;
     }
@@ -46,7 +38,7 @@ uint8_t pca9685_interface_iic_deinit()
 
 uint8_t pca9685_interface_iic_write(uint8_t addr, uint8_t reg, uint8_t *buf, uint16_t len)
 {
-    if (i2c_smbus_write_i2c_block_data(pca9685_fd, reg, len, buf) < 0) {
+    if (rov_i2c_write(pca9685_fd, addr, reg, len, buf) < 0) {
         log_e("write to device failed");
         return 1;
     }
@@ -56,7 +48,7 @@ uint8_t pca9685_interface_iic_write(uint8_t addr, uint8_t reg, uint8_t *buf, uin
 
 uint8_t pca9685_interface_iic_read(uint8_t addr, uint8_t reg, uint8_t *buf, uint16_t len)
 {
-    if (i2c_smbus_read_i2c_block_data(pca9685_fd, reg, len, buf) < 0) {
+    if (rov_i2c_read(pca9685_fd, addr, reg, len, buf) < 0) {
         log_e("read from device failed");
         return 1;
     }
@@ -66,54 +58,19 @@ uint8_t pca9685_interface_iic_read(uint8_t addr, uint8_t reg, uint8_t *buf, uint
 
 uint8_t pca9685_interface_oe_init()
 {
-    struct gpiod_line_settings *settings;
-    struct gpiod_line_config *line_cfg;
-    struct gpiod_chip *chip;
-    int ret;
-
-    chip = gpiod_chip_open(PCA9685_GPIOCHIP);
-    if (!chip)
-        return -1;
-
-    settings = gpiod_line_settings_new();
-    if (!settings)
-        goto close_chip;
-
-    gpiod_line_settings_set_direction(settings, GPIOD_LINE_DIRECTION_OUTPUT);
-    gpiod_line_settings_set_output_value(settings, GPIOD_LINE_ACTIVE_STATE_HIGH);
-
-    line_cfg = gpiod_line_config_new();
-    if (!line_cfg)
-        goto free_settings;
-
-    ret = gpiod_line_config_add_line_settings(line_cfg, &PCA9685_LINE, 1,
-                                              settings);
-    if (ret)
-        goto free_line_config;
-
-    request = gpiod_chip_request_lines(chip, NULL, line_cfg);
-
-free_line_config:
-    gpiod_line_config_free(line_cfg);
-
-free_settings:
-    gpiod_line_settings_free(settings);
-
-close_chip:
-    gpiod_chip_close(chip);
-
+    request = gpio_set_output_mode(PCA9685_GPIOCHIP, PCA9685_LINE, GPIOD_LINE_VALUE_INACTIVE, NULL);
     return 0;
 }
 
 uint8_t pca9685_interface_oe_deinit()
 {
-    gpiod_line_request_release(request);
+    gpio_deinit(request);
     return 0;
 }
 
 uint8_t pca9685_interface_oe_write(uint8_t value)
 {
-    gpiod_line_request_set_value(request, PCA9685_LINE, value);
+    gpio_set_output_value(request, PCA9685_LINE, value);
     return 0;
 }
 
