@@ -5,7 +5,7 @@
 
 #include "sysfs.h"
 
-#include "gpio_gpioSysfs.h"
+#include "gpio_sysfs.h"
 
 #define GPIO_SYSFS_PATH	"/sys/class/gpio"
 
