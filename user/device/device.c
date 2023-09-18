@@ -5,9 +5,10 @@
 #define LOG_TAG "device.main"
 
 #include <elog.h>
+#include <unistd.h>
 #include <pthread.h>
 #include <sys/epoll.h>
-#include <unistd.h>
+
 #include "application/pwm_controller.h"
 #include "application/depth_sensor.h"
 #include "application/motion_sensor.h"

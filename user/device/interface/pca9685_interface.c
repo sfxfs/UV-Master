@@ -1,18 +1,19 @@
 #define LOG_TAG "interface.pca9685"
 
 #include <elog.h>
+#include <fcntl.h>
 #include <unistd.h>
 #include <stdarg.h>
 #include <sys/ioctl.h>
 #include <linux/i2c-dev.h>
+
 #include <i2c/smbus.h>
 #include <gpiod.h>
-#include <fcntl.h>
 
 #define PCA9685_I2C_DEV "/dev/i2c-0"        // PCA9685 使用的 I2C设备
 #define PCA9685_I2C_7BIT_ADDR 0x40          // 将A0-A5全部接地，则其器件地址为:0x40
 #define PCA9685_GPIOCHIP "/dev/gpiochip0"
-static const unsigned int pca9685_line_offset = 1;
+static const unsigned int PCA9685_LINE = 1;
 
 int pca9685_fd;
 struct gpiod_line_request *request = NULL;
@@ -79,13 +80,13 @@ uint8_t pca9685_interface_oe_init()
         goto close_chip;
 
     gpiod_line_settings_set_direction(settings, GPIOD_LINE_DIRECTION_OUTPUT);
-    gpiod_line_settings_set_output_value(settings, GPIOD_LINE_VALUE_ACTIVE);
+    gpiod_line_settings_set_output_value(settings, GPIOD_LINE_ACTIVE_STATE_HIGH);
 
     line_cfg = gpiod_line_config_new();
     if (!line_cfg)
         goto free_settings;
 
-    ret = gpiod_line_config_add_line_settings(line_cfg, &pca9685_line_offset, 1,
+    ret = gpiod_line_config_add_line_settings(line_cfg, &PCA9685_LINE, 1,
                                               settings);
     if (ret)
         goto free_line_config;
@@ -112,7 +113,7 @@ uint8_t pca9685_interface_oe_deinit()
 
 uint8_t pca9685_interface_oe_write(uint8_t value)
 {
-    gpiod_line_request_set_value(request, pca9685_line_offset, value);
+    gpiod_line_request_set_value(request, PCA9685_LINE, value);
     return 0;
 }
 

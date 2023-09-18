@@ -2,8 +2,8 @@
 
 #include <elog.h>
 #include <pthread.h>
-#include <jsonrpc-c.h>
 #include <sys/time.h>
+#include <jsonrpc-c.h>
 
 #include "handler.h"
 #include "server.h"
