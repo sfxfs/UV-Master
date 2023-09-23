@@ -1,6 +1,17 @@
 # ROV-Master
 
-本项目适用于所有 Linux 开发板，内核要求 4.8 以上（由 libgpiod 要求），并且具有高可移植性，只需修改 User 的部分源文件
+本项目理论上适用于所有 Linux 开发板，内核要求 4.8 以上（由 libgpiod 要求），并且具有高可移植性。
+
+***本程序使用到的所有开源项目***：
+
+- [cJSON](https://github.com/DaveGamble/cJSON.git)
+- [jsonrpc-c](https://github.com/hmng/jsonrpc-c.git)
+- [libgpiod](https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git)
+- [libev](https://github.com/enki/libev.git)
+- [i2c-tools](https://git.kernel.org/pub/scm/utils/i2c-tools/i2c-tools.git)
+- [Melon](https://github.com/Water-Melon/Melon.git)
+- [picohttpparser](https://github.com/h2o/picohttpparser.git)
+- [libdriver](www.libdriver.com)
 
 ## 开发
 
