@@ -11,7 +11,8 @@
 - [i2c-tools](https://git.kernel.org/pub/scm/utils/i2c-tools/i2c-tools.git)
 - [Melon](https://github.com/Water-Melon/Melon.git)
 - [picohttpparser](https://github.com/h2o/picohttpparser.git)
-- [libdriver](www.libdriver.com)
+- [libdriver](https://github.com/hepingood)
+- [EasyLogger](https://github.com/armink/EasyLogger.git)
 
 ## 开发
 
