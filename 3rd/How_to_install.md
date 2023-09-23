@@ -1,4 +1,13 @@
+请提前安装依赖包：
+
+```shell
+sudo apt-get install -y autoconf automake libtool autoconf-archive m4 pkg-config
+```
+
+------
+
 ## libev
+
 ```shell
 $ ./configure --prefix=<安装绝对路径> --host=<交叉编译工具链>
 
@@ -10,6 +19,7 @@ $ make install
 
 
 ## libgpiod
+
 ```shell
 $ ./autogen.sh --enable-tools=yes --prefix=<安装绝对路径> --host=<交叉编译工具链>
 
@@ -22,14 +32,13 @@ $ make install
 
 ## i2c-tools
 ```shell
-$ export CC=<交叉编译工具链>-gcc
+$ export CC=arm-cortexa9-linux-gnueabihf-gcc
 
-$ export STRIP=<交叉编译工具链>-strip
+$ export STRIP=arm-cortexa9-linux-gnueabihf-strip
 
-$ export AR=<交叉编译工具链>-ar
+$ export AR=arm-cortexa9-linux-gnueabihf-ar
 
-$ export PREFIX=<安装绝对路径>
-# 或者直接修改根目录 Makefile
+# 安装绝对路径 PREFIX 请直接修改根目录 Makefile
 
 $ make
 
