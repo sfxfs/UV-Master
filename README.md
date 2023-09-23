@@ -1,4 +1,4 @@
-# ROV-Master
+# UV-Master
 
 本项目理论上适用于所有 Linux 开发板，内核要求 4.8 以上（由 libgpiod 要求），并且具有高可移植性。
 
