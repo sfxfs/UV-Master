@@ -54,6 +54,6 @@ dkms.conf
 .vscode/
 .idea/
 
-build/
+*build*/
 lib/
 output/
