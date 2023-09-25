@@ -11,8 +11,9 @@
 #include <unistd.h>
 #include <string.h>
 #include "parameters/pid_ctl.h"
-#include "parameters/propeller.h"
 #include "parameters/dev_ctl.h"
+#include "parameters/propeller.h"
+#include "parameters/rocket_ratio.h"
 
 #include "config.h"
 
