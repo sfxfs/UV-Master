@@ -20,6 +20,8 @@ $ make install
 
 ## libgpiod
 
+注意！请使用 **v1.6.x** 分支，最新版将无法在较老内核下使用
+
 ```shell
 $ ./autogen.sh --enable-tools=yes --prefix=<安装绝对路径> --host=<交叉编译工具链>
 

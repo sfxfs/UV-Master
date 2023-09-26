@@ -24,7 +24,7 @@ int rov_i2c_init(char *dev)
 }
 int rov_i2c_deinit(int fd)
 {
-    close(fd);
+    return close(fd);
 }
 
 int rov_i2c_write(int fd, uint8_t addr, uint8_t reg, uint8_t len, uint8_t *val)
@@ -107,10 +107,8 @@ int rov_i2c_read_byte(int fd, uint8_t addr, uint8_t reg, uint8_t *val)
             return 0;
         }
     }
-    else
-    {
-        return -1;
-    }
+
+    return -1;
 }
 
 int rov_i2c_i2cdetect(int fd, uint8_t addr)
