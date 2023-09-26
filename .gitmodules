@@ -4,7 +4,7 @@
 [submodule "3rd/libev"]
 	path = 3rd/libev
 	url = https://github.com/enki/libev.git
-[submodule "libgpiod"]
-	path = libgpiod
+[submodule "3rd/libgpiod"]
+	path = 3rd/libgpiod
 	url = https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git
 	branch = v1.6.x
