@@ -23,15 +23,26 @@ void *device_thread(void *arg)
     {
 
     }
+
     return NULL;
 }
 
 int rov_device_run(struct rov_info* info)
 {
-
+    if (pwm_controller_init(0x40, 50) < 0)
+    {
+        log_e("pwm controller init failed");
+        return -1;
+    }
+    return 0;
 }
 
 int rov_device_stop(struct rov_info* info)
 {
-
+    if (pwm_controller_deinit() < -1)
+    {
+        log_e("pwm controller deinit failed");
+        return -1;
+    }
+    return 0;
 }

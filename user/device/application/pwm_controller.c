@@ -262,8 +262,7 @@ int pwm_controller_init(pca9685_address_t addr, uint16_t hz)
         return -1;
     }
 
-    extern int pca9685_fd;
-    return pca9685_fd;
+    return 0;
 }
 
 /**

@@ -7,15 +7,16 @@
 #include <stdarg.h>
 
 #include "iic.h"
+#include "other.h"
 #include "gpio_gpiod.h"
 
 #define PCA9685_I2C_DEV "/dev/i2c-0"        // PCA9685 使用的 I2C设备
 #define PCA9685_I2C_7BIT_ADDR 0x40          // 将A0-A5全部接地，则其器件地址为:0x40
 
 #define PCA9685_GPIOCHIP "/dev/gpiochip0"
-#define PCA9685_LINE_OFFSET 6
+#define PCA9685_LINE_OFFSET 203
 
-int pca9685_fd;
+static int pca9685_fd;
 
 uint8_t pca9685_interface_iic_init()
 {
@@ -86,12 +87,7 @@ uint8_t pca9685_interface_oe_write(uint8_t value)
 
 void pca9685_interface_delay_ms(uint32_t ms)
 {
-    struct timespec sleeper, dummy;
-
-    sleeper.tv_sec = (time_t) (ms / 1000);
-    sleeper.tv_nsec = (long) (ms % 1000) * 1000000;
-
-    nanosleep(&sleeper, &dummy);
+    rov_delay(ms);
 }
 
 void pca9685_interface_debug_print(const char *const fmt, ...)

@@ -45,7 +45,7 @@ void init(int debug_mode)
     if (jsonrpc_server_run(&rovInfo, 8888, 3) < 0)
     {
         deinit();
-        exit(-2);
+        exit(-1);
     }
 }
 
