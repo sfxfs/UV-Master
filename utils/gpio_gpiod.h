@@ -1,13 +1,10 @@
 #ifndef _GPIO_LIBD_H_
 #define _GPIO_LIBD_H_
 
-#include <gpiod.h>
+int rov_gpiod_set_input(const char *path, unsigned int offset);
+int rov_gpiod_set_output(const char *path, unsigned int offset, int initial_value);
 
-struct gpiod_line_request *gpio_set_output_mode(const char *chip_path, unsigned int offset, enum gpiod_line_value value, const char *consumer);
-struct gpiod_line_request *gpio_set_input_mode(const char *chip_path, unsigned int offset, const char *consumer);
-
-#define gpio_set_output_value(request,offset,value) gpiod_line_request_set_value(request,offset,value)
-#define gpio_get_input_value(request,offset) gpiod_line_request_get_value(request,offset)
-#define gpio_deinit(request) gpiod_line_request_release(request)
+int rov_gpiod_set_value(const char *path, unsigned int offset, int value);
+int rov_gpiod_get_value(const char *path, unsigned int offset);
 
 #endif

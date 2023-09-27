@@ -1,107 +1,126 @@
-#include "gpio_gpiod.h"
+#include <stdio.h>
+#include <gpiod.h>
 
-struct gpiod_line_request *gpio_set_output_mode(const char *chip_path, unsigned int offset, enum gpiod_line_value value, const char *consumer)
+int rov_gpiod_set_input(const char *path, unsigned int offset)
 {
-    struct gpiod_request_config *req_cfg = NULL;
-	struct gpiod_line_request *request = NULL;
-	struct gpiod_line_settings *settings;
-	struct gpiod_line_config *line_cfg;
-	struct gpiod_chip *chip;
-	int ret;
+	int ret = -1;
 
-	chip = gpiod_chip_open(chip_path);
-	if (!chip)
-		return NULL;
-
-	settings = gpiod_line_settings_new();
-	if (!settings)
-		goto close_chip;
-
-	gpiod_line_settings_set_direction(settings,
-					  GPIOD_LINE_DIRECTION_OUTPUT);
-	gpiod_line_settings_set_output_value(settings, value);
-
-	line_cfg = gpiod_line_config_new();
-	if (!line_cfg)
-		goto free_settings;
-
-	ret = gpiod_line_config_add_line_settings(line_cfg, &offset, 1,
-						  settings);
-	if (ret)
-		goto free_line_config;
-
-	if (consumer) {
-		req_cfg = gpiod_request_config_new();
-		if (!req_cfg)
-			goto free_line_config;
-
-		gpiod_request_config_set_consumer(req_cfg, consumer);
+	struct gpiod_chip *chip = gpiod_chip_open(path);
+	if (NULL == chip)
+	{
+		printf("cannot open %s, please run as root\n", path);
+		goto chip_error;
 	}
 
-	request = gpiod_chip_request_lines(chip, req_cfg, line_cfg);
+	struct gpiod_line *line = gpiod_chip_get_line(chip, offset);
+	if (NULL == chip)
+	{
+		printf("cannot open %s line %d\n", path, offset);
+		goto line_error;
+	}
 
-	gpiod_request_config_free(req_cfg);
+	ret = gpiod_line_request_input(line, NULL);
+	if (0 != ret)
+	{
+		printf("cannot set %s line %d to input\n", path, offset);
+	}
 
-free_line_config:
-	gpiod_line_config_free(line_cfg);
-
-free_settings:
-	gpiod_line_settings_free(settings);
-
-close_chip:
+	gpiod_line_release(line);
+line_error:
 	gpiod_chip_close(chip);
-
-	return request;
+chip_error:
+	return ret;
 }
 
-struct gpiod_line_request *gpio_set_input_mode(const char *chip_path, unsigned int offset, const char *consumer)
+int rov_gpiod_set_output(const char *path, unsigned int offset, int initial_value)
 {
-    struct gpiod_request_config *req_cfg = NULL;
-	struct gpiod_line_request *request = NULL;
-	struct gpiod_line_settings *settings;
-	struct gpiod_line_config *line_cfg;
-	struct gpiod_chip *chip;
-	int ret;
+	int ret = -1;
 
-	chip = gpiod_chip_open(chip_path);
-	if (!chip)
-		return NULL;
-
-	settings = gpiod_line_settings_new();
-	if (!settings)
-		goto close_chip;
-
-	gpiod_line_settings_set_direction(settings, GPIOD_LINE_DIRECTION_INPUT);
-
-	line_cfg = gpiod_line_config_new();
-	if (!line_cfg)
-		goto free_settings;
-
-	ret = gpiod_line_config_add_line_settings(line_cfg, &offset, 1,
-						  settings);
-	if (ret)
-		goto free_line_config;
-
-	if (consumer) {
-		req_cfg = gpiod_request_config_new();
-		if (!req_cfg)
-			goto free_line_config;
-
-		gpiod_request_config_set_consumer(req_cfg, consumer);
+	struct gpiod_chip *chip = gpiod_chip_open(path);
+	if (NULL == chip)
+	{
+		printf("cannot open %s, please run as root\n", path);
+		goto chip_error;
 	}
 
-	request = gpiod_chip_request_lines(chip, req_cfg, line_cfg);
+	struct gpiod_line *line = gpiod_chip_get_line(chip, offset);
+	if (NULL == chip)
+	{
+		printf("cannot open %s line %d\n", path, offset);
+		goto line_error;
+	}
 
-	gpiod_request_config_free(req_cfg);
+	ret = gpiod_line_request_output(line, NULL, initial_value);
+	if (0 != ret)
+	{
+		printf("cannot set %s line %d to output\n", path, offset);
+	}
 
-free_line_config:
-	gpiod_line_config_free(line_cfg);
-
-free_settings:
-	gpiod_line_settings_free(settings);
-
-close_chip:
+	gpiod_line_release(line);
+line_error:
 	gpiod_chip_close(chip);
+chip_error:
+	return ret;
+}
 
-	return request;
+int rov_gpiod_set_value(const char *path, unsigned int offset, int value)
+{
+	int ret = -1;
+
+	struct gpiod_chip *chip = gpiod_chip_open(path);
+	if (NULL == chip)
+	{
+		printf("cannot open %s, please run as root\n", path);
+		goto chip_error;
+	}
+
+	struct gpiod_line *line = gpiod_chip_get_line(chip, offset);
+	if (NULL == chip)
+	{
+		printf("cannot open %s line %d\n", path, offset);
+		goto line_error;
+	}
+
+	ret = gpiod_line_set_value(line, value);
+	if (0 != ret)
+	{
+		printf("cannot set %s line %d to %d\n", path, offset, value);
+	}
+
+	gpiod_line_release(line);
+line_error:
+	gpiod_chip_close(chip);
+chip_error:
+	return ret;
+}
+
+int rov_gpiod_get_value(const char *path, unsigned int offset)
+{
+	int ret = -1;
+
+	struct gpiod_chip *chip = gpiod_chip_open(path);
+	if (NULL == chip)
+	{
+		printf("cannot open %s, please run as root\n", path);
+		goto chip_error;
+	}
+
+	struct gpiod_line *line = gpiod_chip_get_line(chip, offset);
+	if (NULL == chip)
+	{
+		printf("cannot open %s line %d\n", path, offset);
+		goto line_error;
+	}
+
+	ret = gpiod_line_get_value(line);
+	if (0 > ret)
+	{
+		printf("cannot get %s line %d value\n", path, offset);
+	}
+
+	gpiod_line_release(line);
+line_error:
+	gpiod_chip_close(chip);
+chip_error:
+	return ret;
 }
