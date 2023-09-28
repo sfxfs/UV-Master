@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <errno.h>
+#include <string.h>
 #include <gpiod.h>
 
 int rov_gpiod_set_input(const char *path, unsigned int offset)
@@ -81,10 +83,15 @@ int rov_gpiod_set_value(const char *path, unsigned int offset, int value)
 		goto line_error;
 	}
 
-	ret = gpiod_line_set_value(line, value);
+	struct gpiod_line_request_config config = {
+		.consumer = NULL,
+		.request_type = GPIOD_LINE_REQUEST_DIRECTION_OUTPUT,
+		.flags = 0,
+	};
+	ret = gpiod_line_request(line, &config, value);
 	if (0 != ret)
 	{
-		printf("cannot set %s line %d to %d\n", path, offset, value);
+		printf("cannot set %s line %d to %d: %s\n", path, offset, value, strerror(errno));
 	}
 
 	gpiod_line_release(line);

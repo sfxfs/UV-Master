@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <fcntl.h>
+#include <errno.h>
+#include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <signal.h>
@@ -18,7 +20,7 @@ int rov_i2c_init(char *dev)
     if (fd < 0)
     {
         printf("fail to open %s \r\n", dev);
-        exit(1);
+        return -1;
     }
     return fd;
 }
@@ -29,11 +31,16 @@ int rov_i2c_deinit(int fd)
 
 int rov_i2c_write(int fd, uint8_t addr, uint8_t reg, uint8_t len, uint8_t *val)
 {
-    ioctl(fd, I2C_TENBIT, 0);
-
-    if (ioctl(fd, I2C_SLAVE, addr) < 0)
+    if (ioctl(fd, I2C_TENBIT, 0) < 0)
     {
-        printf("fail to set i2c device slave address!\n");
+        printf("Unable to set address type: %s\n", strerror(errno));
+        close(fd);
+        return -1;
+    } 
+
+    if (ioctl(fd, I2C_SLAVE, (int)addr) < 0)
+    {
+        printf("Unable to select I2C device: %s\n", strerror(errno));
         close(fd);
         return -1;
     }
@@ -49,8 +56,7 @@ int rov_i2c_read(int fd, uint8_t addr, uint8_t reg, uint8_t len, uint8_t *val)
 
     if (ioctl(fd, I2C_SLAVE, addr) < 0)
     {
-        printf("fail to set i2c device slave address!\n");
-        close(fd);
+        printf("Unable to select I2C device: %s\n", strerror(errno));
         return -1;
     }
 
@@ -71,8 +77,7 @@ int rov_i2c_write_byte(int fd, uint8_t addr, uint8_t reg, uint8_t val)
 
     if (ioctl(fd, I2C_SLAVE, addr) < 0)
     {
-        printf("fail to set i2c device slave address!\n");
-        close(fd);
+        printf("Unable to select I2C device: %s\n", strerror(errno));
         return -1;
     }
 
@@ -94,8 +99,7 @@ int rov_i2c_read_byte(int fd, uint8_t addr, uint8_t reg, uint8_t *val)
     ioctl(fd, I2C_TENBIT, 0);
     if (ioctl(fd, I2C_SLAVE, addr) < 0)
     {
-        printf("fail to set i2c device slave address!\n");
-        close(fd);
+        printf("Unable to select I2C device: %s\n", strerror(errno));
         return -1;
     }
     ioctl(fd, I2C_RETRIES, 5);
@@ -116,7 +120,7 @@ int rov_i2c_i2cdetect(int fd, uint8_t addr)
     ioctl(fd, I2C_TENBIT, 0);
     if (ioctl(fd, I2C_SLAVE, addr) < 0)
     {
-        printf("fail to set i2c device slave address!\n");
+        printf("Unable to select I2C device: %s\n", strerror(errno));
         return -1;
     }  
     return 0;

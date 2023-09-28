@@ -48,7 +48,7 @@ uint8_t pca9685_set_addr_pin(pca9685_handle_t *handle, pca9685_address_t addr_pi
         return 2;                             /* return error */
     }
 
-    handle->iic_addr = 0x80;                  /* set 0x80*/
+    handle->iic_addr = 0x40;                  /* set 0x40*/
     handle->iic_addr |= addr_pin << 1;        /* set iic addr */
 
     return 0;                                 /* success return 0 */

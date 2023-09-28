@@ -18,7 +18,7 @@
 #include "config.h"
 
 #define CONFIG_FILE_PATH "config.json"
-#define CONFIG_FILE_LEN 2048
+#define CONFIG_FILE_LEN 4096
 
 static void rov_info_write_initial_value(struct rov_info* info)
 {
@@ -30,6 +30,11 @@ static void rov_info_write_initial_value(struct rov_info* info)
     propeller_params_init(&info->propeller.center_left);
     propeller_params_init(&info->propeller.back_right);
     propeller_params_init(&info->propeller.back_left);
+
+    rocket_ratio_params_init(&info->rocket.ratio_x);
+    rocket_ratio_params_init(&info->rocket.ratio_y);
+    rocket_ratio_params_init(&info->rocket.ratio_z);
+    rocket_ratio_params_init(&info->rocket.ratio_yaw);
 
     pid_ctl_params_init(&info->pidScale.yaw);
     pid_ctl_params_init(&info->pidScale.depth);
@@ -75,6 +80,18 @@ static cJSON* propeller_params_write(struct rov_info* info)
     return root;
 }
 
+static cJSON* rocket_ratio_params_write(struct rov_info* info)
+{
+    cJSON *root = cJSON_CreateObject();
+
+    cJSON_AddItemToObject(root, "rx", rocket_ratio_params_add_to_root(&info->rocket.ratio_x));
+    cJSON_AddItemToObject(root, "ry", rocket_ratio_params_add_to_root(&info->rocket.ratio_y));
+    cJSON_AddItemToObject(root, "rz", rocket_ratio_params_add_to_root(&info->rocket.ratio_z));
+    cJSON_AddItemToObject(root, "ryaw", rocket_ratio_params_add_to_root(&info->rocket.ratio_yaw));
+
+    return root;
+}
+
 int rov_config_write_to_file(struct rov_info* info)
 {
     cJSON* params = cJSON_CreateObject();
@@ -82,6 +99,7 @@ int rov_config_write_to_file(struct rov_info* info)
     cJSON_AddItemToObject(params, "propeller_params", propeller_params_write(info));
     cJSON_AddItemToObject(params, "pid_clt_params", pid_ctl_params_write(info));
     cJSON_AddItemToObject(params, "dev_ctl_params", dev_ctl_params_write(info));
+    cJSON_AddItemToObject(params, "rocket_ratio_params", rocket_ratio_params_write(info));
 
     char *temp = cJSON_Print(params);
     FILE *fp = fopen(CONFIG_FILE_PATH, "w");
@@ -132,6 +150,16 @@ static void dev_ctl_params_read(struct rov_info* info, cJSON *node)
     dev_ctl_params_read_from_root(&info->devCtl.yuntai, cJSON_GetObjectItem(node, "yuntai"));
 }
 
+static void rocket_ratio_params_read(struct rov_info* info, cJSON *node)
+{
+    if (node == NULL)
+        return;
+    rocket_ratio_params_read_from_root(&info->rocket.ratio_x, cJSON_GetObjectItem(node, "rx"));
+    rocket_ratio_params_read_from_root(&info->rocket.ratio_y, cJSON_GetObjectItem(node, "ry"));
+    rocket_ratio_params_read_from_root(&info->rocket.ratio_z, cJSON_GetObjectItem(node, "rz"));
+    rocket_ratio_params_read_from_root(&info->rocket.ratio_yaw, cJSON_GetObjectItem(node, "ryaw"));
+}
+
 int rov_config_read_from_file(struct rov_info* info)
 {
     FILE *fp = fopen(CONFIG_FILE_PATH, "r");
@@ -140,14 +168,23 @@ int rov_config_read_from_file(struct rov_info* info)
         log_e("file no exist");
         return -1;
     }
+
     char buf[CONFIG_FILE_LEN] = {0};
-    log_i("read %d bytes of config file", fread(buf, 1, CONFIG_FILE_LEN, fp));
+    size_t read_byte = fread(buf, 1, CONFIG_FILE_LEN, fp);
+    log_i("read %d bytes of config file", read_byte);
+    if (CONFIG_FILE_LEN == read_byte)
+    {
+        log_e("size of config file beyond the max len");
+        return -1;
+    }
+
     cJSON *params = cJSON_Parse(buf);
     if (params != NULL) // propeller_parameters 非空，解析
     {
         propeller_params_read(info, cJSON_GetObjectItem(params, "propeller_params"));
         pid_ctl_params_read(info, cJSON_GetObjectItem(params, "pid_clt_params"));
         dev_ctl_params_read(info, cJSON_GetObjectItem(params, "dev_params"));
+        rocket_ratio_params_read(info, cJSON_GetObjectItem(params, "rocket_ratio_params"));
     }
     else
     {

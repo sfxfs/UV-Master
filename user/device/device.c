@@ -29,7 +29,7 @@ void *device_thread(void *arg)
 
 int rov_device_run(struct rov_info* info)
 {
-    if (pwm_controller_init(0x40, 50) < 0)
+    if (pwm_controller_init(PCA9685_ADDRESS_A000000, 50) < 0)
     {
         log_e("pwm controller init failed");
         return -1;

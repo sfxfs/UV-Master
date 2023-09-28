@@ -47,6 +47,12 @@ void rov_init(int debug_mode)
         rov_deinit();
         exit(-1);
     }
+
+    if (rov_device_run(&rovInfo) < 0)
+    {
+        rov_deinit();
+        exit(-1);
+    }
 }
 
 void rov_loop()

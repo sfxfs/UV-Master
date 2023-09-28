@@ -20,7 +20,8 @@ static int pca9685_fd;
 
 uint8_t pca9685_interface_iic_init()
 {
-    if (rov_i2c_init(PCA9685_I2C_DEV) < 0)
+    pca9685_fd = rov_i2c_init(PCA9685_I2C_DEV);
+    if (pca9685_fd < 0)
     {
         log_e("iic dev init failed");
         return -1;
@@ -94,6 +95,6 @@ void pca9685_interface_debug_print(const char *const fmt, ...)
 {
     va_list temp_va;
 	va_start(temp_va, fmt);
-	elog_d("device.pca9685", fmt, temp_va);
+	elog_e("device.pca9685", fmt, temp_va);
 	va_end(temp_va);
 }
