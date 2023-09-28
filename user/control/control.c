@@ -3,10 +3,11 @@
 #include <elog.h>
 #include <unistd.h>
 #include <pthread.h>
+#include "other.h"
 
-#include "ctrlPart/horizon.h"
-#include "ctrlPart/rotate.h"
-#include "ctrlPart/depth.h"
+#include "ctrlPart/manual_ctl.h"
+#include "ctrlPart/rotate_ctl.h"
+#include "ctrlPart/depth_ctl.h"
 #include "pid.h"
 
 #include "../device/application/pwm_controller.h"
@@ -24,7 +25,9 @@
 void write_to_propeller(propeller_t *param)
 {
     #define PWM_COTROLLER_WRITE(channel,propeller) \
-        pwm_controller_write(channel, 0.0f, 7.5f + constrain(5.0f * param->propeller.power_cur, -5.0f, 5.0f));
+        pwm_controller_write(channel, 0.0f, 7.5f + constrain(5.0f * param->propeller.power_cur, -5.0f, 5.0f));\
+        param->propeller.power_last = param->propeller.power_cur;\
+        param->propeller.power_cur = 0;
         
         CALL_FOR_ALL_PROPELLER(PWM_COTROLLER_WRITE)
     #undef PWM_COTROLLER_WRITE
@@ -35,11 +38,9 @@ void *control_thread(void *arg)
     rov_info_t *info = (rov_info_t *)arg;
     for (;;)
     {
-        rov_horizon_control(info);
-        rov_rotate_control(info);
-        rov_depth_control(info);
+        rov_manual_control(info);
         write_to_propeller(&info->propeller);
-        usleep(10 * 1000);
+        rov_delay(10);
     }
     return NULL;
 }

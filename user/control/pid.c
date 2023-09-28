@@ -1,5 +1,6 @@
 #include <math.h>
 #include <string.h>
+#include "other.h"
 
 #include "pid.h"
 

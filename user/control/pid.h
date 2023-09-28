@@ -3,8 +3,6 @@
 
 #include <stdint.h>
 
-#define constrain(amt,low,high) ((amt)<(low)?(low):((amt)>(high)?(high):(amt))) //限幅函数
-
 typedef struct pid_param
 {
     uint8_t Err_Limit_Flag : 1;            //偏差限幅标志   位定义
