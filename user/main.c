@@ -4,14 +4,14 @@
 #include <unistd.h>
 #include <sys/stat.h>
 
-extern void init(int debug_mode);
-extern void deinit(void);
-extern void loop(void);
+extern void rov_init(int debug_mode);
+extern void rov_deinit(void);
+extern void rov_loop(void);
 
 static void exit_rov(int sig)
 {
     printf("info: closing rov app...\n");
-    deinit();
+    rov_deinit();
     exit(0);
 }
 
@@ -31,9 +31,9 @@ int main(int argc, char **argv)
             close(STDOUT_FILENO);
             close(STDERR_FILENO);;
 
-            init(0);
+            rov_init(0);
             for (;;) {
-                loop();
+                rov_loop();
             }
         }
     } else {
@@ -43,9 +43,9 @@ int main(int argc, char **argv)
                "/ _, _/ /_/ /| |/ /  / /  / / /_/ (__  ) /_/  __/ /    \n"
                "/_/ |_|\\____/ |___/  /_/  /_/\\__,_/____/\\__/\\___/_/     \n");
         printf("info: starting rov app...\n");
-        init(1);
+        rov_init(1);
         for (;;) {
-            loop();
+            rov_loop();
         }
     }
 

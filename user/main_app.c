@@ -14,12 +14,12 @@
 
 rov_info_t rovInfo = {0};
 
-void deinit()
+void rov_deinit()
 {
     jsonrpc_server_stop();
 }
 
-void init(int debug_mode)
+void rov_init(int debug_mode)
 {
     if (debug_mode)
     {
@@ -38,18 +38,18 @@ void init(int debug_mode)
 
     if (rov_config_init(&rovInfo) < 0)
     {
-        deinit();
+        rov_deinit();
         exit(-1);
     }
 
     if (jsonrpc_server_run(&rovInfo, 8888, 3) < 0)
     {
-        deinit();
+        rov_deinit();
         exit(-1);
     }
 }
 
-void loop()
+void rov_loop()
 {
     sleep(1);
 }

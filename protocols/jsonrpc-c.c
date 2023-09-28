@@ -23,7 +23,7 @@
 
 static const char jrpc_http_header[] = "HTTP/1.1 200 OK\r\nContent-Type: application/json; charset=UTF-8\r\nAccept: application/json\r\n";
 
-struct ev_loop *loop;
+static struct ev_loop *loop;
 
 // get sockaddr, IPv4 or IPv6:
 static void *get_in_addr(struct sockaddr *sa) {
