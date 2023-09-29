@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(ROV-Master)
+project(UV-Master)
 
 set(CMAKE_VERBOSE_MAKEFILE ON)
 
@@ -21,14 +21,14 @@ add_subdirectory(protocols)
 add_subdirectory(user)
 add_subdirectory(utils)
 
-add_executable(rovmaster user/main.c)
+add_executable(uvmaster user/main.c)
 
-target_link_libraries(rovmaster
-						rovUser
- 						rovDrivers
-						rovLogSys
-						rovProtocols
-						rovUtils
+target_link_libraries(uvmaster
+						uvUser
+ 						uvDrivers
+						uvLogSys
+						uvProtocols
+						uvUtils
 						pthread
 						i2c
 						gpiod

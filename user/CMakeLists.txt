@@ -18,7 +18,7 @@ aux_source_directory(server server_srcs)
 aux_source_directory(config config_srcs)
 aux_source_directory(config/parameters parameters_srcs)
 
-add_library(rovUser STATIC
+add_library(uvUser STATIC
         	main_app.c
 			${control_srcs}
 			${ctrlPart_srcs}
