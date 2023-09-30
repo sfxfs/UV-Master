@@ -8,33 +8,39 @@
     function(back_left) \
     function(back_right)
 
-static void write_propeller_value(struct propeller_parameters *param, double rocket_ratio_val)
+static void limit_propeller_value(struct propeller_parameters *param)
 {
-    param->power_cur += rocket_ratio_val * (rocket_ratio_val > 0 ? param->power_positive : param->power_negative) * param->enabled * (param->reversed == true ? -1 : 1);
+    param->power_cur = param->power_cur * (param->power_cur > 0 ? param->power_positive : param->power_negative) * (double)param->enabled * (param->reversed == true ? -1.0 : 1.0);
 }
 
 void rov_manual_control(rov_info_t *info)
 {
     #define PROPELLER_VALUE_WRITE(which) \
-        write_propeller_value(&info->propeller.which, info->rocket.x * (info->rocket.x > 0 ? info->rocket.ratio_x.which.p : info->rocket.ratio_x.which.n));
+        info->propeller.which.power_cur += info->rocket.x * (info->rocket.x > 0 ? info->rocket.ratio_x.which.p : info->rocket.ratio_x.which.n) * (info->rocket.ratio_x.which.reversed == true ? -1.0 : 1.0);
 
         CALL_FOR_ALL_PROPELLER(PROPELLER_VALUE_WRITE)
     #undef PROPELLER_VALUE_WRITE
 
     #define PROPELLER_VALUE_WRITE(which) \
-        write_propeller_value(&info->propeller.which, info->rocket.y * (info->rocket.y > 0 ? info->rocket.ratio_y.which.p : info->rocket.ratio_y.which.n));
+        info->propeller.which.power_cur += info->rocket.y * (info->rocket.y > 0 ? info->rocket.ratio_y.which.p : info->rocket.ratio_y.which.n) * (info->rocket.ratio_y.which.reversed == true ? -1.0 : 1.0);
 
         CALL_FOR_ALL_PROPELLER(PROPELLER_VALUE_WRITE)
     #undef PROPELLER_VALUE_WRITE
 
     #define PROPELLER_VALUE_WRITE(which) \
-        write_propeller_value(&info->propeller.which, info->rocket.z * (info->rocket.z > 0 ? info->rocket.ratio_z.which.p : info->rocket.ratio_z.which.n));
+        info->propeller.which.power_cur += info->rocket.z * (info->rocket.z > 0 ? info->rocket.ratio_z.which.p : info->rocket.ratio_z.which.n) * (info->rocket.ratio_z.which.reversed == true ? -1.0 : 1.0);
 
         CALL_FOR_ALL_PROPELLER(PROPELLER_VALUE_WRITE)
     #undef PROPELLER_VALUE_WRITE
 
     #define PROPELLER_VALUE_WRITE(which) \
-        write_propeller_value(&info->propeller.which, info->rocket.yaw * (info->rocket.yaw > 0 ? info->rocket.ratio_yaw.which.p : info->rocket.ratio_yaw.which.n));
+        info->propeller.which.power_cur += info->rocket.yaw * (info->rocket.yaw > 0 ? info->rocket.ratio_yaw.which.p : info->rocket.ratio_yaw.which.n) * (info->rocket.ratio_yaw.which.reversed == true ? -1.0 : 1.0);
+
+        CALL_FOR_ALL_PROPELLER(PROPELLER_VALUE_WRITE)
+    #undef PROPELLER_VALUE_WRITE
+
+    #define PROPELLER_VALUE_WRITE(which) \
+        limit_propeller_value(&info->propeller.which);
 
         CALL_FOR_ALL_PROPELLER(PROPELLER_VALUE_WRITE)
     #undef PROPELLER_VALUE_WRITE
