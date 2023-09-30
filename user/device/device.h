@@ -7,9 +7,6 @@
 
 #include "../data_define.h"
 
-#define DEVICE_EPOLL_MAX_EVENT 10
-#define DEVICE_EPOLL_WAIT_MS 100
-
 int rov_device_run(struct rov_info* info);
 int rov_device_stop(struct rov_info* info);
 

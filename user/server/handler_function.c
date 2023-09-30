@@ -38,12 +38,21 @@ cJSON *get_rov_info(sensor_t *sensor_data)
     cJSON* cjson_info = NULL;
     cjson_info = cJSON_CreateObject();
     char *temp_str = malloc(sizeof(char) * 20);
-    sprintf(temp_str, "%.02f ℃", sensor_data->temperature);
-    cJSON_AddStringToObject(cjson_info, "温度", temp_str);
-    sprintf(temp_str, "%.02f °", sensor_data->yaw);
-    cJSON_AddStringToObject(cjson_info, "航向角", temp_str);
-    sprintf(temp_str, "%.02f cm", sensor_data->depth);
-    cJSON_AddStringToObject(cjson_info, "深度", temp_str);
+    if (sensor_data->temperature != 0.0f)
+    {
+        sprintf(temp_str, "%.02f ℃", sensor_data->temperature);
+        cJSON_AddStringToObject(cjson_info, "温度", temp_str);
+    }
+    if (sensor_data->yaw != 0.0f)
+    {
+        sprintf(temp_str, "%.02f °", sensor_data->yaw);
+        cJSON_AddStringToObject(cjson_info, "航向角", temp_str);
+    }
+    if (sensor_data->depth > 0.0f)
+    {
+        sprintf(temp_str, "%.02f cm", sensor_data->depth);
+        cJSON_AddStringToObject(cjson_info, "深度", temp_str);
+    }
     free(temp_str);
     return cjson_info;
 }

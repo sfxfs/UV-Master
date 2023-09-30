@@ -15,17 +15,17 @@
 #include "control.h"
 
 #define CALL_FOR_ALL_PROPELLER(function) \
-    function(PCA9685_CHANNEL_0,front_left) \
-    function(PCA9685_CHANNEL_1,front_right) \
-    function(PCA9685_CHANNEL_2,center_left) \
-    function(PCA9685_CHANNEL_3,center_right) \
-    function(PCA9685_CHANNEL_4,back_left) \
-    function(PCA9685_CHANNEL_5,back_right)
+    function(front_left) \
+    function(front_right) \
+    function(center_left) \
+    function(center_right) \
+    function(back_left) \
+    function(back_right)
 
 void write_to_propeller(propeller_t *param)
 {
-    #define PWM_COTROLLER_WRITE(channel,propeller) \
-        pwm_controller_write(channel, 0.0f, 7.5f + constrain(5.0f * param->propeller.power_cur, -5.0f, 5.0f));\
+    #define PWM_COTROLLER_WRITE(propeller) \
+        pwm_controller_write(param->propeller.channel, 0.0f, 7.5f + constrain(5.0f * (float)param->propeller.power_cur, -5.0f, 5.0f));\
         param->propeller.power_last = param->propeller.power_cur;\
         param->propeller.power_cur = 0;
         

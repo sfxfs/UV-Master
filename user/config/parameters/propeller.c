@@ -39,8 +39,6 @@ void propeller_params_init_freq(double *params)
 
 void propeller_params_init(struct propeller_parameters *params)
 {
-    if (params == NULL)
-        return;
     params->enabled = 1;
     params->reversed = 0;
     params->channel = 0;

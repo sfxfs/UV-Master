@@ -12,7 +12,7 @@
 #include "config/config.h"
 #include "control/control.h"
 
-rov_info_t rovInfo = {0};
+rov_info_t rovInfo;
 
 void rov_deinit()
 {

@@ -6,6 +6,7 @@
 
 struct pwmDev_parameters
 {
+    int channel;
     int pMax;
     int nMax;
     int reset;

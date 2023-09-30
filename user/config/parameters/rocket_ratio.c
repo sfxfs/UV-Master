@@ -26,8 +26,6 @@ static void _rocket_dir_read_from_root(struct power_dir *params, cJSON *node)
 
 static void _rocket_dir_params_init(struct power_dir *params)
 {
-    if (params == NULL)
-        return;
     params->p = 0.5;
     params->n = 0.5;
 }
@@ -48,6 +46,8 @@ cJSON* rocket_ratio_params_add_to_root(struct r2p_ratio *params)
 
 void rocket_ratio_params_read_from_root(struct r2p_ratio *params, cJSON *node)
 {
+    if (node == NULL)
+        return;
     _rocket_dir_read_from_root(&params->front_right, cJSON_GetObjectItem(node, "front_right"));
     _rocket_dir_read_from_root(&params->front_left, cJSON_GetObjectItem(node, "front_left"));
     _rocket_dir_read_from_root(&params->center_right, cJSON_GetObjectItem(node, "center_right"));

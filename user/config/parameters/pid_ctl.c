@@ -26,8 +26,6 @@ void pid_ctl_params_read_from_root(struct pid_scale_parameters *params, cJSON *n
 
 void pid_ctl_params_init(struct pid_scale_parameters *params)
 {
-    if (params == NULL)
-        return;
     params->Kp = 0.1f;
     params->Ki = 0;
     params->Kd = 0;
