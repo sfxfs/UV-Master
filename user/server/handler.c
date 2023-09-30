@@ -4,6 +4,8 @@
 #include "handler_function.h"
 #include "handler.h"
 
+#include "../device/application/pwm_controller.h"
+
 cJSON *info_handler(jrpc_context *ctx, cJSON *params, cJSON *id)
 {
     return get_rov_info(ctx->data);
@@ -79,6 +81,7 @@ cJSON *set_debug_mode_enabled_handler(jrpc_context *ctx, cJSON *params, cJSON *i
 cJSON *set_propeller_pwm_freq_calibration_handler(jrpc_context *ctx, cJSON *params, cJSON *id)
 {
     ((propeller_t *)ctx->data)->pwm_freq_calibration = params->child->valuedouble;
+    pwm_controller_set_freq(params->child->valuedouble);   // to-do
     return cJSON_CreateNull();
 }
 

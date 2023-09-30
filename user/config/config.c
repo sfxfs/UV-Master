@@ -24,6 +24,7 @@ static void rov_info_write_initial_value(struct rov_info* info)
 {
     memset(info, 0, sizeof(rov_info_t));
 
+    propeller_params_init_freq(&info->propeller.pwm_freq_calibration);
     propeller_params_init(&info->propeller.front_right);
     propeller_params_init(&info->propeller.front_left);
     propeller_params_init(&info->propeller.center_right);

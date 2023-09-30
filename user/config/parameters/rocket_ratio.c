@@ -8,6 +8,7 @@ static cJSON* _rocket_dir_add_to_root(struct power_dir params)
 {
     cJSON* node = cJSON_CreateObject();
 
+    cJSON_AddItemToObject(node, "reversed", params.reversed == 1 ? cJSON_CreateTrue() : cJSON_CreateFalse());
     cJSON_AddNumberToObject(node, "p", params.p);
     cJSON_AddNumberToObject(node, "n", params.n);
 
@@ -16,12 +17,17 @@ static cJSON* _rocket_dir_add_to_root(struct power_dir params)
 
 static void _rocket_dir_read_from_root(struct power_dir *params, cJSON *node)
 {
+    if (node == NULL)
+        return;
+    params->reversed = cJSON_GetObjectItem(node, "reversed")->valueint;
     params->p = cJSON_GetObjectItem(node, "p")->valuedouble;
     params->n = cJSON_GetObjectItem(node, "n")->valuedouble;
 }
 
 static void _rocket_dir_params_init(struct power_dir *params)
 {
+    if (params == NULL)
+        return;
     params->p = 0.5;
     params->n = 0.5;
 }

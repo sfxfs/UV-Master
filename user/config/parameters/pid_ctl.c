@@ -17,6 +17,8 @@ cJSON* pid_ctl_params_add_to_root(struct pid_scale_parameters *params)
 
 void pid_ctl_params_read_from_root(struct pid_scale_parameters *params, cJSON *node)
 {
+    if (node == NULL)
+        return;
     params->Kp = (float)cJSON_GetObjectItem(node, "p")->valuedouble;
     params->Ki = (float)cJSON_GetObjectItem(node, "i")->valuedouble;
     params->Kd = (float)cJSON_GetObjectItem(node, "d")->valuedouble;
@@ -24,6 +26,8 @@ void pid_ctl_params_read_from_root(struct pid_scale_parameters *params, cJSON *n
 
 void pid_ctl_params_init(struct pid_scale_parameters *params)
 {
+    if (params == NULL)
+        return;
     params->Kp = 0.1f;
     params->Ki = 0;
     params->Kd = 0;

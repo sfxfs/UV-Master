@@ -6,6 +6,7 @@
 
 struct power_dir
 {
+    uint8_t reversed;
     double p;
     double n;
 };

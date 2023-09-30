@@ -18,6 +18,8 @@ cJSON* dev_ctl_params_add_to_root(struct pwmDev_parameters *params)
 
 void dev_ctl_params_read_from_root(struct pwmDev_parameters *params, cJSON *node)
 {
+    if (node == NULL)
+        return;
     params->pMax = cJSON_GetObjectItem(node, "pMax")->valueint;
     params->nMax = cJSON_GetObjectItem(node, "nMax")->valueint;
     params->reset = cJSON_GetObjectItem(node, "reset")->valueint;
@@ -26,6 +28,8 @@ void dev_ctl_params_read_from_root(struct pwmDev_parameters *params, cJSON *node
 
 void dev_ctl_params_init(struct pwmDev_parameters *params)
 {
+    if (params == NULL)
+        return;
     params->pMax = 1000;
     params->nMax = 0;
     params->reset = 500;

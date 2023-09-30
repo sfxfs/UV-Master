@@ -61,6 +61,7 @@ int rov_control_stop(struct rov_info* info)
 {
     if (pthread_cancel(info->threadTid.control) != 0)
     {
+        log_e("cancel thread failed");
         return -1;
     }
     return 0;
