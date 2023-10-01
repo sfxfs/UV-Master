@@ -25,7 +25,7 @@
 void write_to_propeller(propeller_t *param)
 {
     #define PWM_COTROLLER_WRITE(propeller) \
-        pwm_controller_write(param->propeller.channel, 0.0f, 7.5f + constrain(5.0f * (float)param->propeller.power_cur, -5.0f, 5.0f));\
+        pwm_controller_write(param->propeller.channel, 0.0f, 7.5 + constrain(5.0 * param->propeller.power_cur, -5.0, 5.0));\
         param->propeller.power_last = param->propeller.power_cur;\
         param->propeller.power_cur = 0;
         
@@ -39,7 +39,18 @@ void *control_thread(void *arg)
     for (;;)
     {
         rov_manual_control(info);
-        write_to_propeller(&info->propeller);
+        if (info->devCtl.debug_mode_stat)
+            write_to_propeller(&info->propeller);
+        else
+        {
+            info->propeller.front_left.power_cur = (double)info->debugInfo.propeller_direct_front_left / 1000.0;
+            info->propeller.front_right.power_cur = (double)info->debugInfo.propeller_direct_front_right / 1000.0;
+            info->propeller.center_left.power_cur = (double)info->debugInfo.propeller_direct_center_left / 1000.0;
+            info->propeller.center_right.power_cur = (double)info->debugInfo.propeller_direct_center_right / 1000.0;
+            info->propeller.back_left.power_cur = (double)info->debugInfo.propeller_direct_back_left / 1000.0;
+            info->propeller.back_right.power_cur = (double)info->debugInfo.propeller_direct_back_right / 1000.0;
+            write_to_propeller(&info->propeller);
+        }
         rov_delay(10);
     }
     return NULL;

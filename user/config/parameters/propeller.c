@@ -28,8 +28,8 @@ void propeller_params_read_from_root(struct propeller_parameters *params, cJSON 
     params->channel = cJSON_GetObjectItem(node, "channel")->valueint;
     params->power_positive = cJSON_GetObjectItem(node, "power_positive")->valuedouble;
     params->power_negative = cJSON_GetObjectItem(node, "power_negative")->valuedouble;
-    params->deadzone_upper = cJSON_GetObjectItem(node, "deadzone_upper")->valuedouble;
-    params->deadzone_lower = cJSON_GetObjectItem(node, "deadzone_lower")->valuedouble;
+    params->deadzone_upper = cJSON_GetObjectItem(node, "deadzone_upper")->valueint;
+    params->deadzone_lower = cJSON_GetObjectItem(node, "deadzone_lower")->valueint;
 }
 
 void propeller_params_init_freq(double *params)

@@ -27,17 +27,6 @@ typedef enum
 
 typedef enum
 {
-    WIT_PROTOCOL_NORMAL = 0,
-    WIT_PROTOCOL_MODBUS,
-    WIT_PROTOCOL_CAN,
-    WIT_PROTOCOL_I2C,
-    WIT_PROTOCOL_JY61,
-    WIT_PROTOCOL_905x_MODBUS,
-    WIT_PROTOCOL_905x_CAN,
-} wit_protocol_t;
-
-typedef enum
-{
     RSW_TIME = 0x01,
     RSW_ACC = 0x02,
     RSW_GYRO = 0x04,
@@ -113,14 +102,14 @@ typedef enum
 typedef struct jy901_handle_s
 {
     void (*SerialWrite)(uint8_t *p_ucData, uint32_t uiLen);
-    int32_t (*WitI2cWrite)(uint8_t ucAddr, uint8_t ucReg, uint8_t *p_ucVal, uint32_t uiLen);
-    int32_t (*WitI2cRead)(uint8_t ucAddr, uint8_t ucReg, uint8_t *p_ucVal, uint32_t uiLen);
     void (*DelaymsCb)(uint16_t ucMs);
-    void (*RegUpdateCb)(uint32_t uiReg, uint32_t uiRegNum);
-    uint8_t s_ucAddr;
+    float fAcc[3];
+    float fGyro[3];
+    float fAngle[3];
+    float fMag[3];
     uint8_t s_ucWitDataBuff[WIT_DATA_BUFF_SIZE];
+    char s_cDataUpdate;
     uint32_t s_uiWitDataCnt;
-    uint32_t s_uiProtoclo;
     uint32_t s_uiReadRegIndex;
     int16_t sReg[REGSIZE];
 } jy901_handle_t;
@@ -128,7 +117,7 @@ typedef struct jy901_handle_s
 void WitSerialDataIn(jy901_handle_t *handle, uint8_t ucData);
 int32_t WitWriteReg(jy901_handle_t *handle, uint32_t uiReg, uint16_t usData);
 int32_t WitReadReg(jy901_handle_t *handle, uint32_t uiReg, uint32_t uiReadNum);
-int32_t WitInit(jy901_handle_t *handle, uint32_t uiProtocol, uint8_t ucAddr);
+int32_t WitInit(jy901_handle_t *handle);
 void WitDeInit(jy901_handle_t *handle);
 
 int32_t WitStartAccCali(jy901_handle_t *handle);
