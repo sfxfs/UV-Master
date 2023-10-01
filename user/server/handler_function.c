@@ -71,8 +71,6 @@ cJSON *get_rov_debug_info(debug_info_t *info)
 
 cJSON *move_analysis(cJSON* params, struct rov_info* info, move_mode_t mode)
 {
-    info->devCtl.lose_clt_flag = 0;
-
     info->rocket.x = cjson_value_analysis_double(params, "x");
     info->rocket.y = cjson_value_analysis_double(params, "y");
     info->rocket.z = cjson_value_analysis_double(params, "z");
@@ -90,5 +88,9 @@ cJSON *move_analysis(cJSON* params, struct rov_info* info, move_mode_t mode)
 //            expect_rotate_auv = -cjson_value_analysis_double(params, "rot");
             break;
     }
+
+    pthread_mutex_unlock(&info->thread.mutex.cal_rocket_output);
+    info->devCtl.lose_clt_flag = 0;
+
     return cJSON_CreateNull();
 }

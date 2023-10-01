@@ -45,8 +45,8 @@ static void control_handler_reg(struct rov_info* info)
 static void debug_handler_reg(struct rov_info* info)
 {
     jrpc_register_procedure(&server, set_debug_mode_enabled_handler, "set_debug_mode_enabled", &info->devCtl);
-    jrpc_register_procedure(&server, set_propeller_pwm_freq_calibration_handler, "set_propeller_pwm_freq_calibration", &info->propeller);
-    jrpc_register_procedure(&server, set_propeller_values_handler, "set_propeller_values", &info->debugInfo);
+    jrpc_register_procedure(&server, set_propeller_pwm_freq_calibration_handler, "set_propeller_pwm_freq_calibration", info);
+    jrpc_register_procedure(&server, set_propeller_values_handler, "set_propeller_values", info);
     jrpc_register_procedure(&server, set_propeller_parameters_handler, "set_propeller_parameters", &info->propeller);
     jrpc_register_procedure(&server, set_control_loop_parameters_handler, "set_control_loop_parameters", &info->pidScale);
     jrpc_register_procedure(&server, load_handler, "load_parameters", info);
@@ -105,12 +105,12 @@ int jsonrpc_server_run(struct rov_info* info, int port, int clt_timeout_value)
         return -1;
     }
     log_i("starting thread");
-    if (pthread_create(&info->threadTid.rpc_server, NULL, server_thread, info) != 0)
+    if (pthread_create(&info->thread.tid.rpc_server, NULL, server_thread, info) != 0)
     {
         log_e("thread start failed");
         return -1;
     }
-    pthread_detach(info->threadTid.rpc_server);
+    pthread_detach(info->thread.tid.rpc_server);
 
     _info_in_rpc = info;
     signal(SIGALRM, check_lose_status);

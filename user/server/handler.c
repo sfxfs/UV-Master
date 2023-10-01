@@ -4,8 +4,6 @@
 #include "handler_function.h"
 #include "handler.h"
 
-#include "../device/application/pwm_controller.h"
-
 cJSON *info_handler(jrpc_context *ctx, cJSON *params, cJSON *id)
 {
     return get_rov_info(ctx->data);
@@ -80,19 +78,22 @@ cJSON *set_debug_mode_enabled_handler(jrpc_context *ctx, cJSON *params, cJSON *i
 
 cJSON *set_propeller_pwm_freq_calibration_handler(jrpc_context *ctx, cJSON *params, cJSON *id)
 {
-    ((propeller_t *)ctx->data)->pwm_freq_calibration = params->child->valuedouble;
-    pwm_controller_set_freq(params->child->valuedouble);   // to-do
+    ((rov_info_t *)ctx->data)->propeller.pwm_freq_calibration = params->child->valuedouble;
+    pthread_mutex_unlock(&((rov_info_t *)ctx->data)->thread.mutex.pwm_controller_reset_freq);
     return cJSON_CreateNull();
 }
 
 cJSON *set_propeller_values_handler(jrpc_context *ctx, cJSON *params, cJSON *id)
 {
-    ((debug_info_t *)ctx->data)->propeller_direct_back_left    = cjson_value_analysis_int(params, "back_left");
-    ((debug_info_t *)ctx->data)->propeller_direct_back_right = cjson_value_analysis_int(params, "back_right");
-    ((debug_info_t *)ctx->data)->propeller_direct_center_left = cjson_value_analysis_int(params, "center_left");
-    ((debug_info_t *)ctx->data)->propeller_direct_center_right = cjson_value_analysis_int(params, "center_right");
-    ((debug_info_t *)ctx->data)->propeller_direct_front_left  = cjson_value_analysis_int(params, "front_left");
-    ((debug_info_t *)ctx->data)->propeller_direct_front_right  = cjson_value_analysis_int(params, "front_right");
+    rov_info_t *info = (rov_info_t *)ctx->data;
+    info->debugInfo.propeller_direct_back_left = cjson_value_analysis_int(params, "back_left");
+    info->debugInfo.propeller_direct_back_right = cjson_value_analysis_int(params, "back_right");
+    info->debugInfo.propeller_direct_center_left = cjson_value_analysis_int(params, "center_left");
+    info->debugInfo.propeller_direct_center_right = cjson_value_analysis_int(params, "center_right");
+    info->debugInfo.propeller_direct_front_left  = cjson_value_analysis_int(params, "front_left");
+    info->debugInfo.propeller_direct_front_right  = cjson_value_analysis_int(params, "front_right");
+
+    pthread_mutex_unlock(&info->thread.mutex.cal_rocket_output);
     return cJSON_CreateNull();
 }
 

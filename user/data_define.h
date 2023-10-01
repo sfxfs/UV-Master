@@ -18,7 +18,7 @@ typedef struct rov_info {
     struct sensor sensor;
     struct dev_ctl devCtl;
     struct debug_info debugInfo;
-    struct thread_tid threadTid;
+    struct rov_thread thread;
 } rov_info_t;
 
 #endif //DATA_DEFINE_H
