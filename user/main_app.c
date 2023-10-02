@@ -17,11 +17,12 @@ rov_info_t rovInfo;
 void rov_deinit()
 {
     jsonrpc_server_stop();
+    rov_device_stop(&rovInfo);
 }
 
-void rov_init(int debug_mode)
+void rov_init(bool debug_mode)
 {
-    if (debug_mode)
+    if (debug_mode == true)
     {
         // 初始化 EasyLogger
         elog_init();
@@ -37,20 +38,14 @@ void rov_init(int debug_mode)
     }
 
     if (rov_config_init(&rovInfo) < 0)
-    {
-        rov_deinit();
         exit(-1);
-    }
 
     if (jsonrpc_server_run(&rovInfo, 8888, 3) < 0)
-    {
-        rov_deinit();
         exit(-1);
-    }
 
     if (rov_device_run(&rovInfo) < 0)
     {
-        rov_deinit();
+        jsonrpc_server_stop();
         exit(-1);
     }
 

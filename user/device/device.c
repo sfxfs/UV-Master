@@ -7,7 +7,6 @@
 #include <elog.h>
 #include <unistd.h>
 #include <pthread.h>
-#include <sys/epoll.h>
 #include "other.h"
 
 #include "application/pwm_controller.h"
@@ -63,6 +62,8 @@ void *device_thread(void *arg)
             pwm_controller_init(PCA9685_ADDRESS_A000000, info->propeller.pwm_freq_calibration);
         }
     }
+
+    return NULL;
 }
 
 int rov_device_run(struct rov_info* info)
@@ -78,20 +79,20 @@ int rov_device_run(struct rov_info* info)
         return -1;
     }
 
-    log_i("starting thread");
-    if (pthread_create(&info->thread.tid.device, NULL, device_thread, info) != 0)
-    {
-        log_e("thread start failed");
-        return -1;
-    }
-    pthread_detach(info->thread.tid.device);
-
     if (pthread_create(&info->thread.tid.propeller, NULL, propeller_thread, info) != 0)
     {
         log_e("propeller thread start failed");
         return -1;
     }
     pthread_detach(info->thread.tid.propeller);
+
+    log_i("starting thread");
+    if (pthread_create(&info->thread.tid.device, NULL, device_thread, info) != 0)
+    {
+        log_e("thread start failed");
+    }
+    pthread_detach(info->thread.tid.device);
+
     return 0;
 }
 

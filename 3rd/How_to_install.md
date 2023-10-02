@@ -1,3 +1,5 @@
+请提前安装好[工具链](https://releases.linaro.org/components/toolchain/binaries/7.5-2019.12/arm-linux-gnueabihf/gcc-linaro-7.5.0-2019.12-x86_64_arm-linux-gnueabihf.tar.xz)并添加到环境变量
+
 请提前安装依赖包：
 
 ```shell

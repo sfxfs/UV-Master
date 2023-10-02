@@ -124,7 +124,7 @@ cJSON *save_handler(jrpc_context *ctx, cJSON *params, cJSON *id)
 cJSON *load_handler(jrpc_context *ctx, cJSON *params, cJSON *id)
 {
     // for compatibility
-    rov_info_t *info = ctx->data;
+    rov_info_t *info = (rov_info_t *)ctx->data;
     cJSON* root = cJSON_CreateObject();
     cJSON* propeller_parameters = cJSON_CreateObject();
     cJSON* control_loop_parameters = cJSON_CreateObject();
