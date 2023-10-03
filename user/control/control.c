@@ -10,6 +10,11 @@
 
 #include "control.h"
 
+/**
+ * @brief 
+ * @param arg 
+ * @return 
+ */
 void *control_thread(void *arg)
 {
     rov_info_t *info = (rov_info_t *)arg;

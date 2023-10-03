@@ -4,6 +4,11 @@
 
 #include "rocket_ratio.h"
 
+/**
+ * @brief 单个推进器比率参数添加（Creat Json and Add Param）
+ * @param params power_dir结构体参数
+ * @return Json对象
+ */
 static cJSON* _rocket_dir_add_to_root(struct power_dir params)
 {
     cJSON* node = cJSON_CreateObject();
@@ -15,6 +20,11 @@ static cJSON* _rocket_dir_add_to_root(struct power_dir params)
     return node;
 }
 
+/**
+ * @brief 单个推进器比率读取（From Json）
+ * @param params power_dir结构体参数
+ * @param node Json对象
+ */
 static void _rocket_dir_read_from_root(struct power_dir *params, cJSON *node)
 {
     if (node == NULL)
@@ -24,12 +34,22 @@ static void _rocket_dir_read_from_root(struct power_dir *params, cJSON *node)
     params->n = cJSON_GetObjectItem(node, "n")->valuedouble;
 }
 
+/**
+ * @brief 单个推进器比率初始化（默认0.5倍）
+ * @param params power_dir结构体参数
+ */
 static void _rocket_dir_params_init(struct power_dir *params)
 {
+    params->reversed = false;
     params->p = 0.5;
     params->n = 0.5;
 }
 
+/**
+ * @brief 推进器比率参数添加（Creat Json and Add Param）
+ * @param params r2p_ratio结构体参数
+ * @return Json对象
+ */
 cJSON* rocket_ratio_params_add_to_root(struct r2p_ratio *params)
 {
     cJSON* node = cJSON_CreateObject();
@@ -44,6 +64,11 @@ cJSON* rocket_ratio_params_add_to_root(struct r2p_ratio *params)
     return node;
 }
 
+/**
+ * @brief 推进器比率读取（From Json）
+ * @param params r2p_ratio结构体参数
+ * @param node Json对象
+ */
 void rocket_ratio_params_read_from_root(struct r2p_ratio *params, cJSON *node)
 {
     if (node == NULL)
@@ -56,6 +81,10 @@ void rocket_ratio_params_read_from_root(struct r2p_ratio *params, cJSON *node)
     _rocket_dir_read_from_root(&params->back_left, cJSON_GetObjectItem(node, "back_left"));
 }
 
+/**
+ * @brief 推进器比率初始化（默认0.5倍）
+ * @param params r2p_ratio结构体参数
+ */
 void rocket_ratio_params_init(struct r2p_ratio *params)
 {
     _rocket_dir_params_init(&params->front_right);

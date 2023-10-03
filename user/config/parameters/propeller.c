@@ -4,6 +4,11 @@
 
 #include "propeller.h"
 
+/**
+ * @brief 单个推进器参数添加（Creat Json and Add Param）
+ * @param params propeller_parameters结构体参数
+ * @return Json对象
+ */
 cJSON* propeller_params_add_to_root(struct propeller_parameters *params)
 {
     cJSON* node = cJSON_CreateObject();
@@ -19,6 +24,11 @@ cJSON* propeller_params_add_to_root(struct propeller_parameters *params)
     return node;
 }
 
+/**
+ * @brief 单个推进器参数读取（from Json）
+ * @param params propeller_parameters结构体参数
+ * @param node Json对象
+ */
 void propeller_params_read_from_root(struct propeller_parameters *params, cJSON *node)
 {
     if (node == NULL)
@@ -32,11 +42,19 @@ void propeller_params_read_from_root(struct propeller_parameters *params, cJSON 
     params->deadzone_lower = cJSON_GetObjectItem(node, "deadzone_lower")->valueint;
 }
 
+/**
+ * @brief 单个推进器频率初始化（默认50 HZ ）
+ * @param params 推进器PWM频率参数（propeller.pwm_freq_calibration）
+ */
 void propeller_params_init_freq(double *params)
 {
     *params = 50;
 }
 
+/**
+ * @brief 单个推进器参数初始化
+ * @param params propeller_parameters结构体参数
+ */
 void propeller_params_init(struct propeller_parameters *params)
 {
     params->enabled = 1;

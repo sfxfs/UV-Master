@@ -20,9 +20,13 @@
 #define CONFIG_FILE_PATH "config.json"
 #define CONFIG_FILE_LEN 4096
 
+/**
+ * @brief rov信息初始化
+ * @param info rov_info结构体参数
+ */
 static void rov_info_write_initial_value(struct rov_info* info)
 {
-    memset(info, 0, sizeof(rov_info_t));
+    memset(info, 0, sizeof(rov_info_t));//变量初始化
 
     propeller_params_init_freq(&info->propeller.pwm_freq_calibration);
     propeller_params_init(&info->propeller.front_right);
@@ -45,6 +49,11 @@ static void rov_info_write_initial_value(struct rov_info* info)
     dev_ctl_params_init(&info->devCtl.arm);
 }
 
+/**
+ * @brief pwm设备参数添加(Creat Json and Add param)
+ * @param info rov_info结构体参数
+ * @return Json对象
+ */
 static cJSON* dev_ctl_params_write(struct rov_info* info)
 {
     cJSON *root = cJSON_CreateObject();
@@ -56,6 +65,11 @@ static cJSON* dev_ctl_params_write(struct rov_info* info)
     return root;
 }
 
+/**
+ * @brief pid控制参数添加（Creat Json and Add param)
+ * @param info rov_info结构体参数
+ * @return Json对象
+ */
 static cJSON* pid_ctl_params_write(struct rov_info* info)
 {
     cJSON *root = cJSON_CreateObject();
@@ -66,6 +80,11 @@ static cJSON* pid_ctl_params_write(struct rov_info* info)
     return root;
 }
 
+/**
+ * @brief 推进器参数添加（Creat Json and Add params）
+ * @param info rov_info结构体参数
+ * @return Json对象
+ */
 static cJSON* propeller_params_write(struct rov_info* info)
 {
     cJSON *root = cJSON_CreateObject();
@@ -81,6 +100,11 @@ static cJSON* propeller_params_write(struct rov_info* info)
     return root;
 }
 
+/**
+ * @brief 各轴参数写入（Creat Json and Add params）
+ * @param info rov_info结构体参数
+ * @return Json对象
+ */
 static cJSON* rocket_ratio_params_write(struct rov_info* info)
 {
     cJSON *root = cJSON_CreateObject();
@@ -93,6 +117,11 @@ static cJSON* rocket_ratio_params_write(struct rov_info* info)
     return root;
 }
 
+/**
+ * @brief rov外设配置信息写入config.
+ * @param info rov_info结构体参数
+ * @return 0：成功  -1：失败
+ */
 int rov_config_write_to_file(struct rov_info* info)
 {
     cJSON* params = cJSON_CreateObject();
@@ -121,6 +150,11 @@ int rov_config_write_to_file(struct rov_info* info)
     return 0;
 }
 
+/**
+ * @brief 推进器参数读取（From Json）
+ * @param info rov_info结构体参数
+ * @param node Json对象
+ */
 static void propeller_params_read(struct rov_info* info, cJSON *node)
 {
     if (node == NULL)
@@ -134,6 +168,11 @@ static void propeller_params_read(struct rov_info* info, cJSON *node)
     propeller_params_read_from_root(&info->propeller.back_left, cJSON_GetObjectItem(node, "back_left"));
 }
 
+/**
+ * @brief pid控制参数读取（From Json）
+ * @param info rov_info结构体参数
+ * @param node Json对象
+ */
 static void pid_ctl_params_read(struct rov_info* info, cJSON *node)
 {
     if (node == NULL)
@@ -142,6 +181,11 @@ static void pid_ctl_params_read(struct rov_info* info, cJSON *node)
     pid_ctl_params_read_from_root(&info->pidScale.depth, cJSON_GetObjectItem(node, "depth_lock"));
 }
 
+/**
+ * @brief pwm设备参数读取（From Json）
+ * @param info rov_info结构体参数
+ * @param node Json对象
+ */
 static void dev_ctl_params_read(struct rov_info* info, cJSON *node)
 {
     if (node == NULL)
@@ -151,6 +195,11 @@ static void dev_ctl_params_read(struct rov_info* info, cJSON *node)
     dev_ctl_params_read_from_root(&info->devCtl.yuntai, cJSON_GetObjectItem(node, "yuntai"));
 }
 
+/**
+ * @brief 各轴推进器参数读取（From Json）
+ * @param info rov_info结构体参数
+ * @param node Json对象
+ */
 static void rocket_ratio_params_read(struct rov_info* info, cJSON *node)
 {
     if (node == NULL)
@@ -161,6 +210,11 @@ static void rocket_ratio_params_read(struct rov_info* info, cJSON *node)
     rocket_ratio_params_read_from_root(&info->rocket.ratio_yaw, cJSON_GetObjectItem(node, "ryaw"));
 }
 
+/**
+ * @brief rov外设配置信息读取（From config.json to Rov_info）
+ * @param info rov_info结构体参数
+ * @return 0：成功 -1：失败
+ */
 int rov_config_read_from_file(struct rov_info* info)
 {
     FILE *fp = fopen(CONFIG_FILE_PATH, "r");
@@ -173,7 +227,7 @@ int rov_config_read_from_file(struct rov_info* info)
     char buf[CONFIG_FILE_LEN] = {0};
     size_t read_byte = fread(buf, 1, CONFIG_FILE_LEN, fp);
     log_i("read %d bytes of config file", read_byte);
-    if (CONFIG_FILE_LEN == read_byte)
+    if (CONFIG_FILE_LEN == read_byte) //文件内容>=4096字节
     {
         log_e("size of config file beyond the max len");
         return -1;
@@ -197,12 +251,17 @@ int rov_config_read_from_file(struct rov_info* info)
     return 0;
 }
 
+/**
+ * @brief rov外设配置信息初始化
+ * @param info rov_info结构体参数
+ * @return 0：成功 -1：失败
+ */
 int rov_config_init(struct rov_info* info)
 {
     log_i("load to config file");
     if (0 == access(CONFIG_FILE_PATH, F_OK)) // 0:存在
     {
-        if (rov_config_read_from_file(info) < 0)
+        if (rov_config_read_from_file(info) < 0)  //能够读取则不做任何事
         {
             log_e("cannot read config file");
             return -1;
@@ -211,8 +270,8 @@ int rov_config_init(struct rov_info* info)
     else
     {
         log_w("config file not exist, create it");
-        rov_info_write_initial_value(info);
-        if (rov_config_write_to_file(info) < 0)
+        rov_info_write_initial_value(info); //初始化Rov_info
+        if (rov_config_write_to_file(info) < 0) //创建并将Rov_info信息写至config
         {
             log_e("cannot write config file");
             return -1;
