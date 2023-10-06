@@ -376,8 +376,8 @@ int32_t WitReadReg(jy901_handle_t *handle, uint32_t uiReg, uint32_t uiReadNum)
 
 int32_t WitInit(jy901_handle_t *handle)
 {
-    memset(handle, 0, sizeof(jy901_handle_t));
-    handle->s_uiWitDataCnt = 0;
+    if (handle->SerialInit() != 0)
+        return WIT_HAL_ERROR;
     return WIT_HAL_OK;
 }
 
@@ -453,7 +453,7 @@ int32_t WitStopMagCali(jy901_handle_t *handle)
 
 
 /*change Band*/
-int32_t WitSetUartBaud(jy901_handle_t *handle, int32_t uiBaudIndex)
+int32_t WitSetUartBaud(jy901_handle_t *handle, wit_baud_t uiBaudIndex)
 {
     if(!CheckRange(uiBaudIndex,WIT_BAUD_4800,WIT_BAUD_230400))
     {
@@ -471,7 +471,7 @@ int32_t WitSetUartBaud(jy901_handle_t *handle, int32_t uiBaudIndex)
 
 
 /*change Bandwidth*/
-int32_t WitSetBandwidth(jy901_handle_t *handle, int32_t uiBaudWidth)
+int32_t WitSetBandwidth(jy901_handle_t *handle, wit_bandwidth_t uiBaudWidth)
 {
     if(!CheckRange(uiBaudWidth,BANDWIDTH_256HZ,BANDWIDTH_5HZ))
     {
@@ -488,7 +488,7 @@ int32_t WitSetBandwidth(jy901_handle_t *handle, int32_t uiBaudWidth)
 
 
 /*change output rate */
-int32_t WitSetOutputRate(jy901_handle_t *handle, int32_t uiRate)
+int32_t WitSetOutputRate(jy901_handle_t *handle, wit_rrate_t uiRate)
 {
     if(!CheckRange(uiRate,RRATE_02HZ,RRATE_NONE))
     {
@@ -506,7 +506,7 @@ int32_t WitSetOutputRate(jy901_handle_t *handle, int32_t uiRate)
 
 
 /*change WitSetContent */
-int32_t WitSetContent(jy901_handle_t *handle, int32_t uiRsw)
+int32_t WitSetContent(jy901_handle_t *handle, wit_rsw_t uiRsw)
 {
     if(!CheckRange(uiRsw,RSW_TIME,RSW_MASK))
     {

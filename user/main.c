@@ -17,6 +17,12 @@ static void exit_rov(int sig)
 
 int main(int argc, char **argv)
 {
+    if (geteuid() != 0)
+    {
+        printf("please run as root !\n");
+        exit(0);
+    }
+
     signal(SIGINT, exit_rov);
 
     char * debug_env = getenv("ROV_DEBUG");
@@ -42,7 +48,7 @@ int main(int argc, char **argv)
                " / /_/ / / / / | / /  / /|_/ / __ `/ ___/ __/ _ \\/ ___/\n"
                "/ _, _/ /_/ /| |/ /  / /  / / /_/ (__  ) /_/  __/ /    \n"
                "/_/ |_|\\____/ |___/  /_/  /_/\\__,_/____/\\__/\\___/_/     \n");
-        printf("info: starting rov app...\n");
+        printf("info: starting uv-master app...\n");
         rov_init(1);
         for (;;) {
             rov_loop();

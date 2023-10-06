@@ -13,7 +13,6 @@ extern "C"{
 
 #define WIT_DATA_BUFF_SIZE  256
 #define REGSIZE        0x90
-
 typedef enum
 {
     WIT_HAL_OK = 0,
@@ -101,6 +100,7 @@ typedef enum
 
 typedef struct jy901_handle_s
 {
+    int (*SerialInit)(void);
     void (*SerialWrite)(uint8_t *p_ucData, uint32_t uiLen);
     void (*DelaymsCb)(uint16_t ucMs);
     float fAcc[3];
@@ -124,10 +124,10 @@ int32_t WitStartAccCali(jy901_handle_t *handle);
 int32_t WitStopAccCali(jy901_handle_t *handle);
 int32_t WitStartMagCali(jy901_handle_t *handle);
 int32_t WitStopMagCali(jy901_handle_t *handle);
-int32_t WitSetUartBaud(jy901_handle_t *handle, int32_t uiBaudIndex);
-int32_t WitSetBandwidth(jy901_handle_t *handle, int32_t uiBaudWidth);
-int32_t WitSetOutputRate(jy901_handle_t *handle, int32_t uiRate);
-int32_t WitSetContent(jy901_handle_t *handle, int32_t uiRsw);
+int32_t WitSetUartBaud(jy901_handle_t *handle, wit_baud_t uiBaudIndex);
+int32_t WitSetBandwidth(jy901_handle_t *handle, wit_bandwidth_t uiBaudWidth);
+int32_t WitSetOutputRate(jy901_handle_t *handle, wit_rrate_t uiRate);
+int32_t WitSetContent(jy901_handle_t *handle, wit_rsw_t uiRsw);
 int32_t WitSaveParameter(jy901_handle_t *handle);
 int32_t WitSetForReset(jy901_handle_t *handle);
 int32_t WitCaliRefAngle(jy901_handle_t *handle);
