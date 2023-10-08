@@ -1,3 +1,5 @@
+#include "other.h"
+
 #include "manual_ctl.h"
 
 #define CALL_FOR_ALL_PROPELLER(function) \
@@ -10,9 +12,12 @@
 
 static void limit_propeller_value(struct propeller_parameters *param)
 {
-    param->power_cur = param->power_cur * (param->power_cur > 0 ? param->power_positive : param->power_negative) * (double)param->enabled * (param->reversed == true ? -1.0 : 1.0);
+    param->power_cur = param->power_cur * (double)param->enabled * (param->reversed == true ? -1.0 : 1.0);
+
     if (param->power_cur != 0)
         param->power_cur += (double)(param->power_cur > 0 ? param->deadzone_upper : param->deadzone_lower) / 1000.0;
+
+    param->power_cur = constrain(param->power_cur, param->deadzone_lower, param->deadzone_upper);
 }
 
 void rov_manual_control(rov_info_t *info)

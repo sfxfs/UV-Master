@@ -5,7 +5,7 @@
 #ifndef ROV_MASTER_DEVICE_H
 #define ROV_MASTER_DEVICE_H
 
-#include "../data_define.h"
+#include "data_define.h"
 
 int rov_device_run(struct rov_info* info);
 int rov_device_stop(struct rov_info* info);

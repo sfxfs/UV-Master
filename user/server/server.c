@@ -5,7 +5,9 @@
 #include <sys/time.h>
 #include <jsonrpc-c.h>
 
-#include "handler.h"
+#include "handler/control.h"
+#include "handler/debug.h"
+#include "handler/info.h"
 #include "server.h"
 
 static struct jrpc_server server = {0};
@@ -96,6 +98,7 @@ void check_lose_status(int signo)
  * @brief 启动 jsonrpc 服务
  * @param info 含有rov信息的结构体
  * @param port http 服务的端口
+ * @param clt_timeout_value 连接超时的时间
  * @return 成功返回 0，失败返回 -1
  */
 int jsonrpc_server_run(struct rov_info* info, int port, int clt_timeout_value)

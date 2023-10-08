@@ -13,6 +13,7 @@ extern "C"{
 
 #define WIT_DATA_BUFF_SIZE  256
 #define REGSIZE        0x90
+
 typedef enum
 {
     WIT_HAL_OK = 0,
@@ -102,7 +103,7 @@ typedef struct jy901_handle_s
 {
     int (*SerialInit)(void);
     void (*SerialWrite)(uint8_t *p_ucData, uint32_t uiLen);
-    void (*DelaymsCb)(uint16_t ucMs);
+    void (*DelaymsCb)(unsigned int ucMs);
     float fAcc[3];
     float fGyro[3];
     float fAngle[3];

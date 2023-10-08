@@ -6,7 +6,7 @@
 #define ROV_MASTER_PROPELLER_H
 
 #include <cJSON.h>
-#include "../../data_define.h"
+#include "data_define.h"
 
 cJSON* propeller_params_add_to_root(struct propeller_parameters *params);
 void propeller_params_read_from_root(struct propeller_parameters *params, cJSON *node);
