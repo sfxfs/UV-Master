@@ -1,6 +1,7 @@
 //
 // Created by fxf on 23-9-4.
 //
+#include "utils.h"
 
 #include "propeller.h"
 
@@ -24,6 +25,13 @@ cJSON* propeller_params_add_to_root(struct propeller_parameters *params)
     return node;
 }
 
+void propeller_freq_read_from_root(double *freq, cJSON *node)
+{
+    if (node == NULL)
+        return;
+    *freq = node->valuedouble;
+}
+
 /**
  * @brief 单个推进器参数读取（from Json）
  * @param params propeller_parameters结构体参数
@@ -33,13 +41,13 @@ void propeller_params_read_from_root(struct propeller_parameters *params, cJSON 
 {
     if (node == NULL)
         return;
-    params->reversed =  cJSON_GetObjectItem(node, "reversed")->valueint;
-    params->enabled =  cJSON_GetObjectItem(node, "enabled")->valueint;
-    params->channel = cJSON_GetObjectItem(node, "channel")->valueint;
-    params->power_positive = cJSON_GetObjectItem(node, "power_positive")->valuedouble;
-    params->power_negative = cJSON_GetObjectItem(node, "power_negative")->valuedouble;
-    params->deadzone_upper = cJSON_GetObjectItem(node, "deadzone_upper")->valueint;
-    params->deadzone_lower = cJSON_GetObjectItem(node, "deadzone_lower")->valueint;
+    params->reversed =  cjson_value_analysis_int(node, "reversed");
+    params->enabled =  cjson_value_analysis_int(node, "enabled");
+    params->channel = cjson_value_analysis_int(node, "channel");
+    params->power_positive = cjson_value_analysis_double(node, "power_positive");
+    params->power_negative = cjson_value_analysis_double(node, "power_negative");
+    params->deadzone_upper = cjson_value_analysis_int(node, "deadzone_upper");
+    params->deadzone_lower = cjson_value_analysis_int(node, "deadzone_lower");
 }
 
 /**
@@ -64,4 +72,42 @@ void propeller_params_init(struct propeller_parameters *params)
     params->deadzone_lower = 0;
     params->power_positive = 0.2;
     params->power_negative = 0.2;
+}
+
+/**
+ * @brief 推进器参数添加（Creat Json and Add params）
+ * @param info rov_info结构体参数
+ * @return Json对象
+ */
+cJSON* propeller_params_write(struct rov_info* info)
+{
+    cJSON *root = cJSON_CreateObject();
+
+    cJSON_AddNumberToObject(root, "pwm_freq_calibration", info->propeller.pwm_freq_calibration);
+    cJSON_AddItemToObject(root, "front_right", propeller_params_add_to_root(&info->propeller.front_right));
+    cJSON_AddItemToObject(root, "front_left", propeller_params_add_to_root(&info->propeller.front_left));
+    cJSON_AddItemToObject(root, "center_right", propeller_params_add_to_root(&info->propeller.center_right));
+    cJSON_AddItemToObject(root, "center_left", propeller_params_add_to_root(&info->propeller.center_left));
+    cJSON_AddItemToObject(root, "back_right", propeller_params_add_to_root(&info->propeller.back_right));
+    cJSON_AddItemToObject(root, "back_left", propeller_params_add_to_root(&info->propeller.back_left));
+
+    return root;
+}
+
+/**
+ * @brief 推进器参数读取（From Json）
+ * @param info rov_info结构体参数
+ * @param node Json对象
+ */
+void propeller_params_read(struct rov_info* info, cJSON *node)
+{
+    if (node == NULL)
+        return;
+    propeller_freq_read_from_root(&info->propeller.pwm_freq_calibration, cJSON_GetObjectItem(node, "pwm_freq_calibration"));
+    propeller_params_read_from_root(&info->propeller.front_right, cJSON_GetObjectItem(node, "front_right"));
+    propeller_params_read_from_root(&info->propeller.front_left, cJSON_GetObjectItem(node, "front_left"));
+    propeller_params_read_from_root(&info->propeller.center_right, cJSON_GetObjectItem(node, "center_right"));
+    propeller_params_read_from_root(&info->propeller.center_left, cJSON_GetObjectItem(node, "center_left"));
+    propeller_params_read_from_root(&info->propeller.back_right, cJSON_GetObjectItem(node, "back_right"));
+    propeller_params_read_from_root(&info->propeller.back_left, cJSON_GetObjectItem(node, "back_left"));
 }

@@ -51,16 +51,8 @@ void *device_thread(void *arg)
 {
     rov_info_t *info = (rov_info_t *)arg;
 
-    pthread_mutex_init(&info->thread.mutex.pwm_controller_reset_freq, NULL);
-    pthread_mutex_lock(&info->thread.mutex.pwm_controller_reset_freq);
-
     for (;;)
     {
-        if (pthread_mutex_trylock(&info->thread.mutex.pwm_controller_reset_freq) == 0)
-        {
-            pwm_controller_deinit();
-            pwm_controller_init(PCA9685_ADDRESS_A000000, info->propeller.pwm_freq_calibration);
-        }
     }
 
     return NULL;

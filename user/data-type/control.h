@@ -52,7 +52,6 @@ struct thread_mutex
 {
     pthread_mutex_t write_propeller;
     pthread_mutex_t cal_rocket_output;
-    pthread_mutex_t pwm_controller_reset_freq;
 };
 
 typedef struct rov_thread

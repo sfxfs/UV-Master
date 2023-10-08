@@ -12,4 +12,7 @@ cJSON* rocket_ratio_params_add_to_root(struct r2p_ratio *params);
 void rocket_ratio_params_read_from_root(struct r2p_ratio *params, cJSON *node);
 void rocket_ratio_params_init(struct r2p_ratio *params);
 
+cJSON* rocket_ratio_params_write(struct rov_info* info);
+void rocket_ratio_params_read(struct rov_info* info, cJSON *node);
+
 #endif //ROV_MASTER_ROCKET_RATIO_H

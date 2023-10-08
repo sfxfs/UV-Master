@@ -6,7 +6,6 @@
 
 #include <elog.h>
 #include <stdio.h>
-#include <cJSON.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
@@ -50,71 +49,28 @@ static void rov_info_write_initial_value(struct rov_info* info)
 }
 
 /**
- * @brief pwm设备参数添加(Creat Json and Add param)
- * @param info rov_info结构体参数
- * @return Json对象
+ * @brief 由 cJSON 链表写入配置到文件
+ * @param params json 类型配置数据
+ * @return 0：成功  -1：失败
  */
-static cJSON* dev_ctl_params_write(struct rov_info* info)
+int rov_config_write_json_to_file(cJSON *params)
 {
-    cJSON *root = cJSON_CreateObject();
+    char *temp = cJSON_Print(params);
+    FILE *fp = fopen(CONFIG_FILE_PATH, "w");
+    if (fp == NULL)
+    {
+        //使用“写入”方式创建文件
+        fp = fopen(CONFIG_FILE_PATH, "wt+");
+    }
+    if (fputs(temp, fp) < 0)   //写入文件
+    {
+        log_e("error in fputs config file");
+        return -1;
+    }
 
-    cJSON_AddItemToObject(root, "light", dev_ctl_params_add_to_root(&info->devCtl.light));
-    cJSON_AddItemToObject(root, "yuntai", dev_ctl_params_add_to_root(&info->devCtl.yuntai));
-    cJSON_AddItemToObject(root, "arm", dev_ctl_params_add_to_root(&info->devCtl.arm));
-
-    return root;
-}
-
-/**
- * @brief pid控制参数添加（Creat Json and Add param)
- * @param info rov_info结构体参数
- * @return Json对象
- */
-static cJSON* pid_ctl_params_write(struct rov_info* info)
-{
-    cJSON *root = cJSON_CreateObject();
-
-    cJSON_AddItemToObject(root, "yaw_lock", pid_ctl_params_add_to_root(&info->pidScale.yaw));
-    cJSON_AddItemToObject(root, "depth_lock", pid_ctl_params_add_to_root(&info->pidScale.depth));
-
-    return root;
-}
-
-/**
- * @brief 推进器参数添加（Creat Json and Add params）
- * @param info rov_info结构体参数
- * @return Json对象
- */
-static cJSON* propeller_params_write(struct rov_info* info)
-{
-    cJSON *root = cJSON_CreateObject();
-
-    cJSON_AddNumberToObject(root, "pwm_freq_calibration", info->propeller.pwm_freq_calibration);
-    cJSON_AddItemToObject(root, "front_right", propeller_params_add_to_root(&info->propeller.front_right));
-    cJSON_AddItemToObject(root, "front_left", propeller_params_add_to_root(&info->propeller.front_left));
-    cJSON_AddItemToObject(root, "center_right", propeller_params_add_to_root(&info->propeller.center_right));
-    cJSON_AddItemToObject(root, "center_left", propeller_params_add_to_root(&info->propeller.center_left));
-    cJSON_AddItemToObject(root, "back_right", propeller_params_add_to_root(&info->propeller.back_right));
-    cJSON_AddItemToObject(root, "back_left", propeller_params_add_to_root(&info->propeller.back_left));
-
-    return root;
-}
-
-/**
- * @brief 各轴参数写入（Creat Json and Add params）
- * @param info rov_info结构体参数
- * @return Json对象
- */
-static cJSON* rocket_ratio_params_write(struct rov_info* info)
-{
-    cJSON *root = cJSON_CreateObject();
-
-    cJSON_AddItemToObject(root, "rx", rocket_ratio_params_add_to_root(&info->rocket.ratio_x));
-    cJSON_AddItemToObject(root, "ry", rocket_ratio_params_add_to_root(&info->rocket.ratio_y));
-    cJSON_AddItemToObject(root, "rz", rocket_ratio_params_add_to_root(&info->rocket.ratio_z));
-    cJSON_AddItemToObject(root, "ryaw", rocket_ratio_params_add_to_root(&info->rocket.ratio_yaw));
-
-    return root;
+    fclose(fp);
+    free(temp);
+    return 0;
 }
 
 /**
@@ -131,83 +87,41 @@ int rov_config_write_to_file(struct rov_info* info)
     cJSON_AddItemToObject(params, "dev_ctl_params", dev_ctl_params_write(info));
     cJSON_AddItemToObject(params, "rocket_ratio_params", rocket_ratio_params_write(info));
 
-    char *temp = cJSON_Print(params);
-    FILE *fp = fopen(CONFIG_FILE_PATH, "w");
-    if (fp == NULL)
+    if (rov_config_write_json_to_file(params) != 0)
     {
-        //使用“写入”方式创建文件
-        fp = fopen(CONFIG_FILE_PATH, "wt+");
-    }
-    if (fputs(temp, fp) < 0)   //写入文件
-    {
-        log_e("error in fputs config file");
+        cJSON_Delete(params);
         return -1;
     }
 
-    fclose(fp);
-    free(temp);
     cJSON_Delete(params);
     return 0;
 }
 
 /**
- * @brief 推进器参数读取（From Json）
- * @param info rov_info结构体参数
- * @param node Json对象
+ * @brief 读取配置文件
+ * @return 由读取到的配置文件创建的 cjson 结构体
  */
-static void propeller_params_read(struct rov_info* info, cJSON *node)
+cJSON *rov_config_read_from_file_return_cjson()
 {
-    if (node == NULL)
-        return;
-    info->propeller.pwm_freq_calibration = cJSON_GetObjectItem(node, "pwm_freq_calibration")->valuedouble;
-    propeller_params_read_from_root(&info->propeller.front_right, cJSON_GetObjectItem(node, "front_right"));
-    propeller_params_read_from_root(&info->propeller.front_left, cJSON_GetObjectItem(node, "front_left"));
-    propeller_params_read_from_root(&info->propeller.center_right, cJSON_GetObjectItem(node, "center_right"));
-    propeller_params_read_from_root(&info->propeller.center_left, cJSON_GetObjectItem(node, "center_left"));
-    propeller_params_read_from_root(&info->propeller.back_right, cJSON_GetObjectItem(node, "back_right"));
-    propeller_params_read_from_root(&info->propeller.back_left, cJSON_GetObjectItem(node, "back_left"));
-}
+    FILE *fp = fopen(CONFIG_FILE_PATH, "r");
+    if (fp == NULL)
+    {
+        log_e("file no exist");
+        return NULL;
+    }
 
-/**
- * @brief pid控制参数读取（From Json）
- * @param info rov_info结构体参数
- * @param node Json对象
- */
-static void pid_ctl_params_read(struct rov_info* info, cJSON *node)
-{
-    if (node == NULL)
-        return;
-    pid_ctl_params_read_from_root(&info->pidScale.yaw, cJSON_GetObjectItem(node, "yaw_lock"));
-    pid_ctl_params_read_from_root(&info->pidScale.depth, cJSON_GetObjectItem(node, "depth_lock"));
-}
+    char buf[CONFIG_FILE_LEN] = {0};
+    size_t read_byte = fread(buf, 1, CONFIG_FILE_LEN, fp);
+    if (fclose(fp) != 0)
+        log_e("cannot close file");
+    log_i("read %d bytes of config file", read_byte);
+    if (CONFIG_FILE_LEN == read_byte) //文件内容>=4096字节
+    {
+        log_e("size of config file beyond the max len");
+        return NULL;
+    }
 
-/**
- * @brief pwm设备参数读取（From Json）
- * @param info rov_info结构体参数
- * @param node Json对象
- */
-static void dev_ctl_params_read(struct rov_info* info, cJSON *node)
-{
-    if (node == NULL)
-        return;
-    dev_ctl_params_read_from_root(&info->devCtl.arm, cJSON_GetObjectItem(node, "arm"));
-    dev_ctl_params_read_from_root(&info->devCtl.light, cJSON_GetObjectItem(node, "light"));
-    dev_ctl_params_read_from_root(&info->devCtl.yuntai, cJSON_GetObjectItem(node, "yuntai"));
-}
-
-/**
- * @brief 各轴推进器参数读取（From Json）
- * @param info rov_info结构体参数
- * @param node Json对象
- */
-static void rocket_ratio_params_read(struct rov_info* info, cJSON *node)
-{
-    if (node == NULL)
-        return;
-    rocket_ratio_params_read_from_root(&info->rocket.ratio_x, cJSON_GetObjectItem(node, "rx"));
-    rocket_ratio_params_read_from_root(&info->rocket.ratio_y, cJSON_GetObjectItem(node, "ry"));
-    rocket_ratio_params_read_from_root(&info->rocket.ratio_z, cJSON_GetObjectItem(node, "rz"));
-    rocket_ratio_params_read_from_root(&info->rocket.ratio_yaw, cJSON_GetObjectItem(node, "ryaw"));
+    return cJSON_Parse(buf);
 }
 
 /**
@@ -217,23 +131,7 @@ static void rocket_ratio_params_read(struct rov_info* info, cJSON *node)
  */
 int rov_config_read_from_file(struct rov_info* info)
 {
-    FILE *fp = fopen(CONFIG_FILE_PATH, "r");
-    if (fp == NULL)
-    {
-        log_e("file no exist");
-        return -1;
-    }
-
-    char buf[CONFIG_FILE_LEN] = {0};
-    size_t read_byte = fread(buf, 1, CONFIG_FILE_LEN, fp);
-    log_i("read %d bytes of config file", read_byte);
-    if (CONFIG_FILE_LEN == read_byte) //文件内容>=4096字节
-    {
-        log_e("size of config file beyond the max len");
-        return -1;
-    }
-
-    cJSON *params = cJSON_Parse(buf);
+    cJSON *params = rov_config_read_from_file_return_cjson();
     if (params != NULL) // propeller_parameters 非空，解析
     {
         propeller_params_read(info, cJSON_GetObjectItem(params, "propeller_params"));

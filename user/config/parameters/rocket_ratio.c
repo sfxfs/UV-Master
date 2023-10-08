@@ -1,6 +1,7 @@
 //
 // Created by fxf on 9/25/23.
 //
+#include "utils.h"
 
 #include "rocket_ratio.h"
 
@@ -29,9 +30,9 @@ static void _rocket_dir_read_from_root(struct power_dir *params, cJSON *node)
 {
     if (node == NULL)
         return;
-    params->reversed = cJSON_GetObjectItem(node, "reversed")->valueint;
-    params->p = cJSON_GetObjectItem(node, "p")->valuedouble;
-    params->n = cJSON_GetObjectItem(node, "n")->valuedouble;
+    params->reversed = cjson_value_analysis_int(node, "reversed");
+    params->p = cjson_value_analysis_double(node, "p");
+    params->n = cjson_value_analysis_double(node, "n");
 }
 
 /**
@@ -93,4 +94,36 @@ void rocket_ratio_params_init(struct r2p_ratio *params)
     _rocket_dir_params_init(&params->center_left);
     _rocket_dir_params_init(&params->back_right);
     _rocket_dir_params_init(&params->back_left);
+}
+
+/**
+ * @brief 各轴参数写入（Creat Json and Add params）
+ * @param info rov_info结构体参数
+ * @return Json对象
+ */
+cJSON* rocket_ratio_params_write(struct rov_info* info)
+{
+    cJSON *root = cJSON_CreateObject();
+
+    cJSON_AddItemToObject(root, "rx", rocket_ratio_params_add_to_root(&info->rocket.ratio_x));
+    cJSON_AddItemToObject(root, "ry", rocket_ratio_params_add_to_root(&info->rocket.ratio_y));
+    cJSON_AddItemToObject(root, "rz", rocket_ratio_params_add_to_root(&info->rocket.ratio_z));
+    cJSON_AddItemToObject(root, "ryaw", rocket_ratio_params_add_to_root(&info->rocket.ratio_yaw));
+
+    return root;
+}
+
+/**
+ * @brief 各轴推进器参数读取（From Json）
+ * @param info rov_info结构体参数
+ * @param node Json对象
+ */
+void rocket_ratio_params_read(struct rov_info* info, cJSON *node)
+{
+    if (node == NULL)
+        return;
+    rocket_ratio_params_read_from_root(&info->rocket.ratio_x, cJSON_GetObjectItem(node, "rx"));
+    rocket_ratio_params_read_from_root(&info->rocket.ratio_y, cJSON_GetObjectItem(node, "ry"));
+    rocket_ratio_params_read_from_root(&info->rocket.ratio_z, cJSON_GetObjectItem(node, "rz"));
+    rocket_ratio_params_read_from_root(&info->rocket.ratio_yaw, cJSON_GetObjectItem(node, "ryaw"));
 }

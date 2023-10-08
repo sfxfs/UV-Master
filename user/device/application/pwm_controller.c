@@ -265,6 +265,74 @@ int pwm_controller_init(pca9685_address_t addr, uint16_t hz)
     return 0;
 }
 
+int pwm_controller_set_freq(uint16_t hz)
+{
+    uint8_t res;
+    uint8_t reg;
+
+    /* inactive */
+    res = pca9685_set_active(&gs_handle, PCA9685_BOOL_FALSE);
+    if (res != 0)
+    {
+        pca9685_interface_debug_print("pca9685: set active failed.\n");
+        (void)pca9685_deinit(&gs_handle);
+        
+        return -1;
+    }
+    
+    /* set sleep mode */
+    res = pca9685_set_sleep_mode(&gs_handle, PCA9685_BOOL_TRUE);
+    if (res != 0)
+    {
+        pca9685_interface_debug_print("pca9685: set sleep mode failed.\n");
+        (void)pca9685_deinit(&gs_handle);
+        
+        return -1;
+    }
+    
+    /* set frequency */
+    res = pca9685_output_frequency_convert_to_register(&gs_handle, PCA9685_OSCILLATOR_INTERNAL_FREQUENCY, hz, (uint8_t *)&reg);
+    if (res != 0)
+    {
+        pca9685_interface_debug_print("pca9685: output frequency convert to register failed.\n");
+        (void)pca9685_deinit(&gs_handle);
+        
+        return -1;
+    }
+    
+    /* set pre scale */
+    res = pca9685_set_prescaler(&gs_handle, reg);
+    if (res != 0)
+    {
+        pca9685_interface_debug_print("pca9685: set pre scale failed.\n");
+        (void)pca9685_deinit(&gs_handle);
+        
+        return -1;
+    }
+
+    /* set sleep mode */
+    res = pca9685_set_sleep_mode(&gs_handle, PCA9685_BOOL_FALSE);
+    if (res != 0)
+    {
+        pca9685_interface_debug_print("pca9685: set sleep mode failed.\n");
+        (void)pca9685_deinit(&gs_handle);
+        
+        return -1;
+    }
+    
+    /* active */
+    res = pca9685_set_active(&gs_handle, PCA9685_BOOL_TRUE);
+    if (res != 0)
+    {
+        pca9685_interface_debug_print("pca9685: set active failed.\n");
+        (void)pca9685_deinit(&gs_handle);
+        
+        return -1;
+    }
+
+    return 0;
+}
+
 /**
  * @brief  basic example deinit
  * @return status code

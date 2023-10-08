@@ -1,5 +1,6 @@
 #include "config/parameters/pid_ctl.h"
 #include "config/parameters/propeller.h"
+#include "device/application/pwm_controller.h"
 
 #include "config/config.h"
 #include "data_define.h"
@@ -27,8 +28,7 @@ cJSON *set_debug_mode_enabled_handler(jrpc_context *ctx, cJSON *params, cJSON *i
 
 cJSON *set_propeller_pwm_freq_calibration_handler(jrpc_context *ctx, cJSON *params, cJSON *id)
 {
-    ((rov_info_t *)ctx->data)->propeller.pwm_freq_calibration = params->child->valuedouble;
-    pthread_mutex_unlock(&((rov_info_t *)ctx->data)->thread.mutex.pwm_controller_reset_freq);
+    pwm_controller_set_freq((uint16_t)params->child->valuedouble);
     return cJSON_CreateNull();
 }
 
@@ -66,33 +66,11 @@ cJSON *set_control_loop_parameters_handler(jrpc_context *ctx, cJSON *params, cJS
 
 cJSON *save_handler(jrpc_context *ctx, cJSON *params, cJSON *id)
 {
-    rov_config_write_to_file(ctx->data);
+    rov_config_write_json_to_file(params);
     return cJSON_CreateNull();
 }
 
 cJSON *load_handler(jrpc_context *ctx, cJSON *params, cJSON *id)
 {
-    // for compatibility
-    rov_info_t *info = (rov_info_t *)ctx->data;
-    cJSON* root = cJSON_CreateObject();
-    cJSON* propeller_parameters = cJSON_CreateObject();
-    cJSON* control_loop_parameters = cJSON_CreateObject();
-
-    cJSON_AddNumberToObject(root, "propeller_pwm_freq_calibration", info->propeller.pwm_freq_calibration);
-
-    cJSON_AddItemToObject(propeller_parameters, "front_right", propeller_params_add_to_root(&info->propeller.front_right));
-    cJSON_AddItemToObject(propeller_parameters, "front_left", propeller_params_add_to_root(&info->propeller.front_left));
-    cJSON_AddItemToObject(propeller_parameters, "center_right", propeller_params_add_to_root(&info->propeller.center_right));
-    cJSON_AddItemToObject(propeller_parameters, "center_left", propeller_params_add_to_root(&info->propeller.center_left));
-    cJSON_AddItemToObject(propeller_parameters, "back_right", propeller_params_add_to_root(&info->propeller.back_right));
-    cJSON_AddItemToObject(propeller_parameters, "back_left", propeller_params_add_to_root(&info->propeller.back_left));
-
-    cJSON_AddItemToObject(root, "propeller_parameters", propeller_parameters);
-
-    cJSON_AddItemToObject(control_loop_parameters, "yaw_lock", pid_ctl_params_add_to_root(&info->pidScale.yaw));
-    cJSON_AddItemToObject(control_loop_parameters, "depth_lock", pid_ctl_params_add_to_root(&info->pidScale.depth));
-
-    cJSON_AddItemToObject(root, "control_loop_parameters", control_loop_parameters);
-
-    return root;
+    return rov_config_read_from_file_return_cjson();
 }

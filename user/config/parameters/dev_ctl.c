@@ -1,6 +1,7 @@
 //
 // Created by fxf on 23-9-4.
 //
+#include "utils.h"
 
 #include "dev_ctl.h"
 
@@ -31,11 +32,11 @@ void dev_ctl_params_read_from_root(struct pwmDev_parameters *params, cJSON *node
 {
     if (node == NULL)
         return;
-    params->channel = cJSON_GetObjectItem(node, "channel")->valueint;
-    params->pMax = cJSON_GetObjectItem(node, "pMax")->valueint;
-    params->nMax = cJSON_GetObjectItem(node, "nMax")->valueint;
-    params->reset = cJSON_GetObjectItem(node, "reset")->valueint;
-    params->speed = cJSON_GetObjectItem(node, "speed")->valueint;
+    params->channel = cjson_value_analysis_int(node, "channel");
+    params->pMax = cjson_value_analysis_int(node, "pMax");
+    params->nMax = cjson_value_analysis_int(node, "nMax");
+    params->reset = cjson_value_analysis_int(node, "reset");
+    params->speed = cjson_value_analysis_int(node, "speed");
 }
 
 /**
@@ -49,4 +50,34 @@ void dev_ctl_params_init(struct pwmDev_parameters *params)
     params->nMax = 0;
     params->reset = 500;
     params->speed = 50;
+}
+
+/**
+ * @brief pwm设备参数添加(Creat Json and Add param)
+ * @param info rov_info结构体参数
+ * @return Json对象
+ */
+cJSON* dev_ctl_params_write(struct rov_info* info)
+{
+    cJSON *root = cJSON_CreateObject();
+
+    cJSON_AddItemToObject(root, "light", dev_ctl_params_add_to_root(&info->devCtl.light));
+    cJSON_AddItemToObject(root, "yuntai", dev_ctl_params_add_to_root(&info->devCtl.yuntai));
+    cJSON_AddItemToObject(root, "arm", dev_ctl_params_add_to_root(&info->devCtl.arm));
+
+    return root;
+}
+
+/**
+ * @brief pwm设备参数读取（From Json）
+ * @param info rov_info结构体参数
+ * @param node Json对象
+ */
+void dev_ctl_params_read(struct rov_info* info, cJSON *node)
+{
+    if (node == NULL)
+        return;
+    dev_ctl_params_read_from_root(&info->devCtl.arm, cJSON_GetObjectItem(node, "arm"));
+    dev_ctl_params_read_from_root(&info->devCtl.light, cJSON_GetObjectItem(node, "light"));
+    dev_ctl_params_read_from_root(&info->devCtl.yuntai, cJSON_GetObjectItem(node, "yuntai"));
 }
