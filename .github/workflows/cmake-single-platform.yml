@@ -23,7 +23,7 @@ jobs:
     - uses: actions/checkout@v3
 
     - name: Install dependencies
-      run: sudo apt-get update && sudo apt-get install -y build-essential wget cmake autoconf automake libtool autoconf-archive m4 pkg-config
+      run: sudo apt-get update && sudo apt-get install -y build-essential wget cmake ninja-build autoconf automake libtool autoconf-archive m4 pkg-config
 
     - name: Get toolchain
       run: |
@@ -45,3 +45,9 @@ jobs:
     - name: Build
       # Build your program with the given configuration
       run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+
+    - name: Upload Artifact
+      uses: actions/upload-artifact@master
+      with:
+        name: UV Master For NanoPi Neo Core
+        path: ${{github.workspace}}/output
