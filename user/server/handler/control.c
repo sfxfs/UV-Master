@@ -1,19 +1,7 @@
+#include "config/parameters/utils.h"
 #include "data_define.h"
 
 #include "control.h"
-
-static double cjson_value_analysis_double(cJSON *params,const char *str)
-{
-    cJSON* cjson_temp = NULL;
-    double value;
-    cjson_temp = cJSON_GetObjectItem(params, str);
-    if (cjson_temp != NULL)      //如果没收到则返回
-    {
-        value = cjson_temp->valuedouble;
-    }
-    else value = 0;
-    return value;
-}
 
 static cJSON *move_analysis(cJSON* params, struct rov_info* info, move_mode_t mode)
 {

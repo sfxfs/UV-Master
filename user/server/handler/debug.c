@@ -1,24 +1,12 @@
 #include "config/parameters/pid_ctl.h"
 #include "config/parameters/propeller.h"
 #include "device/application/pwm_controller.h"
+#include "config/parameters/utils.h"
 
 #include "config/config.h"
 #include "data_define.h"
 
 #include "debug.h"
-
-static int cjson_value_analysis_int(cJSON *params, const char *str)
-{
-    cJSON* cjson_temp = NULL;
-    int value;
-    cjson_temp = cJSON_GetObjectItem(params, str);
-    if (cjson_temp != NULL)      //如果没收到则返回
-    {
-        value = cjson_temp->valueint;
-    }
-    else value = 0;
-    return value;
-}
 
 cJSON *set_debug_mode_enabled_handler(jrpc_context *ctx, cJSON *params, cJSON *id)
 {
@@ -32,7 +20,7 @@ cJSON *set_propeller_pwm_freq_calibration_handler(jrpc_context *ctx, cJSON *para
 {
     if (params == NULL)
         return cJSON_CreateNull();
-    pwm_controller_set_freq((uint16_t)params->child->valuedouble);
+    pwm_controller_set_freq((uint16_t)params->child->valueint);
     return cJSON_CreateNull();
 }
 

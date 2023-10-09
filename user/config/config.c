@@ -28,11 +28,8 @@ static void rov_info_write_initial_value(struct rov_info* info)
     memset(info, 0, sizeof(rov_info_t));//变量初始化
 
     propeller_params_all_init(&info->propeller);
-
     rocket_ratio_params_all_init(&info->rocket);
-
     pid_ctl_params_all_init(&info->pidScale);
-
     dev_ctl_params_all_init(&info->devCtl);
 }
 

@@ -25,11 +25,11 @@ cJSON* propeller_params_add_to_root(struct propeller_parameters *params)
     return node;
 }
 
-void propeller_freq_read_from_root(double *freq, cJSON *node)
+void propeller_freq_read_from_root(uint16_t *freq, cJSON *node)
 {
     if (node == NULL)
         return;
-    *freq = node->valuedouble;
+    *freq = node->valueint;
 }
 
 /**
@@ -54,7 +54,7 @@ void propeller_params_read_from_root(struct propeller_parameters *params, cJSON 
  * @brief 单个推进器频率初始化（默认50 HZ ）
  * @param params 推进器PWM频率参数（propeller.pwm_freq_calibration）
  */
-void propeller_params_init_freq(double *params)
+void propeller_params_init_freq(uint16_t *params)
 {
     *params = 50;
 }

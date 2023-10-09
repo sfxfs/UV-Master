@@ -19,7 +19,7 @@ struct propeller_parameters
 
 typedef struct propeller
 {
-    double pwm_freq_calibration;
+    uint16_t pwm_freq_calibration;
     struct propeller_parameters front_left;
     struct propeller_parameters front_right;
     struct propeller_parameters center_left;
