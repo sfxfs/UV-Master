@@ -39,26 +39,6 @@ cJSON *set_propeller_values_handler(jrpc_context *ctx, cJSON *params, cJSON *id)
     return cJSON_CreateNull();
 }
 
-cJSON *set_propeller_parameters_handler(jrpc_context *ctx, cJSON *params, cJSON *id)
-{
-    // to do ...
-    // propeller_params_read_from_root(&((propeller_t *)ctx->data)->front_right, cJSON_GetObjectItem(params, "front_right"));
-    // propeller_params_read_from_root(&((propeller_t *)ctx->data)->front_left, cJSON_GetObjectItem(params, "front_left"));
-    // propeller_params_read_from_root(&((propeller_t *)ctx->data)->center_right, cJSON_GetObjectItem(params, "center_right"));
-    // propeller_params_read_from_root(&((propeller_t *)ctx->data)->center_left, cJSON_GetObjectItem(params, "center_left"));
-    // propeller_params_read_from_root(&((propeller_t *)ctx->data)->back_right, cJSON_GetObjectItem(params, "back_right"));
-    // propeller_params_read_from_root(&((propeller_t *)ctx->data)->back_left, cJSON_GetObjectItem(params, "back_left"));
-    return cJSON_CreateNull();
-}
-
-cJSON *set_control_loop_parameters_handler(jrpc_context *ctx, cJSON *params, cJSON *id)
-{
-    // to do ...
-    // pid_ctl_params_read_from_root(&((pid_scale_t *)ctx->data)->yaw, cJSON_GetObjectItem(params, "yaw_lock"));
-    // pid_ctl_params_read_from_root(&((pid_scale_t *)ctx->data)->depth, cJSON_GetObjectItem(params, "depth_lock"));
-    return cJSON_CreateNull();
-}
-
 cJSON *save_handler(jrpc_context *ctx, cJSON *params, cJSON *id)
 {
     rov_config_write_json_to_file(params);

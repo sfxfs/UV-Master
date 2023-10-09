@@ -49,8 +49,6 @@ static void debug_handler_reg(struct rov_info* info)
     jrpc_register_procedure(&server, set_debug_mode_enabled_handler, "set_debug_mode_enabled", &info->devCtl);
     jrpc_register_procedure(&server, set_propeller_pwm_freq_calibration_handler, "set_propeller_pwm_freq_calibration", info);
     jrpc_register_procedure(&server, set_propeller_values_handler, "set_propeller_values", info);
-    jrpc_register_procedure(&server, set_propeller_parameters_handler, "set_propeller_parameters", &info->propeller);
-    jrpc_register_procedure(&server, set_control_loop_parameters_handler, "set_control_loop_parameters", &info->pidScale);
     jrpc_register_procedure(&server, load_handler, "load_parameters", info);
     jrpc_register_procedure(&server, save_handler, "save_parameters", info);
 }

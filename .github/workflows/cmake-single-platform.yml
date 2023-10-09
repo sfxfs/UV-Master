@@ -49,5 +49,5 @@ jobs:
     - name: Upload Artifact
       uses: actions/upload-artifact@master
       with:
-        name: UV Master For NanoPi Neo Core
+        name: uv-master-armhf-bin
         path: ${{github.workspace}}/output
