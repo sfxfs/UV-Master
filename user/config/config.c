@@ -27,25 +27,13 @@ static void rov_info_write_initial_value(struct rov_info* info)
 {
     memset(info, 0, sizeof(rov_info_t));//变量初始化
 
-    propeller_params_init_freq(&info->propeller.pwm_freq_calibration);
-    propeller_params_init(&info->propeller.front_right);
-    propeller_params_init(&info->propeller.front_left);
-    propeller_params_init(&info->propeller.center_right);
-    propeller_params_init(&info->propeller.center_left);
-    propeller_params_init(&info->propeller.back_right);
-    propeller_params_init(&info->propeller.back_left);
+    propeller_params_all_init(&info->propeller);
 
-    rocket_ratio_params_init(&info->rocket.ratio_x);
-    rocket_ratio_params_init(&info->rocket.ratio_y);
-    rocket_ratio_params_init(&info->rocket.ratio_z);
-    rocket_ratio_params_init(&info->rocket.ratio_yaw);
+    rocket_ratio_params_all_init(&info->rocket);
 
-    pid_ctl_params_init(&info->pidScale.yaw);
-    pid_ctl_params_init(&info->pidScale.depth);
+    pid_ctl_params_all_init(&info->pidScale);
 
-    dev_ctl_params_init(&info->devCtl.light);
-    dev_ctl_params_init(&info->devCtl.yuntai);
-    dev_ctl_params_init(&info->devCtl.arm);
+    dev_ctl_params_all_init(&info->devCtl);
 }
 
 /**
@@ -56,6 +44,11 @@ static void rov_info_write_initial_value(struct rov_info* info)
 int rov_config_write_json_to_file(cJSON *params)
 {
     char *temp = cJSON_Print(params);
+    if (temp == NULL)
+    {
+        log_e("cjson print error, invaild cjson data");
+        return -1;
+    }
     FILE *fp = fopen(CONFIG_FILE_PATH, "w");
     if (fp == NULL)
     {
@@ -98,7 +91,7 @@ int rov_config_write_to_file(struct rov_info* info)
 }
 
 /**
- * @brief 读取配置文件
+ * @brief 读取配置文件（记得用完要 delete）
  * @return 由读取到的配置文件创建的 cjson 结构体
  */
 cJSON *rov_config_read_from_file_return_cjson()

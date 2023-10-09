@@ -12,6 +12,7 @@ cJSON* pid_ctl_params_add_to_root(struct pid_scale_parameters *params);
 void pid_ctl_params_read_from_root(struct pid_scale_parameters *params, cJSON *node);
 void pid_ctl_params_init(struct pid_scale_parameters *params);
 
+void pid_ctl_params_all_init(pid_scale_t *params);
 cJSON* pid_ctl_params_write(struct rov_info* info);
 void pid_ctl_params_read(struct rov_info* info, cJSON *node);
 

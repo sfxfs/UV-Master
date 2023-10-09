@@ -29,7 +29,7 @@ static void write_to_propeller(propeller_t *param)
         pwm_controller_write(param->propeller.channel, 0.0f, 7.5 + constrain(2.5 * param->propeller.power_cur, -2.5, 2.5));\
         param->propeller.power_last = param->propeller.power_cur;\
         param->propeller.power_cur = 0;
-        
+
         CALL_FOR_ALL_PROPELLER(PWM_COTROLLER_WRITE)
     #undef PWM_COTROLLER_WRITE
 }
@@ -37,6 +37,11 @@ static void write_to_propeller(propeller_t *param)
 void *propeller_thread(void *arg)
 {
     rov_info_t *info = (rov_info_t *)arg;
+
+    for (int i = 0; i < 16; i++)
+    {
+        pwm_controller_write(i, 0, 0);
+    }
 
     for (;;)
     {
@@ -47,16 +52,16 @@ void *propeller_thread(void *arg)
     return NULL;
 }
 
-void *device_thread(void *arg)
-{
-    rov_info_t *info = (rov_info_t *)arg;
+// void *device_thread(void *arg)
+// {
+//     rov_info_t *info = (rov_info_t *)arg;
 
-    for (;;)
-    {
-    }
+//     for (;;)
+//     {
+//     }
 
-    return NULL;
-}
+//     return NULL;
+// }
 
 int rov_device_run(struct rov_info* info)
 {
@@ -78,12 +83,12 @@ int rov_device_run(struct rov_info* info)
     }
     pthread_detach(info->thread.tid.propeller);
 
-    log_i("starting thread");
-    if (pthread_create(&info->thread.tid.device, NULL, device_thread, info) != 0)
-    {
-        log_e("thread start failed");
-    }
-    pthread_detach(info->thread.tid.device);
+    // log_i("starting thread");
+    // if (pthread_create(&info->thread.tid.device, NULL, device_thread, info) != 0)
+    // {
+    //     log_e("thread start failed");
+    // }
+    // pthread_detach(info->thread.tid.device);
 
     return 0;
 }

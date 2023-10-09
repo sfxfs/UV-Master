@@ -52,6 +52,13 @@ void dev_ctl_params_init(struct pwmDev_parameters *params)
     params->speed = 50;
 }
 
+void dev_ctl_params_all_init(dev_ctl_t *params)
+{
+    dev_ctl_params_init(&params->light);
+    dev_ctl_params_init(&params->yuntai);
+    dev_ctl_params_init(&params->arm);
+}
+
 /**
  * @brief pwm设备参数添加(Creat Json and Add param)
  * @param info rov_info结构体参数

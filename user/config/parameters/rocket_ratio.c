@@ -96,6 +96,14 @@ void rocket_ratio_params_init(struct r2p_ratio *params)
     _rocket_dir_params_init(&params->back_left);
 }
 
+void rocket_ratio_params_all_init(rocket_t *params)
+{
+    rocket_ratio_params_init(&params->ratio_x);
+    rocket_ratio_params_init(&params->ratio_y);
+    rocket_ratio_params_init(&params->ratio_z);
+    rocket_ratio_params_init(&params->ratio_yaw);
+}
+
 /**
  * @brief 各轴参数写入（Creat Json and Add params）
  * @param info rov_info结构体参数

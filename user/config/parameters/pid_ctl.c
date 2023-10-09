@@ -46,6 +46,12 @@ void pid_ctl_params_init(struct pid_scale_parameters *params)
     params->Kd = 0;
 }
 
+void pid_ctl_params_all_init(pid_scale_t *params)
+{
+    pid_ctl_params_init(&params->yaw);
+    pid_ctl_params_init(&params->depth);
+}
+
 /**
  * @brief pid控制参数添加（Creat Json and Add param)
  * @param info rov_info结构体参数

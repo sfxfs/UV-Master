@@ -74,6 +74,17 @@ void propeller_params_init(struct propeller_parameters *params)
     params->power_negative = 0.2;
 }
 
+void propeller_params_all_init(propeller_t *params)
+{
+    propeller_params_init_freq(&params->pwm_freq_calibration);
+    propeller_params_init(&params->front_right);
+    propeller_params_init(&params->front_left);
+    propeller_params_init(&params->center_right);
+    propeller_params_init(&params->center_left);
+    propeller_params_init(&params->back_right);
+    propeller_params_init(&params->back_left);
+}
+
 /**
  * @brief 推进器参数添加（Creat Json and Add params）
  * @param info rov_info结构体参数

@@ -14,6 +14,7 @@ void propeller_params_read_from_root(struct propeller_parameters *params, cJSON 
 void propeller_params_init_freq(double *params);
 void propeller_params_init(struct propeller_parameters *params);
 
+void propeller_params_all_init(propeller_t *params);
 cJSON* propeller_params_write(struct rov_info* info);
 void propeller_params_read(struct rov_info* info, cJSON *node);
 

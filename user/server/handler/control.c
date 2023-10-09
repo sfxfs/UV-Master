@@ -17,6 +17,8 @@ static double cjson_value_analysis_double(cJSON *params,const char *str)
 
 static cJSON *move_analysis(cJSON* params, struct rov_info* info, move_mode_t mode)
 {
+    if (params == NULL)
+        return cJSON_CreateNull();
     info->rocket.x = cjson_value_analysis_double(params, "x");
     info->rocket.y = cjson_value_analysis_double(params, "y");
     info->rocket.z = cjson_value_analysis_double(params, "z");
@@ -27,11 +29,9 @@ static cJSON *move_analysis(cJSON* params, struct rov_info* info, move_mode_t mo
             break;
         case abs_ctl:
             info->rocket.yaw = 0;
-//            Total_Controller.Yaw_Angle_Control.Expect = -cjson_value_analysis_double(params, "rot");
             break;
         case rel_clt:
             info->rocket.yaw = 0;
-//            expect_rotate_auv = -cjson_value_analysis_double(params, "rot");
             break;
     }
 
@@ -53,18 +53,24 @@ cJSON *move_syn_handler(jrpc_context *ctx, cJSON *params, cJSON *id)
 
 cJSON *catcher_handler(jrpc_context *ctx, cJSON *params, cJSON *id)
 {
+    if (params == NULL)
+        return cJSON_CreateNull();
     ((dev_ctl_t *)ctx->data)->catcher_clt = params->child->valuedouble > 0 ? pwm_pMove : (params->child->valuedouble < 0 ? pwm_nMove : pwm_noAct);
     return cJSON_CreateNull();
 }
 
 cJSON *light_handler(jrpc_context *ctx, cJSON *params, cJSON *id)
 {
+    if (params == NULL)
+        return cJSON_CreateNull();
     ((dev_ctl_t *)ctx->data)->light_clt = params->child->valuedouble > 0 ? pwm_pMove : (params->child->valuedouble < 0 ? pwm_nMove : pwm_noAct);
     return cJSON_CreateNull();
 }
 
 cJSON *depth_handler(jrpc_context *ctx, cJSON *params, cJSON *id)
 {
+    if (params == NULL)
+        return cJSON_CreateNull();
     ((debug_info_t *)ctx->data)->auv_expect_depth = (float)params->child->valuedouble;
     return cJSON_CreateNull();
 }
@@ -81,12 +87,16 @@ cJSON *move_relative_handler(jrpc_context *ctx, cJSON *params, cJSON *id)
 
 cJSON *direction_lock_handler(jrpc_context *ctx, cJSON *params, cJSON *id)
 {
+    if (params == NULL)
+        return cJSON_CreateNull();
     ((dev_ctl_t *)ctx->data)->dir_lock = params->child->valueint;
     return cJSON_CreateNull();
 }
 
 cJSON *depth_lock_handler(jrpc_context *ctx, cJSON *params, cJSON *id)
 {
+    if (params == NULL)
+        return cJSON_CreateNull();
     ((dev_ctl_t *)ctx->data)->depth_lock = params->child->valueint;
     return cJSON_CreateNull();
 }
