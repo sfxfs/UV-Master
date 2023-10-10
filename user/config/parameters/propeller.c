@@ -70,8 +70,8 @@ void propeller_params_init(struct propeller_parameters *params)
     params->channel = 0;
     params->deadzone_upper = 0;
     params->deadzone_lower = 0;
-    params->power_positive = 0.2;
-    params->power_negative = 0.2;
+    params->power_positive = 0.4;
+    params->power_negative = 0.4;
 }
 
 void propeller_params_all_init(propeller_t *params)

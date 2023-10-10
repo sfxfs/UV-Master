@@ -22,12 +22,12 @@ void *control_thread(void *arg)
     {
         pthread_mutex_lock(&info->thread.mutex.cal_rocket_output);
         if (info->devCtl.debug_mode_stat == true) {
-            info->propeller.front_left.power_cur = (double)info->debugInfo.propeller_direct_front_left / 1000.0;
-            info->propeller.front_right.power_cur = (double)info->debugInfo.propeller_direct_front_right / 1000.0;
-            info->propeller.center_left.power_cur = (double)info->debugInfo.propeller_direct_center_left / 1000.0;
-            info->propeller.center_right.power_cur = (double)info->debugInfo.propeller_direct_center_right / 1000.0;
-            info->propeller.back_left.power_cur = (double)info->debugInfo.propeller_direct_back_left / 1000.0;
-            info->propeller.back_right.power_cur = (double)info->debugInfo.propeller_direct_back_right / 1000.0;
+            info->propeller.front_left.power_cur = (double)info->debugInfo.propeller_direct_front_left / 500.0;
+            info->propeller.front_right.power_cur = (double)info->debugInfo.propeller_direct_front_right / 500.0;
+            info->propeller.center_left.power_cur = (double)info->debugInfo.propeller_direct_center_left / 500.0;
+            info->propeller.center_right.power_cur = (double)info->debugInfo.propeller_direct_center_right / 500.0;
+            info->propeller.back_left.power_cur = (double)info->debugInfo.propeller_direct_back_left / 500.0;
+            info->propeller.back_right.power_cur = (double)info->debugInfo.propeller_direct_back_right / 500.0;
         }else {
             rov_manual_control(info);
         }

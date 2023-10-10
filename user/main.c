@@ -10,7 +10,7 @@ extern void rov_loop(void);
 
 static void exit_rov(int sig)
 {
-    printf("info: closing rov app...\n");
+    printf("info: closing uv-master app...\n");
     rov_deinit();
     exit(0);
 }
@@ -19,7 +19,7 @@ int main(int argc, char **argv)
 {
     if (geteuid() != 0)
     {
-        printf("please run as root !\n");
+        printf("please run as root...\n");
         exit(0);
     }
 
@@ -56,6 +56,6 @@ int main(int argc, char **argv)
         }
     }
 
-    printf("error: rov app failed to create process\n");
+    printf("error: uv-master app failed to create process\n");
     return -1;
 }

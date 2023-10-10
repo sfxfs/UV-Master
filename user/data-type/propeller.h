@@ -9,8 +9,8 @@ struct propeller_parameters
     uint8_t enabled : 1;
     uint8_t reversed : 1;
     int channel;
-    int deadzone_upper;  // 0 ~ 1000
-    int deadzone_lower;  // -0 ~ -1000
+    int deadzone_upper;  // 0 ~ 500
+    int deadzone_lower;  // 0 ~ -500
     double power_negative;
     double power_positive;
     double power_cur;   // -1.0 ~ 1.0

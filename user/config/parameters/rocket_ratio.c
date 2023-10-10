@@ -42,8 +42,8 @@ static void _rocket_dir_read_from_root(struct power_dir *params, cJSON *node)
 static void _rocket_dir_params_init(struct power_dir *params)
 {
     params->reversed = false;
-    params->p = 0.5;
-    params->n = 0.5;
+    params->p = 0.15;
+    params->n = 0.15;
 }
 
 /**
