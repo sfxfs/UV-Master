@@ -25,7 +25,7 @@ int main(int argc, char **argv)
 
     signal(SIGINT, exit_rov);
 
-    char * debug_env = getenv("ROV_DEBUG");
+    char * debug_env = getenv("UV_DEBUG");
     if (debug_env == NULL) {
         pid_t pid = fork();
         if (pid > 0) {

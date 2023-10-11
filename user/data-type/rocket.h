@@ -7,8 +7,8 @@
 struct power_dir
 {
     uint8_t reversed;
-    double p;
-    double n;
+    float p;
+    float n;
 };
 
 struct r2p_ratio
@@ -23,10 +23,10 @@ struct r2p_ratio
 
 typedef struct rocket
 {
-    double x;  //左右
-    double y;  //前后
-    double z;  //上下
-    double yaw;//旋转
+    float x;  //左右
+    float y;  //前后
+    float z;  //上下
+    float yaw;//旋转
     struct r2p_ratio ratio_x;
     struct r2p_ratio ratio_y;
     struct r2p_ratio ratio_z;

@@ -10,11 +10,6 @@
 
 #include "control.h"
 
-/**
- * @brief 
- * @param arg 
- * @return 
- */
 void *control_thread(void *arg)
 {
     rov_info_t *info = (rov_info_t *)arg;
@@ -22,12 +17,12 @@ void *control_thread(void *arg)
     {
         pthread_mutex_lock(&info->thread.mutex.cal_rocket_output);
         if (info->devCtl.debug_mode_stat == true) {
-            info->propeller.front_left.power_cur = (double)info->debugInfo.propeller_direct_front_left / 500.0;
-            info->propeller.front_right.power_cur = (double)info->debugInfo.propeller_direct_front_right / 500.0;
-            info->propeller.center_left.power_cur = (double)info->debugInfo.propeller_direct_center_left / 500.0;
-            info->propeller.center_right.power_cur = (double)info->debugInfo.propeller_direct_center_right / 500.0;
-            info->propeller.back_left.power_cur = (double)info->debugInfo.propeller_direct_back_left / 500.0;
-            info->propeller.back_right.power_cur = (double)info->debugInfo.propeller_direct_back_right / 500.0;
+            info->propeller.front_left.power_cur = (float)info->debugInfo.propeller_direct_front_left / 500.0f;
+            info->propeller.front_right.power_cur = (float)info->debugInfo.propeller_direct_front_right / 500.0f;
+            info->propeller.center_left.power_cur = (float)info->debugInfo.propeller_direct_center_left / 500.0f;
+            info->propeller.center_right.power_cur = (float)info->debugInfo.propeller_direct_center_right / 500.0f;
+            info->propeller.back_left.power_cur = (float)info->debugInfo.propeller_direct_back_left / 500.0f;
+            info->propeller.back_right.power_cur = (float)info->debugInfo.propeller_direct_back_right / 500.0f;
         }else {
             rov_manual_control(info);
         }

@@ -11,10 +11,10 @@ struct propeller_parameters
     int channel;
     int deadzone_upper;  // 0 ~ 500
     int deadzone_lower;  // 0 ~ -500
-    double power_negative;
-    double power_positive;
-    double power_cur;   // -1.0 ~ 1.0
-    double power_last;
+    float power_negative;
+    float power_positive;
+    float power_cur;   // -1.0 ~ 1.0
+    float power_last;
 };
 
 typedef struct propeller

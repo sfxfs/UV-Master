@@ -65,6 +65,7 @@ void *propeller_thread(void *arg)
 
 int rov_device_run(struct rov_info* info)
 {
+    log_i("starting pwm controller");
     if (pwm_controller_init(PCA9685_ADDRESS_A000000, info->propeller.pwm_freq_calibration) < 0)
     {
         log_e("pwm controller init failed");
