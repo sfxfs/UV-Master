@@ -6,6 +6,7 @@
 #define DATA_DEFINE_H
 
 #include "data-type/pid.h"
+#include "data-type/system.h"
 #include "data-type/device.h"
 #include "data-type/rocket.h"
 #include "data-type/control.h"
@@ -19,6 +20,7 @@ typedef struct rov_info {
     struct dev_ctl devCtl;
     struct debug_info debugInfo;
     struct rov_thread thread;
+    struct server_config server;
 } rov_info_t;
 
 #endif //DATA_DEFINE_H

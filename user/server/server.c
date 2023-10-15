@@ -92,16 +92,37 @@ void check_lose_status(int signo)
     }
 }
 
+int jsonrpc_set_timeout_value(struct rov_info* info)
+{
+    _info_in_rpc = info;
+    signal(SIGALRM, check_lose_status);
+
+    struct itimerval tick = {0};
+    // Timeout to run first time
+    tick.it_value.tv_sec = 30;
+    tick.it_value.tv_usec = 0;
+
+    // After first, the Interval time for clock
+    tick.it_interval.tv_sec = info->server.clt_timeout;
+    tick.it_interval.tv_usec = 0;
+
+    if (setitimer(ITIMER_REAL, &tick, NULL) < 0)
+    {
+        log_e("failed to start lose status check");
+        return -1;
+    }
+    return 0;
+}
+
 /**
  * @brief 启动 jsonrpc 服务
  * @param info 含有rov信息的结构体
  * @param port http 服务的端口
- * @param clt_timeout_value 连接超时的时间
  * @return 成功返回 0，失败返回 -1
  */
-int jsonrpc_server_run(struct rov_info* info, int port, int clt_timeout_value)
+int jsonrpc_server_run(struct rov_info* info)
 {
-    if (jrpc_server_init(&server, port) != 0) {
+    if (jrpc_server_init(&server, info->server.port) != 0) {
         log_e("init failed");
         return -1;
     }
@@ -113,23 +134,8 @@ int jsonrpc_server_run(struct rov_info* info, int port, int clt_timeout_value)
     }
     pthread_detach(info->thread.tid.rpc_server);
 
-    _info_in_rpc = info;
-    signal(SIGALRM, check_lose_status);
-
-    struct itimerval tick = {0};
-    //Timeout to run first time
-    tick.it_value.tv_sec = 30;
-    tick.it_value.tv_usec = 0;
-
-    //After first, the Interval time for clock
-    tick.it_interval.tv_sec = clt_timeout_value;
-    tick.it_interval.tv_usec = 0;
-
-    if(setitimer(ITIMER_REAL, &tick, NULL) < 0)
-    {
-        log_e("failed to start lose status check");
+    if (jsonrpc_set_timeout_value(info) != 0)
         return -1;
-    }
 
     return 0;
 }

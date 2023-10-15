@@ -9,6 +9,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
+#include "parameters/others.h"
 #include "parameters/pid_ctl.h"
 #include "parameters/dev_ctl.h"
 #include "parameters/propeller.h"
@@ -31,6 +32,7 @@ static void rov_info_write_initial_value(struct rov_info* info)
     rocket_ratio_params_all_init(&info->rocket);
     pid_ctl_params_all_init(&info->pidScale);
     dev_ctl_params_all_init(&info->devCtl);
+    others_params_all_init(info);
 }
 
 /**
@@ -76,6 +78,7 @@ int rov_config_write_to_file(struct rov_info* info)
     cJSON_AddItemToObject(params, "pid_clt_params", pid_ctl_params_write(info));
     cJSON_AddItemToObject(params, "dev_ctl_params", dev_ctl_params_write(info));
     cJSON_AddItemToObject(params, "rocket_ratio_params", rocket_ratio_params_write(info));
+    cJSON_AddItemToObject(params, "others_config_params", others_params_write(info));
 
     if (rov_config_write_json_to_file(params) != 0)
     {
@@ -128,6 +131,7 @@ int rov_config_read_from_file(struct rov_info* info)
         pid_ctl_params_read(info, cJSON_GetObjectItem(params, "pid_clt_params"));
         dev_ctl_params_read(info, cJSON_GetObjectItem(params, "dev_params"));
         rocket_ratio_params_read(info, cJSON_GetObjectItem(params, "rocket_ratio_params"));
+        others_params_read(info, cJSON_GetObjectItem(params, "others_config_params"));
     }
     else
     {

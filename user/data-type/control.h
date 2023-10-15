@@ -3,7 +3,6 @@
 
 #include <stdint.h>
 #include <stdbool.h>
-#include <pthread.h>
 
 struct pwmDev_parameters
 {
@@ -39,25 +38,5 @@ typedef struct debug_info
     int propeller_direct_back_left;
     int propeller_direct_back_right;
 } debug_info_t;
-
-struct thread_tid
-{
-    pthread_t rpc_server;
-    pthread_t device;
-    pthread_t control;
-    pthread_t propeller;
-};
-
-struct thread_mutex
-{
-    pthread_mutex_t write_propeller;
-    pthread_mutex_t cal_rocket_output;
-};
-
-typedef struct rov_thread
-{
-    struct thread_tid tid;
-    struct thread_mutex mutex;
-} rov_thread_t;
 
 #endif

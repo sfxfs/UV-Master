@@ -1,4 +1,4 @@
-#include "other.h"
+#include "other_utils.h"
 
 #include "manual_ctl.h"
 
@@ -17,7 +17,7 @@ static void limit_propeller_value(struct propeller_parameters *param)
     if (param->power_cur != 0)
         param->power_cur += (float)(param->power_cur > 0 ? param->deadzone_upper : param->deadzone_lower) / 500.0f;
 
-    param->power_cur = constrain(param->power_cur, param->deadzone_lower, param->deadzone_upper);
+    param->power_cur = constrain(param->power_cur, param->power_negative, param->power_positive);
 }
 
 void rov_manual_control(rov_info_t *info)

@@ -3,7 +3,8 @@
 
 #include "../data_define.h"
 
-int jsonrpc_server_run  (struct rov_info* info, int port, int clt_timeout_value);
-int jsonrpc_server_stop (void);
+int jsonrpc_server_run          (struct rov_info* info);
+int jsonrpc_set_timeout_value   (struct rov_info* info);
+int jsonrpc_server_stop         (void);
 
 #endif

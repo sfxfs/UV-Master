@@ -7,7 +7,7 @@
 #include <elog.h>
 #include <unistd.h>
 #include <pthread.h>
-#include "other.h"
+#include "other_utils.h"
 
 #include "application/pwm_controller.h"
 #include "application/depth_sensor.h"

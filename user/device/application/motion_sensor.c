@@ -1,7 +1,7 @@
 #define LOG_TAG "device.motion_sensor"
 
 #include <elog.h>
-#include "other.h"
+#include "other_utils.h"
 #include "motion_sensor.h"
 #include "device/interface/jy901_interface.h"
 

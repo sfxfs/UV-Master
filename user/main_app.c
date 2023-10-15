@@ -40,7 +40,7 @@ void rov_init(bool debug_mode)
     if (rov_config_init(&rovInfo) < 0)
         exit(-1);
 
-    if (jsonrpc_server_run(&rovInfo, 8888, 3) < 0)
+    if (jsonrpc_server_run(&rovInfo) < 0)
         exit(-1);
 
     if (rov_device_run(&rovInfo) < 0)

@@ -10,7 +10,7 @@
 #include <gpiod.h>
 
 #include "iic.h"
-#include "other.h"
+#include "other_utils.h"
 
 #define PCA9685_I2C_DEV "/dev/i2c-0"        // PCA9685 使用的 I2C设备
 #define PCA9685_I2C_7BIT_ADDR 0x40          // 将A0-A5全部接地，则其器件地址为:0x40
