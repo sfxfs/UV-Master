@@ -14,7 +14,7 @@ static void _delayMicrosecondsHard(unsigned int howLong) {
         gettimeofday(&tNow, NULL);
 }
 
-void rov_delay(unsigned int ms)
+void uvm_delay(unsigned int ms)
 {
     struct timespec sleeper, dummy;
 
@@ -24,7 +24,7 @@ void rov_delay(unsigned int ms)
     nanosleep(&sleeper, &dummy);
 }
 
-void rov_delayMicroseconds(unsigned int us) {
+void uvm_delayMicroseconds(unsigned int us) {
     struct timespec sleeper;
     unsigned int uSecs = us % 1000000;
     unsigned int wSecs = us / 1000000;

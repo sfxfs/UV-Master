@@ -22,7 +22,7 @@ static int pca9685_fd;
 
 uint8_t pca9685_interface_iic_init()
 {
-    pca9685_fd = rov_i2c_init(PCA9685_I2C_DEV);
+    pca9685_fd = uvm_i2c_init(PCA9685_I2C_DEV);
     if (pca9685_fd < 0)
     {
         log_e("iic dev init failed");
@@ -33,7 +33,7 @@ uint8_t pca9685_interface_iic_init()
 
 uint8_t pca9685_interface_iic_deinit()
 {
-    if (rov_i2c_deinit(pca9685_fd) < 0) {
+    if (uvm_i2c_deinit(pca9685_fd) < 0) {
         log_e("close fd failed");
         return 1;
     }
@@ -43,7 +43,7 @@ uint8_t pca9685_interface_iic_deinit()
 
 uint8_t pca9685_interface_iic_write(uint8_t addr, uint8_t reg, uint8_t *buf, uint16_t len)
 {
-    if (rov_i2c_write(pca9685_fd, addr, reg, len, buf) < 0) {
+    if (uvm_i2c_write(pca9685_fd, addr, reg, len, buf) < 0) {
         log_e("write to device failed");
         return 1;
     }
@@ -53,7 +53,7 @@ uint8_t pca9685_interface_iic_write(uint8_t addr, uint8_t reg, uint8_t *buf, uin
 
 uint8_t pca9685_interface_iic_read(uint8_t addr, uint8_t reg, uint8_t *buf, uint16_t len)
 {
-    if (rov_i2c_read(pca9685_fd, addr, reg, len, buf) < 0) {
+    if (uvm_i2c_read(pca9685_fd, addr, reg, len, buf) < 0) {
         log_e("read from device failed");
         return 1;
     }
@@ -88,7 +88,7 @@ uint8_t pca9685_interface_oe_write(uint8_t value)
 
 void pca9685_interface_delay_ms(uint32_t ms)
 {
-    rov_delay(ms);
+    uvm_delay(ms);
 }
 
 void pca9685_interface_debug_print(const char *const fmt, ...)

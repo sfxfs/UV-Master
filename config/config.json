@@ -95,130 +95,136 @@
 		"rx":	{
 			"front_right":	{
 				"reversed":	false,
-				"p":	0.500000,
-				"n":	0.500000
+				"p":	0.150000,
+				"n":	0.150000
 			},
 			"front_left":	{
 				"reversed":	false,
-				"p":	0.500000,
-				"n":	0.500000
+				"p":	0.150000,
+				"n":	0.150000
 			},
 			"center_right":	{
 				"reversed":	false,
-				"p":	0.500000,
-				"n":	0.500000
+				"p":	0.150000,
+				"n":	0.150000
 			},
 			"center_left":	{
 				"reversed":	false,
-				"p":	0.500000,
-				"n":	0.500000
+				"p":	0.150000,
+				"n":	0.150000
 			},
 			"back_right":	{
 				"reversed":	false,
-				"p":	0.500000,
-				"n":	0.500000
+				"p":	0.150000,
+				"n":	0.150000
 			},
 			"back_left":	{
 				"reversed":	false,
-				"p":	0.500000,
-				"n":	0.500000
+				"p":	0.150000,
+				"n":	0.150000
 			}
 		},
 		"ry":	{
 			"front_right":	{
 				"reversed":	false,
-				"p":	0.500000,
-				"n":	0.500000
+				"p":	0.150000,
+				"n":	0.150000
 			},
 			"front_left":	{
 				"reversed":	false,
-				"p":	0.500000,
-				"n":	0.500000
+				"p":	0.150000,
+				"n":	0.150000
 			},
 			"center_right":	{
 				"reversed":	false,
-				"p":	0.500000,
-				"n":	0.500000
+				"p":	0.150000,
+				"n":	0.150000
 			},
 			"center_left":	{
 				"reversed":	false,
-				"p":	0.500000,
-				"n":	0.500000
+				"p":	0.150000,
+				"n":	0.150000
 			},
 			"back_right":	{
 				"reversed":	false,
-				"p":	0.500000,
-				"n":	0.500000
+				"p":	0.150000,
+				"n":	0.150000
 			},
 			"back_left":	{
 				"reversed":	false,
-				"p":	0.500000,
-				"n":	0.500000
+				"p":	0.150000,
+				"n":	0.150000
 			}
 		},
 		"rz":	{
 			"front_right":	{
 				"reversed":	false,
-				"p":	0.500000,
-				"n":	0.500000
+				"p":	0.150000,
+				"n":	0.150000
 			},
 			"front_left":	{
 				"reversed":	false,
-				"p":	0.500000,
-				"n":	0.500000
+				"p":	0.150000,
+				"n":	0.150000
 			},
 			"center_right":	{
 				"reversed":	false,
-				"p":	0.500000,
-				"n":	0.500000
+				"p":	0.150000,
+				"n":	0.150000
 			},
 			"center_left":	{
 				"reversed":	false,
-				"p":	0.500000,
-				"n":	0.500000
+				"p":	0.150000,
+				"n":	0.150000
 			},
 			"back_right":	{
 				"reversed":	false,
-				"p":	0.500000,
-				"n":	0.500000
+				"p":	0.150000,
+				"n":	0.150000
 			},
 			"back_left":	{
 				"reversed":	false,
-				"p":	0.500000,
-				"n":	0.500000
+				"p":	0.150000,
+				"n":	0.150000
 			}
 		},
 		"ryaw":	{
 			"front_right":	{
 				"reversed":	false,
-				"p":	0.500000,
-				"n":	0.500000
+				"p":	0.150000,
+				"n":	0.150000
 			},
 			"front_left":	{
 				"reversed":	false,
-				"p":	0.500000,
-				"n":	0.500000
+				"p":	0.150000,
+				"n":	0.150000
 			},
 			"center_right":	{
 				"reversed":	false,
-				"p":	0.500000,
-				"n":	0.500000
+				"p":	0.150000,
+				"n":	0.150000
 			},
 			"center_left":	{
 				"reversed":	false,
-				"p":	0.500000,
-				"n":	0.500000
+				"p":	0.150000,
+				"n":	0.150000
 			},
 			"back_right":	{
 				"reversed":	false,
-				"p":	0.500000,
-				"n":	0.500000
+				"p":	0.150000,
+				"n":	0.150000
 			},
 			"back_left":	{
 				"reversed":	false,
-				"p":	0.500000,
-				"n":	0.500000
+				"p":	0.150000,
+				"n":	0.150000
 			}
+		}
+	},
+	"others_config_params":	{
+		"server":	{
+			"port":	8888,
+			"timeout":	3
 		}
 	}
 }

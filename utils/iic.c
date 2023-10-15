@@ -14,7 +14,7 @@
 
 #include "iic.h"
 
-int rov_i2c_init(char *dev)
+int uvm_i2c_init(char *dev)
 {
     int fd = open(dev, O_RDWR);
     if (fd < 0)
@@ -24,12 +24,12 @@ int rov_i2c_init(char *dev)
     }
     return fd;
 }
-int rov_i2c_deinit(int fd)
+int uvm_i2c_deinit(int fd)
 {
     return close(fd);
 }
 
-int rov_i2c_write(int fd, uint8_t addr, uint8_t reg, uint8_t len, uint8_t *val)
+int uvm_i2c_write(int fd, uint8_t addr, uint8_t reg, uint8_t len, uint8_t *val)
 {
     if (ioctl(fd, I2C_TENBIT, 0) < 0)
     {
@@ -50,7 +50,7 @@ int rov_i2c_write(int fd, uint8_t addr, uint8_t reg, uint8_t len, uint8_t *val)
     return i2c_smbus_write_i2c_block_data(fd, reg, len, val);
 }
 
-int rov_i2c_read(int fd, uint8_t addr, uint8_t reg, uint8_t len, uint8_t *val)
+int uvm_i2c_read(int fd, uint8_t addr, uint8_t reg, uint8_t len, uint8_t *val)
 {
     ioctl(fd, I2C_TENBIT, 0);
 
@@ -65,7 +65,7 @@ int rov_i2c_read(int fd, uint8_t addr, uint8_t reg, uint8_t len, uint8_t *val)
     return i2c_smbus_read_i2c_block_data(fd, reg, len, val);
 }
 
-int rov_i2c_write_byte(int fd, uint8_t addr, uint8_t reg, uint8_t val)
+int uvm_i2c_write_byte(int fd, uint8_t addr, uint8_t reg, uint8_t val)
 {
     // int retries;
     uint8_t data[2];
@@ -93,7 +93,7 @@ int rov_i2c_write_byte(int fd, uint8_t addr, uint8_t reg, uint8_t val)
     }
 }
 
-int rov_i2c_read_byte(int fd, uint8_t addr, uint8_t reg, uint8_t *val)
+int uvm_i2c_read_byte(int fd, uint8_t addr, uint8_t reg, uint8_t *val)
 {
     // int retries;
     ioctl(fd, I2C_TENBIT, 0);
@@ -115,7 +115,7 @@ int rov_i2c_read_byte(int fd, uint8_t addr, uint8_t reg, uint8_t *val)
     return -1;
 }
 
-int rov_i2c_i2cdetect(int fd, uint8_t addr)
+int uvm_i2c_i2cdetect(int fd, uint8_t addr)
 {
     ioctl(fd, I2C_TENBIT, 0);
     if (ioctl(fd, I2C_SLAVE, addr) < 0)

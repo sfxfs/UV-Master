@@ -14,15 +14,15 @@ Info:
     /dev/ttyTHS*
     The default baud rate is 9600, 8-bit data, 1 stop bit, no parity
 ******************************************************************************/
-int rov_uart_begin(HARDWARE_UART *dev, char *UART_device)
+int uvm_uart_begin(HARDWARE_UART *dev, char *UART_device)
 {
     //device
     if((dev->fd = open(UART_device, O_RDWR | O_NOCTTY)) < 0)  { //打开UART 
         perror("Failed to open UART device.\n");  
         return -1; 
     }
-    rov_uart_setBaudrate(dev, 115200);
-    rov_uart_Set(dev, 8, 1, 'N');
+    uvm_uart_setBaudrate(dev, 115200);
+    uvm_uart_Set(dev, 8, 1, 'N');
     return 0;
 }
 
@@ -31,9 +31,9 @@ function:   Serial device End
 parameter:
 Info:
 ******************************************************************************/
-int rov_uart_end(HARDWARE_UART *dev)
+int uvm_uart_end(HARDWARE_UART dev)
 {
-    if (close(dev->fd) != 0){
+    if (close(dev.fd) != 0){
         perror("Failed to close UART device.\n");
         return -1;
     }
@@ -64,7 +64,7 @@ parameter:
                B230400      230400
 Info:
 ******************************************************************************/
-int rov_uart_setBaudrate(HARDWARE_UART *dev, uint32_t Baudrate)
+int uvm_uart_setBaudrate(HARDWARE_UART *dev, uint32_t Baudrate)
 {
     uint16_t err;
     uint32_t baud;
@@ -135,11 +135,11 @@ parameter:
     buf :   Sent data
 Info:
 ******************************************************************************/
-int rov_uart_writeByte(HARDWARE_UART *dev, uint8_t buf)
+int uvm_uart_writeByte(HARDWARE_UART dev, uint8_t buf)
 {
     uint8_t sbuf[1] = {0};
     sbuf[0] = buf;
-    return write(dev->fd, sbuf, 1);
+    return write(dev.fd, sbuf, 1);
 }
 
 /******************************************************************************
@@ -149,9 +149,9 @@ parameter:
     len :   Number of bytes sent
 Info:
 ******************************************************************************/
-int rov_uart_write(HARDWARE_UART *dev, const char * buf, uint32_t len)
+int uvm_uart_write(HARDWARE_UART dev, const char * buf, uint32_t len)
 {
-    return write(dev->fd, buf, len);
+    return write(dev.fd, buf, len);
 }
 
 /******************************************************************************
@@ -159,10 +159,10 @@ function: The serial port reads a byte
 parameter:
 Info: Return read data
 ******************************************************************************/
-int rov_uart_readByte(HARDWARE_UART *dev)
+int uvm_uart_readByte(HARDWARE_UART dev)
 {
     uint8_t buf[1] = {0};
-    if (read(dev->fd, buf, 1) < 0)
+    if (read(dev.fd, buf, 1) < 0)
     {
         return -1;
     }
@@ -176,9 +176,9 @@ parameter:
     len :   Number of bytes Read
 Info:
 ******************************************************************************/
-int rov_uart_read(HARDWARE_UART *dev, char* buf, uint32_t len)
+int uvm_uart_read(HARDWARE_UART dev, char* buf, uint32_t len)
 {
-    return read(dev->fd, buf, len);
+    return read(dev.fd, buf, len);
 }
 
 /******************************************************************************
@@ -189,7 +189,7 @@ parameter:
     parity   :   Parity bit
 Info:
 ******************************************************************************/
-int rov_uart_Set(HARDWARE_UART *dev, int databits, int stopbits, int parity)
+int uvm_uart_Set(HARDWARE_UART *dev, int databits, int stopbits, int parity)
 {
     if(tcgetattr(dev->fd, &dev->set) != 0)
     {

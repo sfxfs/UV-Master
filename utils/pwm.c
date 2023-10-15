@@ -7,7 +7,7 @@
 
 #define PWM_SYSFS_PATH "/sys/class/pwm"
 
-int rov_pwm_export(uint32_t pwm)
+int uvm_pwm_export(uint32_t pwm)
 {
     char path[64];
     char file[64];
@@ -27,7 +27,7 @@ int rov_pwm_export(uint32_t pwm)
     return write_sysfs_int("export", path, 0);
 }
 
-int rov_pwm_unexport(uint32_t pwm)
+int uvm_pwm_unexport(uint32_t pwm)
 {
     char path[64];
     int ret;
@@ -38,7 +38,7 @@ int rov_pwm_unexport(uint32_t pwm)
     return write_sysfs_int("unexport", path, 0);
 }
 
-int rov_pwm_set_duty(uint32_t pwm, uint32_t duty)
+int uvm_pwm_set_duty(uint32_t pwm, uint32_t duty)
 {
     char path[64];
     int ret;
@@ -49,7 +49,7 @@ int rov_pwm_set_duty(uint32_t pwm, uint32_t duty)
     return write_sysfs_int("duty_cycle", path, duty);
 }
 
-int rov_pwm_get_duty(uint32_t pwm)
+int uvm_pwm_get_duty(uint32_t pwm)
 {
     char path[64];
     int ret;
@@ -60,7 +60,7 @@ int rov_pwm_get_duty(uint32_t pwm)
     return read_sysfs_posint("duty_cycle", path);
 }
 
-int rov_pwm_set_period(uint32_t pwm, uint32_t period)
+int uvm_pwm_set_period(uint32_t pwm, uint32_t period)
 {
     char path[64];
     int ret;
@@ -71,7 +71,7 @@ int rov_pwm_set_period(uint32_t pwm, uint32_t period)
     return write_sysfs_int("period", path, period);
 }
 
-int rov_pwm_get_period(uint32_t pwm)
+int uvm_pwm_get_period(uint32_t pwm)
 {
     char path[64];
     int ret;
@@ -82,7 +82,7 @@ int rov_pwm_get_period(uint32_t pwm)
     return read_sysfs_posint("period", path);
 }
 
-int rov_pwm_set_polarity(uint32_t pwm, enum pwm_polarity polarity)
+int uvm_pwm_set_polarity(uint32_t pwm, enum pwm_polarity polarity)
 {
     char path[64];
     int ret;
@@ -100,7 +100,7 @@ int rov_pwm_set_polarity(uint32_t pwm, enum pwm_polarity polarity)
                         "normal" : "inversed");
 }
 
-int rov_pwm_get_polarity(uint32_t pwm)
+int uvm_pwm_get_polarity(uint32_t pwm)
 {
     char path[64];
     char string[15];
@@ -118,7 +118,7 @@ int rov_pwm_get_polarity(uint32_t pwm)
         PWM_POLARITY_NORMAL : PWM_POLARITY_INVERSED;
 }
 
-int rov_pwm_set_enable(uint32_t pwm, bool enabled)
+int uvm_pwm_set_enable(uint32_t pwm, bool enabled)
 {
     char path[64];
     int ret;
@@ -130,7 +130,7 @@ int rov_pwm_set_enable(uint32_t pwm, bool enabled)
     return write_sysfs_int_and_verify("enable", path, (uint32_t)enabled);
 }
 
-int rov_pwm_get_enable(uint32_t pwm)
+int uvm_pwm_get_enable(uint32_t pwm)
 {
     char path[64];
     int ret;
@@ -141,7 +141,7 @@ int rov_pwm_get_enable(uint32_t pwm)
     return read_sysfs_posint("enable", path);
 }
 
-int rov_pwm_init(uint32_t pwm, uint32_t period, uint32_t duty,
+int uvm_pwm_init(uint32_t pwm, uint32_t period, uint32_t duty,
             enum pwm_polarity polarity)
 {
     int ret;
@@ -155,7 +155,7 @@ int rov_pwm_init(uint32_t pwm, uint32_t period, uint32_t duty,
     if (ret < 0)
         return ret;
 
-    ret = rov_pwm_export(pwm);
+    ret = uvm_pwm_export(pwm);
     if (ret < 0)
         return ret;
 
@@ -174,16 +174,16 @@ int rov_pwm_init(uint32_t pwm, uint32_t period, uint32_t duty,
         goto out;
     return 0;
 out:
-    rov_pwm_unexport(pwm);
+    uvm_pwm_unexport(pwm);
     return ret;
 }
 
-int rov_pwm_deinit(uint32_t pwm) {
+int uvm_pwm_deinit(uint32_t pwm) {
     int ret;
 
-    ret = rov_pwm_unexport(pwm);
+    ret = uvm_pwm_unexport(pwm);
     if (ret < 0) {
-        printf("rov_pwm_unexport fail\n");
+        printf("uvm_pwm_unexport fail\n");
         return ret;
     }
     return 0;

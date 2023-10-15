@@ -9,7 +9,7 @@
 
 #define GPIO_SYSFS_PATH	"/sys/class/gpio"
 
-int rov_gpio_export(uint32_t gpio)
+int uvm_gpio_export(uint32_t gpio)
 {
     int ret;
     char file[64];
@@ -24,12 +24,12 @@ int rov_gpio_export(uint32_t gpio)
     return write_sysfs_int("export", GPIO_SYSFS_PATH, gpio);
 }
 
-int rov_gpio_unexport(uint32_t gpio)
+int uvm_gpio_unexport(uint32_t gpio)
 {
     return write_sysfs_int("unexport", GPIO_SYSFS_PATH, gpio);
 }
 
-int rov_gpio_set_direction(uint32_t gpio, enum gpio_direction input)
+int uvm_gpio_set_direction(uint32_t gpio, enum gpio_direction input)
 {
     int ret;
     char path[64];
@@ -42,7 +42,7 @@ int rov_gpio_set_direction(uint32_t gpio, enum gpio_direction input)
     return write_sysfs_string_and_verify("direction", path, direction);
 }
 
-int rov_gpio_get_direction(uint32_t gpio)
+int uvm_gpio_get_direction(uint32_t gpio)
 {
     int ret;
     char path[64];
@@ -60,22 +60,22 @@ int rov_gpio_get_direction(uint32_t gpio)
         GPIO_DIRECTION_INPUT : GPIO_DIRECTION_OUTPUT;
 }
 
-int rov_gpio_export_direction(uint32_t gpio, enum gpio_direction input)
+int uvm_gpio_export_direction(uint32_t gpio, enum gpio_direction input)
 {
     int ret;
 
-    ret = rov_gpio_export(gpio);
+    ret = uvm_gpio_export(gpio);
     if (ret < 0)
         goto out;
 
-    ret = rov_gpio_set_direction(gpio, input);
+    ret = uvm_gpio_set_direction(gpio, input);
     if (ret < 0)
-        rov_gpio_unexport(gpio);
+        uvm_gpio_unexport(gpio);
 out:
     return ret;
 }
 
-int rov_gpio_set_value(uint32_t gpio, int value)
+int uvm_gpio_set_value(uint32_t gpio, int value)
 {
     int ret;
     char path[64] = {0};
@@ -95,7 +95,7 @@ int rov_gpio_set_value(uint32_t gpio, int value)
     return write_sysfs_int_and_verify("value", path, value);
 }
 
-int rov_gpio_get_value(uint32_t gpio)
+int uvm_gpio_get_value(uint32_t gpio)
 {
     int ret;
     char path[64];

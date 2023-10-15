@@ -11,7 +11,7 @@ int motion_sensor_init ()
 {
     jy901_handle.SerialInit = jy901_interface_uart_init;
     jy901_handle.SerialWrite = jy901_interface_uart_write;
-    jy901_handle.DelaymsCb = rov_delay;
+    jy901_handle.DelaymsCb = uvm_delay;
     if (WitInit(&jy901_handle) != WIT_HAL_OK)
     {
         log_e("uart init failed");
