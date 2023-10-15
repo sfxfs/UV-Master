@@ -1,18 +1,18 @@
 # UV-Master
 
-本项目理论上适用于所有 Linux 开发板，内核要求 4.8 以上（由 libgpiod 要求），并且具有高可移植性。
+本项目是适用于水下潜航器的控制程序，适用于 Linux 嵌入式系统，并且具有高可移植性。
 
 ***本程序使用到的所有开源项目***：
 
-- [cJSON](https://github.com/DaveGamble/cJSON.git)
-- [jsonrpc-c](https://github.com/hmng/jsonrpc-c.git)
-- [libgpiod](https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git)
-- [libev](https://github.com/enki/libev.git)
-- [i2c-tools](https://git.kernel.org/pub/scm/utils/i2c-tools/i2c-tools.git)
-- [Melon](https://github.com/Water-Melon/Melon.git)
-- [picohttpparser](https://github.com/h2o/picohttpparser.git)
-- [libdriver](https://github.com/hepingood)
-- [EasyLogger](https://github.com/armink/EasyLogger.git)
+- [cJSON](https://github.com/DaveGamble/cJSON.git) 用于解析 JSON 格式数据
+- [jsonrpc-c](https://github.com/hmng/jsonrpc-c.git) tcp 协议的 jsonrpc 服务端
+- [libgpiod](https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git) 用于驱动芯片的 gpio 外设
+- [libev](https://github.com/enki/libev.git) 高性能网络事件库
+- [i2c-tools](https://git.kernel.org/pub/scm/utils/i2c-tools/i2c-tools.git) 用于驱动芯片的 i2c 外设
+- [Melon](https://github.com/Water-Melon/Melon.git) c语言扩展功能库
+- [picohttpparser](https://github.com/h2o/picohttpparser.git) http 报头解析库
+- [libdriver](https://github.com/hepingood) 外设驱动库
+- [EasyLogger](https://github.com/armink/EasyLogger.git) 内存占用小的日志库
 
 ## 开发
 
