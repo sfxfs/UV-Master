@@ -4,21 +4,21 @@
 
 ***本程序使用到的所有开源项目***：
 
-- [cJSON](https://github.com/DaveGamble/cJSON.git) 用于解析 JSON 格式数据
-- [jsonrpc-c](https://github.com/hmng/jsonrpc-c.git) tcp 协议的 jsonrpc 服务端
-- [libgpiod](https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git) 用于驱动芯片的 gpio 外设
-- [libev](https://github.com/enki/libev.git) 高性能网络事件库
-- [i2c-tools](https://git.kernel.org/pub/scm/utils/i2c-tools/i2c-tools.git) 用于驱动芯片的 i2c 外设
-- [Melon](https://github.com/Water-Melon/Melon.git) c语言扩展功能库
-- [picohttpparser](https://github.com/h2o/picohttpparser.git) http 报头解析库
-- [libdriver](https://github.com/hepingood) 外设驱动库
-- [EasyLogger](https://github.com/armink/EasyLogger.git) 内存占用小的日志库
+- [cJSON](https://github.com/DaveGamble/cJSON.git) *用于解析 JSON 格式数据*
+- [jsonrpc-c](https://github.com/hmng/jsonrpc-c.git) *tcp 协议的 jsonrpc 服务端*
+- [libgpiod](https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git) *用于驱动芯片的 gpio 外设*
+- [libev](https://github.com/enki/libev.git) *高性能网络事件库*
+- [i2c-tools](https://git.kernel.org/pub/scm/utils/i2c-tools/i2c-tools.git) *用于驱动芯片的 i2c 外设*
+- [Melon](https://github.com/Water-Melon/Melon.git) *C语言扩展功能库*
+- [picohttpparser](https://github.com/h2o/picohttpparser.git) *HTTP 报头解析库*
+- [libdriver](https://github.com/hepingood) *外设驱动库*
+- [EasyLogger](https://github.com/armink/EasyLogger.git) *内存占用小的日志库*
 
 ## 开发
 
 ### 软件
 
-- 系统：推荐使用基于 **Linux** 的相关系统（如 **Ubuntu** 和 **Manjaro** 等等），如使用 **Windows** 可以在 **WSL** 环境下开发
+- 系统：推荐使用基于 **Linux** 的相关系统（如 **Ubuntu** (推荐20.04) 和 **Manjaro** 等等），如使用 **Windows** 可以在 **WSL** 环境下开发
 - IDE：本项目使用 **CMake** 构建系统，推荐使用 *Jetbrain* 出品的 **CLion**，若使用 **VSCode** 请安装 **CMake** 相关插件
 
 ### 编译
