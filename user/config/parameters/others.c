@@ -23,7 +23,7 @@ void server_params_read_from_root(struct server_config *params, cJSON *node)
 void server_params_init(struct server_config *params)
 {
     params->port = 8888;
-    params->clt_timeout = 3;
+    params->clt_timeout = 3000;
 }
 
 void others_params_all_init(struct rov_info *params)

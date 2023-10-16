@@ -374,14 +374,6 @@ int32_t WitReadReg(jy901_handle_t *handle, uint32_t uiReg, uint32_t uiReadNum)
     return WIT_HAL_OK;
 }
 
-int32_t WitInit(jy901_handle_t *handle)
-{
-    if (handle->SerialInit() != 0)
-        return WIT_HAL_ERROR;
-    return WIT_HAL_OK;
-}
-
-
 void WitDeInit(jy901_handle_t *handle)
 {
     memset(handle, 0, sizeof(jy901_handle_t));

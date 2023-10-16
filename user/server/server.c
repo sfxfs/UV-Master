@@ -4,6 +4,7 @@
 #include <pthread.h>
 #include <sys/time.h>
 #include <jsonrpc-c.h>
+#include <mln_event.h>
 
 #include "handler/control.h"
 #include "handler/debug.h"
@@ -11,6 +12,7 @@
 #include "server.h"
 
 static struct jrpc_server server = {0};
+static mln_event_t *ev = NULL;
 
 /**
  * @brief 注册信息相关的回调函数
@@ -72,46 +74,33 @@ void *server_thread(void *arg)
     return NULL;
 }
 
-static struct rov_info* _info_in_rpc = NULL;
-void check_lose_status(int signo)
+void *check_lose_thread(void *arg)
 {
-    if (_info_in_rpc == NULL)
+    for (;;)
+        mln_event_dispatch(ev);
+    return NULL;
+}
+
+static void check_lose_status(mln_event_t *ev, void *data)
+{
+    rov_info_t *info = (rov_info_t *)data;
+    if (info == NULL)
     {
         return;
     }
 
-    if (_info_in_rpc->devCtl.lose_clt_flag == 0)
+    if (info->devCtl.lose_clt_flag == 0)
     {
-        _info_in_rpc->devCtl.lose_clt_flag = 1;
+        info->devCtl.lose_clt_flag = 1;
     } else
     {
-        _info_in_rpc->rocket.x = 0;
-        _info_in_rpc->rocket.y = 0;
-        _info_in_rpc->rocket.z = 0;
-        _info_in_rpc->rocket.yaw = 0;
+        info->rocket.x = 0;
+        info->rocket.y = 0;
+        info->rocket.z = 0;
+        info->rocket.yaw = 0;
     }
-}
-
-int jsonrpc_set_timeout_value(struct rov_info* info)
-{
-    _info_in_rpc = info;
-    signal(SIGALRM, check_lose_status);
-
-    struct itimerval tick = {0};
-    // Timeout to run first time
-    tick.it_value.tv_sec = 30;
-    tick.it_value.tv_usec = 0;
-
-    // After first, the Interval time for clock
-    tick.it_interval.tv_sec = info->server.clt_timeout;
-    tick.it_interval.tv_usec = 0;
-
-    if (setitimer(ITIMER_REAL, &tick, NULL) < 0)
-    {
-        log_e("failed to start lose status check");
-        return -1;
-    }
-    return 0;
+    if (info->server.clt_timeout)
+        mln_event_timer_set(ev, info->server.clt_timeout, data, check_lose_status);
 }
 
 /**
@@ -134,8 +123,28 @@ int jsonrpc_server_run(struct rov_info* info)
     }
     pthread_detach(info->thread.tid.rpc_server);
 
-    if (jsonrpc_set_timeout_value(info) != 0)
-        return -1;
+    if (info->server.clt_timeout)
+    {
+        ev = mln_event_new();
+        if (ev == NULL)
+        {
+            log_e("event init failed");
+            return -1;
+        }
+
+        if (mln_event_timer_set(ev, info->server.clt_timeout, info, check_lose_status) < 0)
+        {
+            log_e("timer set failed");
+            return -1;
+        }
+
+        if (pthread_create(&info->thread.tid.loss_status_check, NULL, check_lose_thread, NULL) != 0)
+        {
+            log_e("loss check thread start failed");
+            return -1;
+        }
+        pthread_detach(info->thread.tid.loss_status_check);
+    }
 
     return 0;
 }
@@ -147,19 +156,8 @@ int jsonrpc_server_run(struct rov_info* info)
 int jsonrpc_server_stop()
 {
     log_i("stop service");
-    struct itimerval tick = {0};
-    //Timeout to run first time
-    tick.it_value.tv_sec = 0;
-    tick.it_value.tv_usec = 0;
 
-    //After first, the Interval time for clock
-    tick.it_interval.tv_sec = 0;
-    tick.it_interval.tv_usec = 0;
-
-    if(setitimer(ITIMER_REAL, &tick, NULL) < 0)
-    {
-        log_e("failed to stop lose status check");
-    }
+    mln_event_free(ev);
 
     return jrpc_server_stop(&server);
 }

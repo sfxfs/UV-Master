@@ -101,7 +101,6 @@ typedef enum
 
 typedef struct jy901_handle_s
 {
-    int (*SerialInit)(void);
     void (*SerialWrite)(uint8_t *p_ucData, uint32_t uiLen);
     void (*DelaymsCb)(unsigned int ucMs);
     float fAcc[3];
@@ -118,7 +117,6 @@ typedef struct jy901_handle_s
 void WitSerialDataIn(jy901_handle_t *handle, uint8_t ucData);
 int32_t WitWriteReg(jy901_handle_t *handle, uint32_t uiReg, uint16_t usData);
 int32_t WitReadReg(jy901_handle_t *handle, uint32_t uiReg, uint32_t uiReadNum);
-int32_t WitInit(jy901_handle_t *handle);
 void WitDeInit(jy901_handle_t *handle);
 
 int32_t WitStartAccCali(jy901_handle_t *handle);

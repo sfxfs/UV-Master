@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
+#include <sys/ioctl.h>
 
 #include "uart.h"
 
@@ -179,6 +180,16 @@ Info:
 int uvm_uart_read(HARDWARE_UART dev, char* buf, uint32_t len)
 {
     return read(dev.fd, buf, len);
+}
+
+int uvm_uart_data_avail(HARDWARE_UART dev)
+{
+  int result ;
+
+  if (ioctl (dev.fd, FIONREAD, &result) == -1)
+    return -1 ;
+
+  return result ;
 }
 
 /******************************************************************************

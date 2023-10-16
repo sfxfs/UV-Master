@@ -5,6 +5,10 @@
 
 int jy901_interface_uart_init();
 
-void jy901_interface_uart_write(uint8_t *Data, uint32_t Len);
+void jy901_interface_uart_write(uint8_t *Data, uint32_t Len);\
+
+uint8_t jy901_interface_uart_read();
+
+int jy901_interface_uart_avail();
 
 #endif

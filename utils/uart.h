@@ -17,6 +17,7 @@ int uvm_uart_write(HARDWARE_UART dev, const char * buf, uint32_t len);
 int uvm_uart_read(HARDWARE_UART dev, char* buf, uint32_t len);
 int uvm_uart_writeByte(HARDWARE_UART dev, uint8_t buf);
 int uvm_uart_readByte(HARDWARE_UART dev);
+int uvm_uart_data_avail(HARDWARE_UART dev);
 
 int uvm_uart_Set(HARDWARE_UART *dev, int databits, int stopbits, int parity);
 

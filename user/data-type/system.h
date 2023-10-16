@@ -9,6 +9,7 @@ struct thread_tid
     pthread_t device;
     pthread_t control;
     pthread_t propeller;
+    pthread_t loss_status_check;
 };
 
 struct thread_mutex
