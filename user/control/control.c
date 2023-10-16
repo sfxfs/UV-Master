@@ -10,6 +10,11 @@
 
 #include "control.h"
 
+/**
+ * @brief RPC服务端线程（推进器控制线程）
+ * @param arg 输入推进器控制信息，输入类型为void * （rov_info_t *）
+ * @return NULL
+ */
 void *control_thread(void *arg)
 {
     rov_info_t *info = (rov_info_t *)arg;
@@ -31,6 +36,11 @@ void *control_thread(void *arg)
     return NULL;
 }
 
+/**
+ * @brief 启动推进器控制线程
+ * @param info rov_info结构体参数
+ * @return 0 ：成功  -1：失败
+ */
 int rov_control_run(struct rov_info* info)
 {
     if (pthread_mutex_init(&info->thread.mutex.cal_rocket_output, NULL) != 0)
@@ -48,11 +58,17 @@ int rov_control_run(struct rov_info* info)
     return 0;
 }
 
+/**
+ * @brief 取消推进器控制线程
+ * @param info rov_info结构体参数
+ * @return 0:成功 -1：失败
+ */
 int rov_control_stop(struct rov_info* info)
 {
     if (pthread_cancel(info->thread.tid.control) != 0)
     {
         log_e("cancel thread failed");
+        return -1;
     }
     if (pthread_mutex_destroy(&info->thread.mutex.cal_rocket_output) != 0)
     {
