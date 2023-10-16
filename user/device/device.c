@@ -23,6 +23,10 @@
     function(back_left) \
     function(back_right)
 
+/**
+ * @brief 推进器控制数据写入
+ * @param param propeller_t 结构体参数
+ */
 static void write_to_propeller(propeller_t *param)
 {
     #define PWM_COTROLLER_WRITE(propeller) \
@@ -34,6 +38,11 @@ static void write_to_propeller(propeller_t *param)
     #undef PWM_COTROLLER_WRITE
 }
 
+/**
+ * @brief 推进器线程
+ * @param arg 控制参数信息，void * (rov_info_t)
+ * @return NULL
+ */
 void *propeller_thread(void *arg)
 {
     rov_info_t *info = (rov_info_t *)arg;
@@ -52,17 +61,11 @@ void *propeller_thread(void *arg)
     return NULL;
 }
 
-// void *device_thread(void *arg)
-// {
-//     rov_info_t *info = (rov_info_t *)arg;
-
-//     for (;;)
-//     {
-//     }
-
-//     return NULL;
-// }
-
+/**
+ * @brief 推进器启动
+ * @param info rov_info结构体参数
+ * @return 0:成功 -1：失败
+ */
 int rov_device_run(struct rov_info* info)
 {
     log_i("starting pwm controller");
@@ -94,6 +97,11 @@ int rov_device_run(struct rov_info* info)
     return 0;
 }
 
+/**
+ * @brief 取消推进器控制
+ * @param info rov_info结构体参数
+ * @return 0：成功 -1：失败
+ */
 int rov_device_stop(struct rov_info* info)
 {
     if (pwm_controller_deinit() < -1)
@@ -104,6 +112,7 @@ int rov_device_stop(struct rov_info* info)
     if (pthread_mutex_destroy(&info->thread.mutex.write_propeller) != 0)
     {
         log_e("propeller mutex destroy failed");
+        return -1;
     }
     return 0;
 }

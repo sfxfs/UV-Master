@@ -374,6 +374,11 @@ int32_t WitReadReg(jy901_handle_t *handle, uint32_t uiReg, uint32_t uiReadNum)
     return WIT_HAL_OK;
 }
 
+/**
+ * @brief 初始化函数执行
+ * @param handle jy901_handle_t结构体参数
+ * @return WIT_HAL_OK：成功（0）    WIT_HAL_ERROR：失败（-3）
+ */
 int32_t WitInit(jy901_handle_t *handle)
 {
     if (handle->SerialInit() != 0)

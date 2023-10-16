@@ -7,6 +7,10 @@
 
 static jy901_handle_t jy901_handle = {0};
 
+/**
+ * @brief  jy901串口初始化
+ * @return 0：成功 -1：失败
+ */
 int motion_sensor_init ()
 {
     jy901_handle.SerialInit = jy901_interface_uart_init;
@@ -20,12 +24,22 @@ int motion_sensor_init ()
     return 0;
 }
 
+/**
+ * @brief 按照协议，处理接收数据
+ * @param byte 接收数据
+ * @return 0：成功
+ */
 int motion_sensor_uart_data_in (uint8_t byte)
 {
     WitSerialDataIn(&jy901_handle, byte);
     return 0;
 }
 
+/**
+ * @brief 获取jy901处理后的坐标参数
+ * @param data sensor_t结构体参数
+ * @return 0：成功
+ */
 int motion_sensor_get_data (sensor_t *data)
 {
     data->yaw = jy901_handle.fAngle[2];     //z
