@@ -562,6 +562,14 @@ void jrpc_server_destroy(struct jrpc_server *server){
 	free(server->procedures);
 }
 
+/**
+ * @brief rpc服务器注册procedure
+ * @param server 服务器指针
+ * @param function_pointer 函数指针
+ * @param name 过程名
+ * @param data 过程相关数据
+ * @return 
+ */
 int jrpc_register_procedure(struct jrpc_server *server,
 		jrpc_function function_pointer, char *name, void * data) {
 	int i = server->procedure_count++;

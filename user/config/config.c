@@ -36,7 +36,7 @@ static void rov_info_write_initial_value(struct rov_info* info)
 }
 
 /**
- * @brief 由 cJSON 链表写入配置到文件
+ * @brief 由 cJSON 链表写入配置到config文件
  * @param params json 类型配置数据
  * @return 0：成功  -1：失败
  */
@@ -53,10 +53,17 @@ int rov_config_write_json_to_file(cJSON *params)
     {
         //使用“写入”方式创建文件
         fp = fopen(CONFIG_FILE_PATH, "wt+");
+        if(fp == NULL)
+        {
+            log_e("error in open config file");
+            free(temp);
+            return -1;
+        }
     }
     if (fputs(temp, fp) < 0)   //写入文件
     {
         log_e("error in fputs config file");
+        free(temp);
         return -1;
     }
 
