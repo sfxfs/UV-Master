@@ -81,6 +81,11 @@ void *check_lose_thread(void *arg)
     return NULL;
 }
 
+/**
+ * @brief 检查失联状态
+ * @param ev mln_event_t 事件模块
+ * @param data rov_info_t 结构体参数
+ */
 static void check_lose_status(mln_event_t *ev, void *data)
 {
     rov_info_t *info = (rov_info_t *)data;
@@ -150,14 +155,14 @@ int jsonrpc_server_run(struct rov_info* info)
 }
 
 /**
- * @brief jsonrpc 服务
+ * @brief 停止 jsonrpc 服务
  * @return 成功返回 0，失败返回 -1
  */
 int jsonrpc_server_stop()
 {
     log_i("stop service");
 
-    mln_event_free(ev);
+    mln_event_free(ev);//释放事件模块
 
     return jrpc_server_stop(&server);
 }

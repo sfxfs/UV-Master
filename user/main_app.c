@@ -14,12 +14,19 @@
 
 rov_info_t rovInfo;
 
+/**
+ * @brief 停止rov服务
+ */
 void rov_deinit()
 {
     jsonrpc_server_stop();
     rov_device_stop(&rovInfo);
 }
 
+/**
+ * @brief rov初始化
+ * @param debug_mode 调试模式
+ */
 void rov_init(bool debug_mode)
 {
     if (debug_mode == true)
