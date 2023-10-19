@@ -25,6 +25,11 @@ cJSON* propeller_params_add_to_root(struct propeller_parameters *params)
     return node;
 }
 
+/**
+ * @brief 推进器频率读取（from Cjson）
+ * @param freq propeller.pwm_freq_calibration
+ * @param node Cjson
+ */
 void propeller_freq_read_from_root(uint16_t *freq, cJSON *node)
 {
     if (node == NULL)
