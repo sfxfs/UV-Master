@@ -61,11 +61,7 @@ int rov_config_write_json_to_file(cJSON *params)
         }
     }
     if (fputs(temp, fp) < 0)   //写入文件
-    {
         log_e("error in fputs config file");
-        free(temp);
-        return -1;
-    }
 
     fclose(fp);
     free(temp);
