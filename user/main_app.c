@@ -2,7 +2,7 @@
 // Created by fxf on 23-9-2.
 //
 
-#define LOG_TAG "rov.main"
+#define LOG_TAG "uvm.main"
 
 #include <elog.h>
 #include <stdlib.h>
@@ -12,22 +12,22 @@
 #include "config/config.h"
 #include "control/control.h"
 
-rov_info_t rovInfo;
+rov_info_t uvmInfo;
 
 /**
- * @brief 停止rov服务
+ * @brief 停止uvm服务
  */
-void rov_deinit()
+void uvm_deinit()
 {
     jsonrpc_server_stop();
-    rov_device_stop(&rovInfo);
+    rov_device_stop(&uvmInfo);
 }
 
 /**
- * @brief rov初始化
+ * @brief uvm初始化
  * @param debug_mode 调试模式
  */
-void rov_init(bool debug_mode)
+void uvm_init(bool debug_mode)
 {
     if (debug_mode == true)
     {
@@ -44,26 +44,26 @@ void rov_init(bool debug_mode)
         elog_start();
     }
 
-    if (rov_config_init(&rovInfo) < 0)
+    if (rov_config_init(&uvmInfo) < 0)
         exit(-1);
 
-    if (jsonrpc_server_run(&rovInfo) < 0)
+    if (jsonrpc_server_run(&uvmInfo) < 0)
         exit(-1);
 
-    if (rov_device_run(&rovInfo) < 0)
+    if (rov_device_run(&uvmInfo) < 0)
     {
         jsonrpc_server_stop();
         exit(-1);
     }
 
-    if (rov_control_run(&rovInfo) < 0)
+    if (rov_control_run(&uvmInfo) < 0)
     {
-        rov_deinit();
+        uvm_deinit();
         exit(-1);
     }
 }
 
-void rov_loop()
+void uvm_loop()
 {
     sleep(1);
 }

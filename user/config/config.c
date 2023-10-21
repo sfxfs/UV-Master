@@ -55,13 +55,18 @@ int rov_config_write_json_to_file(cJSON *params)
         fp = fopen(CONFIG_FILE_PATH, "wt+");
         if(fp == NULL)
         {
-            log_e("error in open config file");
+            log_e("error in creating config file");
             free(temp);
             return -1;
         }
     }
     if (fputs(temp, fp) < 0)   //写入文件
+    {
         log_e("error in fputs config file");
+        fclose(fp);
+        free(temp);
+        return -1;
+    }
 
     fclose(fp);
     free(temp);
