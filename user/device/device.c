@@ -24,7 +24,7 @@
     function(back_right)
 
 /**
- * @brief 推进器控制数据写入
+ * @brief 推进器输出
  * @param param propeller_t 结构体参数
  */
 static void write_to_propeller(propeller_t *param)

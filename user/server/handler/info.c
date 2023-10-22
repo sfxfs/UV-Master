@@ -51,7 +51,7 @@ static cJSON *get_rov_debug_info(debug_info_t *info)
 }
 
 /**
- * @brief 链接get_rov_info函数的线程
+ * @brief 链接get_rov_info函数
  * @param ctx 下位机info->sensor的指针
  * @return Cjson object
  */
@@ -61,7 +61,7 @@ cJSON *info_handler(jrpc_context *ctx, cJSON *params, cJSON *id)
 }
 
 /**
- * @brief 链接get_rov_debug_info函数的线程
+ * @brief 链接get_rov_debug_info函数
  * @param ctx 下位机调试状态信息
  * @return Cjson object
  */

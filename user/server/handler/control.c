@@ -37,7 +37,7 @@ static cJSON *move_analysis(cJSON* params, struct rov_info* info, move_mode_t mo
 }
 
 /**
- * @brief 手柄数据处理线程
+ * @brief 手柄数据处理
  * @param ctx 下位机数据（rpc）
  * @param params cJSON数据（上位机提供手柄参数）
  * @param id id
@@ -54,7 +54,7 @@ cJSON *move_syn_handler(jrpc_context *ctx, cJSON *params, cJSON *id)
 }
 
 /**
- * @brief 机械臂数据更新线程
+ * @brief 机械臂数据更新
  * @param ctx 下位机数据（rpc）
  * @param params cJSON数据（上位机提供手柄参数）
  * @param id id
@@ -69,7 +69,7 @@ cJSON *catcher_handler(jrpc_context *ctx, cJSON *params, cJSON *id)
 }
 
 /**
- * @brief 灯光数据更新线程
+ * @brief 灯光数据更新
  * @param ctx 下位机数据（rpc）
  * @param params cJSON数据（上位机提供手柄参数）
  * @param id id
@@ -84,7 +84,7 @@ cJSON *light_handler(jrpc_context *ctx, cJSON *params, cJSON *id)
 }
 
 /**
- * @brief 期望深度更新线程
+ * @brief 期望深度更新
  * @param ctx 下位机数据（rpc）
  * @param params cJSON数据（上位机提供手柄参数）
  * @param id id
@@ -99,7 +99,7 @@ cJSON *depth_handler(jrpc_context *ctx, cJSON *params, cJSON *id)
 }
 
 /**
- * @brief 绝对角度移动线程
+ * @brief 绝对角度移动
  * @param ctx 下位机数据（rpc）
  * @param params cJSON数据（上位机提供手柄参数）
  * @param id id
@@ -111,7 +111,7 @@ cJSON *move_absolute_handler(jrpc_context *ctx, cJSON *params, cJSON *id)
 }
 
 /**
- * @brief 相对角度移动线程
+ * @brief 相对角度移动
  * @param ctx 下位机数据（rpc）
  * @param params cJSON数据（上位机提供手柄参数）
  * @param id id
@@ -123,7 +123,7 @@ cJSON *move_relative_handler(jrpc_context *ctx, cJSON *params, cJSON *id)
 }
 
 /**
- * @brief 方向锁定期望角度更新线程
+ * @brief 方向锁定期望角度更新
  * @param ctx 下位机数据（rpc）
  * @param params cJSON数据（上位机提供参数）
  * @param id id
@@ -138,7 +138,7 @@ cJSON *direction_lock_handler(jrpc_context *ctx, cJSON *params, cJSON *id)
 }
 
 /**
- * @brief 深度锁定期望深度更新线程
+ * @brief 深度锁定期望深度更新
  * @param ctx 下位机数据（rpc）
  * @param params cJSON数据（上位机提供参数）
  * @param id id

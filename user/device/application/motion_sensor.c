@@ -9,6 +9,10 @@
 static jy901_handle_t jy901_handle = {0};
 static mln_event_t *ev = NULL;
 
+/**
+ * @brief jy901姿态获取（yaw/pitch/roll）（to rov_info）
+ * @param data sensor_t结构体参数
+ */
 static void motion_sensor_get_data (sensor_t *data)
 {
     data->yaw = jy901_handle.fAngle[2];     //z
@@ -16,6 +20,12 @@ static void motion_sensor_get_data (sensor_t *data)
     data->roll = jy901_handle.fAngle[0];    //x
 }
 
+/**
+ * @brief 陀螺仪传感器数据读取
+ * @param ev mln_event_t结构体参数（ev为主进程消息相关的事件处理结构）
+ * @param fd 文件描述符
+ * @param data rov_info_t
+ */
 static void motion_sensor_uart_data_read (mln_event_t *ev, int fd, void *data)
 {
     rov_info_t *info = (rov_info_t *)data;
@@ -25,6 +35,11 @@ static void motion_sensor_uart_data_read (mln_event_t *ev, int fd, void *data)
     mln_event_fd_set(ev, fd, M_EV_RECV, M_EV_UNLIMITED, data, motion_sensor_uart_data_read);
 }
 
+/**
+ * @brief 陀螺仪初始化
+ * @param info rov_info_t结构体参数
+ * @return 0：成功 -1：失败
+ */
 int motion_sensor_init (rov_info_t *info)
 {
     int fd = jy901_interface_uart_init();
@@ -50,6 +65,10 @@ int motion_sensor_init (rov_info_t *info)
     return 0;
 }
 
+/**
+ * @brief 启动姿态传感器
+ * @param  void
+ */
 void motion_sensor_run (void)
 {
     mln_event_dispatch(ev);

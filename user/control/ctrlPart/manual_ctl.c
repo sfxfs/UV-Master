@@ -10,6 +10,10 @@
     function(back_left) \
     function(back_right)
 
+/**
+ * @brief 推进器参数限制
+ * @param param propeller_parameters 具体推进器 propeller.which
+ */
 static void limit_propeller_value(struct propeller_parameters *param)
 {
     param->power_cur = param->power_cur * (float)param->enabled * (param->reversed == true ? -1.0f : 1.0f);
@@ -20,6 +24,10 @@ static void limit_propeller_value(struct propeller_parameters *param)
     param->power_cur = constrain(param->power_cur, param->power_negative, param->power_positive);
 }
 
+/**
+ * @brief 各姿态运动写入（to rov_info）
+ * @param info rov_info_t 结构体参数
+ */
 void rov_manual_control(rov_info_t *info)
 {
     #define PROPELLER_VALUE_WRITE(which) \

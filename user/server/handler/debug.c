@@ -9,7 +9,7 @@
 #include "debug.h"
 
 /**
- * @brief 调试模式状态更新线程
+ * @brief 调试模式状态更新
  * @param ctx 下位机数据（rpc）
  * @param params cJSON数据（上位机参数）
  * @param id id
@@ -24,7 +24,7 @@ cJSON *set_debug_mode_enabled_handler(jrpc_context *ctx, cJSON *params, cJSON *i
 }
 
 /**
- * @brief 推进器PWM频率设置线程
+ * @brief 推进器PWM频率设置
  * @param ctx 下位机数据（rpc）
  * @param params cJSON数据（上位机提供参数）
  * @param id id
@@ -39,7 +39,7 @@ cJSON *set_propeller_pwm_freq_calibration_handler(jrpc_context *ctx, cJSON *para
 }
 
 /**
- * @brief 推进器参数更新线程
+ * @brief 推进器参数更新
  * @param ctx 下位机数据（rpc）
  * @param params cJSON数据
  * @param id id
@@ -61,7 +61,7 @@ cJSON *set_propeller_values_handler(jrpc_context *ctx, cJSON *params, cJSON *id)
 }
 
 /**
- * @brief config文件更新线程
+ * @brief config文件更新
  * @param params 机器人配置信息
  * @return item（type = CJSON_NULL）
  */
@@ -72,7 +72,7 @@ cJSON *save_handler(jrpc_context *ctx, cJSON *params, cJSON *id)
 }
 
 /**
- * @brief 读取config配置文件线程
+ * @brief 读取config配置文件
  * @return cjson
  */
 cJSON *load_handler(jrpc_context *ctx, cJSON *params, cJSON *id)
