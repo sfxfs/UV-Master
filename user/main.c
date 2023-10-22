@@ -4,14 +4,14 @@
 #include <unistd.h>
 #include <sys/stat.h>
 
-extern void rov_init(int debug_mode);
-extern void rov_deinit(void);
-extern void rov_loop(void);
+extern void uvm_init(int debug_mode);
+extern void uvm_deinit(void);
+extern void uvm_loop(void);
 
-static void exit_rov(int sig)
+static void exit_uvm(int sig)
 {
     printf("info: closing uv-master app...\n");
-    rov_deinit();
+    uvm_deinit();
     exit(0);
 }
 
@@ -23,7 +23,7 @@ int main(int argc, char **argv)
         exit(0);
     }
 
-    signal(SIGINT, exit_rov);
+    signal(SIGINT, exit_uvm);
 
     char * debug_env = getenv("UV_DEBUG");
     if (debug_env == NULL) {
@@ -37,9 +37,9 @@ int main(int argc, char **argv)
             close(STDOUT_FILENO);
             close(STDERR_FILENO);;
 
-            rov_init(0);
+            uvm_init(0);
             for (;;) {
-                rov_loop();
+                uvm_loop();
             }
         }
     } else {
@@ -50,9 +50,9 @@ int main(int argc, char **argv)
                 " \\___/  \\_/   \\/    \\/\\__,_|___/\\__\\___|_|   \n"
                 "                                             \n");
         printf("info: starting uv-master app...\n");
-        rov_init(1);
+        uvm_init(1);
         for (;;) {
-            rov_loop();
+            uvm_loop();
         }
     }
 
