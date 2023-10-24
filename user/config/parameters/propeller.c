@@ -10,9 +10,11 @@
  * @param params propeller_parameters结构体参数
  * @return Json对象
  */
-cJSON* propeller_params_add_to_root(struct propeller_parameters *params)
+cJSON* propeller_params_add_to_root(propeller_attr_t *params)
 {
     cJSON* node = cJSON_CreateObject();
+    if (node == NULL)
+        return NULL;
 
     cJSON_AddItemToObject(node, "reversed", params->reversed == 1 ? cJSON_CreateTrue() : cJSON_CreateFalse());
     cJSON_AddItemToObject(node, "enabled", params->enabled == 1 ? cJSON_CreateTrue() : cJSON_CreateFalse());
@@ -42,7 +44,7 @@ void propeller_freq_read_from_root(uint16_t *freq, cJSON *node)
  * @param params propeller_parameters结构体参数
  * @param node Json对象
  */
-void propeller_params_read_from_root(struct propeller_parameters *params, cJSON *node)
+void propeller_params_read_from_root(propeller_attr_t *params, cJSON *node)
 {
     if (node == NULL)
         return;
@@ -68,7 +70,7 @@ void propeller_params_init_freq(uint16_t *params)
  * @brief 单个推进器参数初始化
  * @param params propeller_parameters结构体参数
  */
-void propeller_params_init(struct propeller_parameters *params)
+void propeller_params_init(propeller_attr_t *params)
 {
     params->enabled = 1;
     params->reversed = 0;
@@ -98,6 +100,8 @@ void propeller_params_all_init(propeller_t *params)
 cJSON* propeller_params_write(struct rov_info* info)
 {
     cJSON *root = cJSON_CreateObject();
+    if (root == NULL)
+        return NULL;
 
     cJSON_AddNumberToObject(root, "pwm_freq_calibration", info->propeller.pwm_freq_calibration);
     cJSON_AddItemToObject(root, "front_right", propeller_params_add_to_root(&info->propeller.front_right));

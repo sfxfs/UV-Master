@@ -9,7 +9,7 @@
  * @param sensor_data sensor_t结构体参数
  * @return cjson
  */
-static cJSON *get_rov_info(sensor_t *sensor_data)
+static cJSON *get_rov_info(sensorDev_info_t *sensor_data)
 {
     cJSON* cjson_info = NULL;
     cjson_info = cJSON_CreateObject();
@@ -34,23 +34,6 @@ static cJSON *get_rov_info(sensor_t *sensor_data)
 }
 
 /**
- * @brief rov调试状态项目生成（form debug_info_t to Cjson）
- * @param info debug_info_t结构体参数
- * @return Cjson object
- */
-static cJSON *get_rov_debug_info(debug_info_t *info)
-{
-    cJSON* cjson_pid_feedbacks = cJSON_CreateObject();
-    cJSON* cjson_pid_control_loops = cJSON_CreateObject();
-
-    cJSON_AddNumberToObject(cjson_pid_control_loops, "depth_lock", info->depth_diffen);
-    cJSON_AddNumberToObject(cjson_pid_control_loops, "direction_lock", info->yaw_diffen);
-    cJSON_AddItemToObject(cjson_pid_feedbacks, "control_loops", cjson_pid_control_loops);
-
-    return cjson_pid_feedbacks;
-}
-
-/**
  * @brief 链接get_rov_info函数
  * @param ctx 下位机info->sensor的指针
  * @return Cjson object
@@ -67,7 +50,7 @@ cJSON *info_handler(jrpc_context *ctx, cJSON *params, cJSON *id)
  */
 cJSON *debug_info_handler(jrpc_context *ctx, cJSON *params, cJSON *id)
 {
-    return get_rov_debug_info(ctx->data);
+    return cJSON_CreateNull();
 }
 
 /**

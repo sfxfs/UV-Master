@@ -54,7 +54,6 @@ void *propeller_thread(void *arg)
 
     for (;;)
     {
-        pthread_mutex_lock(&info->thread.mutex.write_propeller);
         write_to_propeller(&info->propeller);
     }
 
@@ -74,25 +73,13 @@ int rov_device_run(struct rov_info* info)
         log_e("pwm controller init failed");
         return -1;
     }
-    if (pthread_mutex_init(&info->thread.mutex.write_propeller, NULL) != 0)
-    {
-        log_e("cannot init propeller mutex");
-        return -1;
-    }
 
-    if (pthread_create(&info->thread.tid.propeller, NULL, propeller_thread, info) != 0)
+    if (pthread_create(&info->system.device.main_tid, NULL, propeller_thread, info) != 0)
     {
         log_e("propeller thread start failed");
         return -1;
     }
-    pthread_detach(info->thread.tid.propeller);
-
-    // log_i("starting thread");
-    // if (pthread_create(&info->thread.tid.device, NULL, device_thread, info) != 0)
-    // {
-    //     log_e("thread start failed");
-    // }
-    // pthread_detach(info->thread.tid.device);
+    pthread_detach(info->system.device.main_tid);
 
     return 0;
 }
@@ -107,11 +94,6 @@ int rov_device_stop(struct rov_info* info)
     if (pwm_controller_deinit() < -1)
     {
         log_e("pwm controller deinit failed");
-        return -1;
-    }
-    if (pthread_mutex_destroy(&info->thread.mutex.write_propeller) != 0)
-    {
-        log_e("propeller mutex destroy failed");
         return -1;
     }
     return 0;

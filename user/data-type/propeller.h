@@ -4,28 +4,30 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-struct propeller_parameters
+typedef struct propeller_attr
 {
-    uint8_t enabled : 1;
-    uint8_t reversed : 1;
+    float power_cur;    // -1.0 ~ 1.0
+    float power_last;   // -1.0 ~ 1.0
+    int power_debug;    // -500 ~ 500 us
+
+    bool enabled;
+    bool reversed;
     int channel;
-    int deadzone_upper;  // 0 ~ 500
-    int deadzone_lower;  // 0 ~ -500
+    int deadzone_upper;  // 0 ~ 500 us
+    int deadzone_lower;  // 0 ~ -500 us
     float power_negative;
     float power_positive;
-    float power_cur;   // -1.0 ~ 1.0
-    float power_last;
-};
+} propeller_attr_t;
 
 typedef struct propeller
 {
     uint16_t pwm_freq_calibration;
-    struct propeller_parameters front_left;
-    struct propeller_parameters front_right;
-    struct propeller_parameters center_left;
-    struct propeller_parameters center_right;
-    struct propeller_parameters back_left;
-    struct propeller_parameters back_right;
+    struct propeller_attr front_left;
+    struct propeller_attr front_right;
+    struct propeller_attr center_left;
+    struct propeller_attr center_right;
+    struct propeller_attr back_left;
+    struct propeller_attr back_right;
 } propeller_t;
 
 #endif

@@ -13,7 +13,7 @@ static mln_event_t *ev = NULL;
  * @brief jy901姿态获取（yaw/pitch/roll）（to rov_info）
  * @param data sensor_t结构体参数
  */
-static void motion_sensor_get_data (sensor_t *data)
+static void motion_sensor_get_data (sensorDev_info_t *data)
 {
     data->yaw = jy901_handle.fAngle[2];     //z
     data->pitch = jy901_handle.fAngle[1];   //y
@@ -31,7 +31,7 @@ static void motion_sensor_uart_data_read (mln_event_t *ev, int fd, void *data)
     rov_info_t *info = (rov_info_t *)data;
     while (jy901_interface_uart_avail())
         WitSerialDataIn(&jy901_handle, jy901_interface_uart_read());
-    motion_sensor_get_data(&info->sensor);
+    motion_sensor_get_data(&info->device.sensor);
     mln_event_fd_set(ev, fd, M_EV_RECV, M_EV_UNLIMITED, data, motion_sensor_uart_data_read);
 }
 

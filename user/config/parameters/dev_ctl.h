@@ -8,11 +8,11 @@
 #include <cJSON.h>
 #include "data_define.h"
 
-cJSON* dev_ctl_params_add_to_root(struct pwmDev_parameters *params);
-void dev_ctl_params_read_from_root(struct pwmDev_parameters *params, cJSON *node);
-void dev_ctl_params_init(struct pwmDev_parameters *params);
+cJSON* dev_ctl_params_add_to_root(pwmDev_attr_t *params);
+void dev_ctl_params_read_from_root(pwmDev_attr_t *params, cJSON *node);
+void dev_ctl_params_init(pwmDev_attr_t *params);
 
-void dev_ctl_params_all_init(dev_ctl_t *params);
+void dev_ctl_params_all_init(device_t *params);
 cJSON* dev_ctl_params_write(struct rov_info* info);
 void dev_ctl_params_read(struct rov_info* info, cJSON *node);
 
