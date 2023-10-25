@@ -10,6 +10,8 @@
 cJSON *server_params_add_to_root(struct server_config *params)
 {
     cJSON* node = cJSON_CreateObject();
+    if (node == NULL)
+        return NULL;
 
     cJSON_AddNumberToObject(node, "port", params->port);
     cJSON_AddNumberToObject(node, "timeout", params->clt_timeout);
@@ -46,7 +48,7 @@ void server_params_init(struct server_config *params)
  */
 void others_params_all_init(struct rov_info *params)
 {
-    server_params_init(&params->server);
+    server_params_init(&params->system.server.config);
 }
 
 /**
@@ -57,8 +59,10 @@ void others_params_all_init(struct rov_info *params)
 cJSON *others_params_write(struct rov_info *info)
 {
     cJSON *root = cJSON_CreateObject();
+    if (root == NULL)
+        return NULL;
 
-    cJSON_AddItemToObject(root, "server", server_params_add_to_root(&info->server));
+    cJSON_AddItemToObject(root, "server", server_params_add_to_root(&info->system.server.config));
 
     return root;
 }
@@ -72,5 +76,5 @@ void others_params_read(struct rov_info *info, cJSON *node)
 {
     if (node == NULL)
         return;
-    server_params_read_from_root(&info->server, cJSON_GetObjectItem(node, "server"));
+    server_params_read_from_root(&info->system.server.config, cJSON_GetObjectItem(node, "server"));
 }

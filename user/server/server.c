@@ -20,8 +20,8 @@ static mln_event_t *ev = NULL;
  */
 static void info_handler_reg(struct rov_info* info)
 {
-    jrpc_register_procedure(&server, info_handler, "get_info", &info->sensor);
-    jrpc_register_procedure(&server, debug_info_handler, "get_feedbacks", &info->debugInfo);
+    jrpc_register_procedure(&server, info_handler, "get_info", &info->device.sensor);
+    jrpc_register_procedure(&server, debug_info_handler, "get_feedbacks", NULL);
     jrpc_register_procedure(&server, update_handler, "update_firmware", NULL);
 }
 
@@ -31,15 +31,14 @@ static void info_handler_reg(struct rov_info* info)
  */
 static void control_handler_reg(struct rov_info* info)
 {
-    jrpc_register_procedure(&server, move_asyn_handler, "move_asyn", info);
     jrpc_register_procedure(&server, move_syn_handler, "move", info);
     jrpc_register_procedure(&server, move_absolute_handler, "move_absolute", info);
     jrpc_register_procedure(&server, move_relative_handler, "move_relative", info);
-    jrpc_register_procedure(&server, catcher_handler, "catch", &info->devCtl);
-    jrpc_register_procedure(&server, light_handler, "light", &info->devCtl);
-    jrpc_register_procedure(&server, depth_handler, "depth", &info->debugInfo);
-    jrpc_register_procedure(&server, direction_lock_handler, "set_direction_locked", &info->devCtl);
-    jrpc_register_procedure(&server, depth_lock_handler, "set_depth_locked", &info->devCtl);
+    jrpc_register_procedure(&server, catcher_handler, "catch", NULL);
+    jrpc_register_procedure(&server, light_handler, "light", NULL);
+    jrpc_register_procedure(&server, depth_handler, "depth", NULL);
+    jrpc_register_procedure(&server, direction_lock_handler, "set_direction_locked", NULL);
+    jrpc_register_procedure(&server, depth_lock_handler, "set_depth_locked", NULL);
 }
 
 /**
@@ -48,7 +47,7 @@ static void control_handler_reg(struct rov_info* info)
  */
 static void debug_handler_reg(struct rov_info* info)
 {
-    jrpc_register_procedure(&server, set_debug_mode_enabled_handler, "set_debug_mode_enabled", &info->devCtl);
+    jrpc_register_procedure(&server, set_debug_mode_enabled_handler, "set_debug_mode_enabled", NULL);
     jrpc_register_procedure(&server, set_propeller_pwm_freq_calibration_handler, "set_propeller_pwm_freq_calibration", info);
     jrpc_register_procedure(&server, set_propeller_values_handler, "set_propeller_values", info);
     jrpc_register_procedure(&server, load_handler, "load_parameters", info);
@@ -94,18 +93,21 @@ static void check_lose_status(mln_event_t *ev, void *data)
         return;
     }
 
-    if (info->devCtl.lose_clt_flag == 0)
+    pthread_mutex_lock(&info->system.server.loss_status_mtx);
+    if (info->control.flag.lose_clt == false)
     {
-        info->devCtl.lose_clt_flag = 1;
+        info->control.flag.lose_clt = true;
     } else
     {
-        info->rocket.x = 0;
-        info->rocket.y = 0;
-        info->rocket.z = 0;
-        info->rocket.yaw = 0;
+        info->rocket.L_LR.value = 0;
+        info->rocket.L_UD.value = 0;
+        info->rocket.R_LR.value = 0;
+        info->rocket.R_UD.value = 0;
     }
-    if (info->server.clt_timeout)
-        mln_event_timer_set(ev, info->server.clt_timeout, data, check_lose_status);
+    pthread_mutex_unlock(&info->system.server.loss_status_mtx);
+
+    if (info->system.server.config.clt_timeout)
+        mln_event_timer_set(ev, info->system.server.config.clt_timeout, data, check_lose_status);
 }
 
 /**
@@ -116,20 +118,24 @@ static void check_lose_status(mln_event_t *ev, void *data)
  */
 int jsonrpc_server_run(struct rov_info* info)
 {
-    if (jrpc_server_init(&server, info->server.port) != 0) {
+    pthread_cond_init(&info->system.server.recv_cmd_cond, NULL);
+
+    if (jrpc_server_init(&server, info->system.server.config.port) != 0) {
         log_e("init failed");
         return -1;
     }
     log_i("starting thread");
-    if (pthread_create(&info->thread.tid.rpc_server, NULL, server_thread, info) != 0)
+    if (pthread_create(&info->system.server.main_tid, NULL, server_thread, info) != 0)
     {
         log_e("thread start failed");
         return -1;
     }
-    pthread_detach(info->thread.tid.rpc_server);
+    pthread_detach(info->system.server.main_tid);
 
-    if (info->server.clt_timeout)
+    if (info->system.server.config.clt_timeout)
     {
+        pthread_mutex_init(&info->system.server.loss_status_mtx, NULL);
+
         ev = mln_event_new();
         if (ev == NULL)
         {
@@ -137,18 +143,18 @@ int jsonrpc_server_run(struct rov_info* info)
             return -1;
         }
 
-        if (mln_event_timer_set(ev, info->server.clt_timeout, info, check_lose_status) < 0)
+        if (mln_event_timer_set(ev, info->system.server.config.clt_timeout, info, check_lose_status) < 0)
         {
             log_e("timer set failed");
             return -1;
         }
 
-        if (pthread_create(&info->thread.tid.loss_status_check, NULL, check_lose_thread, NULL) != 0)
+        if (pthread_create(&info->system.server.loss_status_check_tid, NULL, check_lose_thread, NULL) != 0)
         {
             log_e("loss check thread start failed");
             return -1;
         }
-        pthread_detach(info->thread.tid.loss_status_check);
+        pthread_detach(info->system.server.loss_status_check_tid);
     }
 
     return 0;

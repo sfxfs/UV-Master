@@ -4,33 +4,36 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-struct power_dir
+typedef struct rocket_button_attr
 {
-    uint8_t reversed;
-    float p;
-    float n;
-};
+    bool triggered;
+    int value;
+} rocket_button_attr_t;
 
-struct r2p_ratio
+typedef struct rocket_propeller_attr
 {
-    struct power_dir front_left;
-    struct power_dir front_right;
-    struct power_dir center_left;
-    struct power_dir center_right;
-    struct power_dir back_left;
-    struct power_dir back_right;
-};
+    float ratio_p;
+    float ratio_n;
+    bool reversed;
+} rocket_propeller_attr_t;
+
+typedef struct rocket_axis_attr
+{
+    float value;
+    struct rocket_propeller_attr front_left;
+    struct rocket_propeller_attr front_right;
+    struct rocket_propeller_attr center_left;
+    struct rocket_propeller_attr center_right;
+    struct rocket_propeller_attr back_left;
+    struct rocket_propeller_attr back_right;
+} rocket_axis_attr_t;
 
 typedef struct rocket
 {
-    float x;  //左右
-    float y;  //前后
-    float z;  //上下
-    float yaw;//旋转
-    struct r2p_ratio ratio_x;
-    struct r2p_ratio ratio_y;
-    struct r2p_ratio ratio_z;
-    struct r2p_ratio ratio_yaw;
+    struct rocket_axis_attr L_UD;   // 左摇杆 上下轴
+    struct rocket_axis_attr L_LR;   // 左摇杆 左右轴
+    struct rocket_axis_attr R_UD;   // 右摇杆 上下轴
+    struct rocket_axis_attr R_LR;   // 右摇杆 左右轴
 } rocket_t;
 
 #endif

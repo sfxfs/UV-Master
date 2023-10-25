@@ -10,7 +10,6 @@
 #include <unistd.h>
 #include <string.h>
 #include "parameters/others.h"
-#include "parameters/pid_ctl.h"
 #include "parameters/dev_ctl.h"
 #include "parameters/propeller.h"
 #include "parameters/rocket_ratio.h"
@@ -30,8 +29,7 @@ static void rov_info_write_initial_value(struct rov_info* info)
 
     propeller_params_all_init(&info->propeller);
     rocket_ratio_params_all_init(&info->rocket);
-    pid_ctl_params_all_init(&info->pidScale);
-    dev_ctl_params_all_init(&info->devCtl);
+    dev_ctl_params_all_init(&info->device);
     others_params_all_init(info);
 }
 
@@ -83,7 +81,6 @@ int rov_config_write_to_file(struct rov_info* info)
     cJSON* params = cJSON_CreateObject();
 
     cJSON_AddItemToObject(params, "propeller_params", propeller_params_write(info));
-    cJSON_AddItemToObject(params, "pid_clt_params", pid_ctl_params_write(info));
     cJSON_AddItemToObject(params, "dev_ctl_params", dev_ctl_params_write(info));
     cJSON_AddItemToObject(params, "rocket_ratio_params", rocket_ratio_params_write(info));
     cJSON_AddItemToObject(params, "others_config_params", others_params_write(info));
@@ -136,7 +133,6 @@ int rov_config_read_from_file(struct rov_info* info)
     if (params != NULL) // propeller_parameters 非空，解析
     {
         propeller_params_read(info, cJSON_GetObjectItem(params, "propeller_params"));
-        pid_ctl_params_read(info, cJSON_GetObjectItem(params, "pid_clt_params"));
         dev_ctl_params_read(info, cJSON_GetObjectItem(params, "dev_params"));
         rocket_ratio_params_read(info, cJSON_GetObjectItem(params, "rocket_ratio_params"));
         others_params_read(info, cJSON_GetObjectItem(params, "others_config_params"));

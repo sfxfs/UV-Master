@@ -4,13 +4,33 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-typedef struct sensor
+typedef struct pwmDev_attr
 {
-    float depth;
+    bool enabled;
+    int cur;
+    int channel;
+    int pMax;
+    int nMax;
+    int reset;
+    int step;
+} pwmDev_attr_t;
+
+typedef struct sensorDev_info
+{
     float pitch;
     float roll;
     float yaw;
+
+    float depth;
     float temperature;
-} sensor_t;
+} sensorDev_info_t;
+
+typedef struct device
+{
+    struct pwmDev_attr arm;
+    struct pwmDev_attr light;
+    struct sensorDev_info sensor;
+} device_t;
+
 
 #endif

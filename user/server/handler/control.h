@@ -17,7 +17,6 @@ typedef enum pwm_mode
     pwm_nMove,
 } pwm_mode_t;
 
-cJSON *move_asyn_handler        (jrpc_context *ctx, cJSON *params, cJSON *id);
 cJSON *move_syn_handler         (jrpc_context *ctx, cJSON *params, cJSON *id);
 cJSON *catcher_handler          (jrpc_context *ctx, cJSON *params, cJSON *id);
 cJSON *light_handler            (jrpc_context *ctx, cJSON *params, cJSON *id);

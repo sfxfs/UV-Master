@@ -48,14 +48,14 @@ void *propeller_thread(void *arg)
     rov_info_t *info = (rov_info_t *)arg;
 
     for (int i = 0; i < 16; i++)
-    {
         pwm_controller_write(i, 0, 0);
-    }
+
 
     for (;;)
     {
-        pthread_mutex_lock(&info->thread.mutex.write_propeller);
+        pthread_mutex_lock(&info->system.device.power_output_mtx);
         write_to_propeller(&info->propeller);
+        pthread_mutex_unlock(&info->system.device.power_output_mtx);
     }
 
     return NULL;
@@ -68,31 +68,21 @@ void *propeller_thread(void *arg)
  */
 int rov_device_run(struct rov_info* info)
 {
+    pthread_mutex_init(&info->system.device.power_output_mtx, NULL);
+
     log_i("starting pwm controller");
     if (pwm_controller_init(PCA9685_ADDRESS_A000000, info->propeller.pwm_freq_calibration) < 0)
     {
         log_e("pwm controller init failed");
         return -1;
     }
-    if (pthread_mutex_init(&info->thread.mutex.write_propeller, NULL) != 0)
-    {
-        log_e("cannot init propeller mutex");
-        return -1;
-    }
 
-    if (pthread_create(&info->thread.tid.propeller, NULL, propeller_thread, info) != 0)
+    if (pthread_create(&info->system.device.main_tid, NULL, propeller_thread, info) != 0)
     {
         log_e("propeller thread start failed");
         return -1;
     }
-    pthread_detach(info->thread.tid.propeller);
-
-    // log_i("starting thread");
-    // if (pthread_create(&info->thread.tid.device, NULL, device_thread, info) != 0)
-    // {
-    //     log_e("thread start failed");
-    // }
-    // pthread_detach(info->thread.tid.device);
+    pthread_detach(info->system.device.main_tid);
 
     return 0;
 }
@@ -107,11 +97,6 @@ int rov_device_stop(struct rov_info* info)
     if (pwm_controller_deinit() < -1)
     {
         log_e("pwm controller deinit failed");
-        return -1;
-    }
-    if (pthread_mutex_destroy(&info->thread.mutex.write_propeller) != 0)
-    {
-        log_e("propeller mutex destroy failed");
         return -1;
     }
     return 0;

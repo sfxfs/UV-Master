@@ -4,39 +4,29 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-struct pwmDev_parameters
+struct status_flag
 {
-    int channel;
-    int pMax;
-    int nMax;
-    int reset;
-    int speed;
+    bool lose_clt;
 };
 
-typedef struct dev_ctl
+struct pid_scale_attr
 {
-    uint8_t depth_lock : 1;
-    uint8_t dir_lock : 1;
-    uint8_t catcher_clt : 2;
-    uint8_t light_clt : 2;
-    uint8_t debug_mode_stat : 1;
-    uint8_t lose_clt_flag : 1;
-    struct pwmDev_parameters light;
-    struct pwmDev_parameters yuntai;
-    struct pwmDev_parameters arm;
-} dev_ctl_t;
+    float Kp;
+    float Ki;
+    float Kd;
+};
 
-typedef struct debug_info
+typedef struct pid_scale
 {
-    float auv_expect_depth;
-    float depth_diffen;
-    float yaw_diffen;
-    int propeller_direct_front_left;
-    int propeller_direct_front_right;
-    int propeller_direct_center_left;
-    int propeller_direct_center_right;
-    int propeller_direct_back_left;
-    int propeller_direct_back_right;
-} debug_info_t;
+    struct pid_scale_attr yaw;
+    struct pid_scale_attr depth;
+} pid_scale_t;
+
+typedef struct control
+{
+    struct status_flag flag;
+    struct pid_scale pid_config;
+} control_t;
+
 
 #endif

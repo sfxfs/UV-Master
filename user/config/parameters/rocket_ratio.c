@@ -10,13 +10,15 @@
  * @param params power_dir结构体参数
  * @return Json对象
  */
-static cJSON* _rocket_dir_add_to_root(struct power_dir params)
+static cJSON* _rocket_dir_add_to_root(rocket_propeller_attr_t params)
 {
     cJSON* node = cJSON_CreateObject();
+    if (node == NULL)
+        return NULL;
 
-    cJSON_AddItemToObject(node, "reversed", params.reversed == 1 ? cJSON_CreateTrue() : cJSON_CreateFalse());
-    cJSON_AddNumberToObject(node, "p", params.p);
-    cJSON_AddNumberToObject(node, "n", params.n);
+    cJSON_AddItemToObject(node, "reversed", params.reversed == true ? cJSON_CreateTrue() : cJSON_CreateFalse());
+    cJSON_AddNumberToObject(node, "ratio_p", params.ratio_p);
+    cJSON_AddNumberToObject(node, "ratio_n", params.ratio_n);
 
     return node;
 }
@@ -26,24 +28,24 @@ static cJSON* _rocket_dir_add_to_root(struct power_dir params)
  * @param params power_dir结构体参数
  * @param node Json对象
  */
-static void _rocket_dir_read_from_root(struct power_dir *params, cJSON *node)
+static void _rocket_dir_read_from_root(rocket_propeller_attr_t *params, cJSON *node)
 {
     if (node == NULL)
         return;
     params->reversed = cjson_value_analysis_int(node, "reversed");
-    params->p = cjson_value_analysis_double(node, "p");
-    params->n = cjson_value_analysis_double(node, "n");
+    params->ratio_p = cjson_value_analysis_double(node, "ratio_p");
+    params->ratio_n = cjson_value_analysis_double(node, "ratio_n");
 }
 
 /**
  * @brief 单个推进器比率初始化（默认0.5倍）
  * @param params power_dir结构体参数
  */
-static void _rocket_dir_params_init(struct power_dir *params)
+static void _rocket_dir_params_init(rocket_propeller_attr_t *params)
 {
     params->reversed = false;
-    params->p = 0.15;
-    params->n = 0.15;
+    params->ratio_p = 0.15;
+    params->ratio_n = 0.15;
 }
 
 /**
@@ -51,9 +53,11 @@ static void _rocket_dir_params_init(struct power_dir *params)
  * @param params r2p_ratio结构体参数
  * @return Json对象
  */
-cJSON* rocket_ratio_params_add_to_root(struct r2p_ratio *params)
+cJSON* rocket_ratio_params_add_to_root(rocket_axis_attr_t *params)
 {
     cJSON* node = cJSON_CreateObject();
+    if (node == NULL)
+        return NULL;
 
     cJSON_AddItemToObject(node, "front_right", _rocket_dir_add_to_root(params->front_right));
     cJSON_AddItemToObject(node, "front_left", _rocket_dir_add_to_root(params->front_left));
@@ -70,7 +74,7 @@ cJSON* rocket_ratio_params_add_to_root(struct r2p_ratio *params)
  * @param params r2p_ratio结构体参数
  * @param node Json对象
  */
-void rocket_ratio_params_read_from_root(struct r2p_ratio *params, cJSON *node)
+void rocket_ratio_params_read_from_root(rocket_axis_attr_t *params, cJSON *node)
 {
     if (node == NULL)
         return;
@@ -86,7 +90,7 @@ void rocket_ratio_params_read_from_root(struct r2p_ratio *params, cJSON *node)
  * @brief 推进器比率初始化（默认0.5倍）
  * @param params r2p_ratio结构体参数
  */
-void rocket_ratio_params_init(struct r2p_ratio *params)
+void rocket_ratio_params_init(rocket_axis_attr_t *params)
 {
     _rocket_dir_params_init(&params->front_right);
     _rocket_dir_params_init(&params->front_left);
@@ -98,10 +102,10 @@ void rocket_ratio_params_init(struct r2p_ratio *params)
 
 void rocket_ratio_params_all_init(rocket_t *params)
 {
-    rocket_ratio_params_init(&params->ratio_x);
-    rocket_ratio_params_init(&params->ratio_y);
-    rocket_ratio_params_init(&params->ratio_z);
-    rocket_ratio_params_init(&params->ratio_yaw);
+    rocket_ratio_params_init(&params->L_UD);
+    rocket_ratio_params_init(&params->L_LR);
+    rocket_ratio_params_init(&params->R_UD);
+    rocket_ratio_params_init(&params->R_LR);
 }
 
 /**
@@ -112,11 +116,13 @@ void rocket_ratio_params_all_init(rocket_t *params)
 cJSON* rocket_ratio_params_write(struct rov_info* info)
 {
     cJSON *root = cJSON_CreateObject();
+    if (root == NULL)
+        return NULL;
 
-    cJSON_AddItemToObject(root, "rx", rocket_ratio_params_add_to_root(&info->rocket.ratio_x));
-    cJSON_AddItemToObject(root, "ry", rocket_ratio_params_add_to_root(&info->rocket.ratio_y));
-    cJSON_AddItemToObject(root, "rz", rocket_ratio_params_add_to_root(&info->rocket.ratio_z));
-    cJSON_AddItemToObject(root, "ryaw", rocket_ratio_params_add_to_root(&info->rocket.ratio_yaw));
+    cJSON_AddItemToObject(root, "L_UD", rocket_ratio_params_add_to_root(&info->rocket.L_UD));
+    cJSON_AddItemToObject(root, "L_LR", rocket_ratio_params_add_to_root(&info->rocket.L_LR));
+    cJSON_AddItemToObject(root, "R_UD", rocket_ratio_params_add_to_root(&info->rocket.R_UD));
+    cJSON_AddItemToObject(root, "R_LR", rocket_ratio_params_add_to_root(&info->rocket.R_LR));
 
     return root;
 }
@@ -130,8 +136,8 @@ void rocket_ratio_params_read(struct rov_info* info, cJSON *node)
 {
     if (node == NULL)
         return;
-    rocket_ratio_params_read_from_root(&info->rocket.ratio_x, cJSON_GetObjectItem(node, "rx"));
-    rocket_ratio_params_read_from_root(&info->rocket.ratio_y, cJSON_GetObjectItem(node, "ry"));
-    rocket_ratio_params_read_from_root(&info->rocket.ratio_z, cJSON_GetObjectItem(node, "rz"));
-    rocket_ratio_params_read_from_root(&info->rocket.ratio_yaw, cJSON_GetObjectItem(node, "ryaw"));
+    rocket_ratio_params_read_from_root(&info->rocket.L_UD, cJSON_GetObjectItem(node, "L_UD"));
+    rocket_ratio_params_read_from_root(&info->rocket.L_LR, cJSON_GetObjectItem(node, "L_LR"));
+    rocket_ratio_params_read_from_root(&info->rocket.R_UD, cJSON_GetObjectItem(node, "R_UD"));
+    rocket_ratio_params_read_from_root(&info->rocket.R_LR, cJSON_GetObjectItem(node, "R_LR"));
 }
