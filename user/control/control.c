@@ -20,7 +20,10 @@ void *control_thread(void *arg)
     rov_info_t *info = (rov_info_t *)arg;
     for (;;)
     {
+        pthread_mutex_lock(&info->system.device.power_output_mtx);
+        pthread_cond_wait(&info->system.server.recv_cmd_cond, &info->system.device.power_output_mtx);
         rov_manual_control(info);
+        pthread_mutex_unlock(&info->system.device.power_output_mtx);
     }
     return NULL;
 }

@@ -31,7 +31,14 @@ static cJSON *move_analysis(cJSON* params, struct rov_info* info, move_mode_t mo
             break;
     }
 
-    info->control.flag.lose_clt = 0;
+    if (info->system.server.config.clt_timeout)
+    {
+        pthread_mutex_lock(&info->system.server.loss_status_mtx);
+        info->control.flag.lose_clt = 0;
+        pthread_mutex_unlock(&info->system.server.loss_status_mtx);
+    }
+
+    pthread_cond_signal(&info->system.server.recv_cmd_cond);
 
     return cJSON_CreateNull();
 }

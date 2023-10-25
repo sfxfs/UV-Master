@@ -93,6 +93,7 @@ static void check_lose_status(mln_event_t *ev, void *data)
         return;
     }
 
+    pthread_mutex_lock(&info->system.server.loss_status_mtx);
     if (info->control.flag.lose_clt == false)
     {
         info->control.flag.lose_clt = true;
@@ -103,6 +104,8 @@ static void check_lose_status(mln_event_t *ev, void *data)
         info->rocket.R_LR.value = 0;
         info->rocket.R_UD.value = 0;
     }
+    pthread_mutex_unlock(&info->system.server.loss_status_mtx);
+
     if (info->system.server.config.clt_timeout)
         mln_event_timer_set(ev, info->system.server.config.clt_timeout, data, check_lose_status);
 }
@@ -115,6 +118,8 @@ static void check_lose_status(mln_event_t *ev, void *data)
  */
 int jsonrpc_server_run(struct rov_info* info)
 {
+    pthread_cond_init(&info->system.server.recv_cmd_cond, NULL);
+
     if (jrpc_server_init(&server, info->system.server.config.port) != 0) {
         log_e("init failed");
         return -1;
@@ -129,6 +134,8 @@ int jsonrpc_server_run(struct rov_info* info)
 
     if (info->system.server.config.clt_timeout)
     {
+        pthread_mutex_init(&info->system.server.loss_status_mtx, NULL);
+
         ev = mln_event_new();
         if (ev == NULL)
         {

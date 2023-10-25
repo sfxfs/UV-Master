@@ -6,6 +6,7 @@
 typedef struct sys_device
 {
     pthread_t main_tid;
+    pthread_mutex_t power_output_mtx;
 } sys_device_t;
 
 struct server_config
@@ -18,6 +19,8 @@ typedef struct sys_server
 {
     pthread_t main_tid;
     pthread_t loss_status_check_tid;
+    pthread_mutex_t loss_status_mtx;
+    pthread_cond_t recv_cmd_cond;
     struct server_config config;
 } sys_server_t;
 
