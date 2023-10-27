@@ -130,7 +130,7 @@ cJSON *rov_config_read_from_file_return_cjson()
 int rov_config_read_from_file(struct rov_info* info)
 {
     cJSON *params = rov_config_read_from_file_return_cjson();
-    if (params != NULL) // propeller_parameters 非空，解析
+    if (params != NULL) // 非空，解析
     {
         propeller_params_read(info, cJSON_GetObjectItem(params, "propeller_params"));
         dev_ctl_params_read(info, cJSON_GetObjectItem(params, "dev_params"));

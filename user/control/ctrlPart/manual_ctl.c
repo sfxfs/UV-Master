@@ -60,3 +60,12 @@ void rov_manual_control(rov_info_t *info)
         CALL_FOR_ALL_PROPELLER(PROPELLER_VALUE_WRITE)
     #undef PROPELLER_VALUE_WRITE
 }
+
+void rov_debug_control(rov_info_t *info)
+{
+    #define PROPELLER_VALUE_WRITE(which) \
+        info->propeller.which.power_cur = (float)info->propeller.which.power_debug / 500.0f;
+
+        CALL_FOR_ALL_PROPELLER(PROPELLER_VALUE_WRITE)
+    #undef PROPELLER_VALUE_WRITE
+}

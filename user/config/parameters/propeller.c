@@ -16,11 +16,11 @@ cJSON* propeller_params_add_to_root(propeller_attr_t *params)
     if (node == NULL)
         return NULL;
 
-    cJSON_AddItemToObject(node, "reversed", params->reversed == 1 ? cJSON_CreateTrue() : cJSON_CreateFalse());
-    cJSON_AddItemToObject(node, "enabled", params->enabled == 1 ? cJSON_CreateTrue() : cJSON_CreateFalse());
+    cJSON_AddItemToObject(node, "reversed", params->reversed == true ? cJSON_CreateTrue() : cJSON_CreateFalse());
+    cJSON_AddItemToObject(node, "enabled", params->enabled == true ? cJSON_CreateTrue() : cJSON_CreateFalse());
     cJSON_AddNumberToObject(node, "channel", params->channel);
-    cJSON_AddNumberToObject(node, "deadzone_lower", params->deadzone_lower);
     cJSON_AddNumberToObject(node, "deadzone_upper", params->deadzone_upper);
+    cJSON_AddNumberToObject(node, "deadzone_lower", params->deadzone_lower);
     cJSON_AddNumberToObject(node, "power_positive", params->power_positive);
     cJSON_AddNumberToObject(node, "power_negative", params->power_negative);
 
@@ -68,12 +68,12 @@ void propeller_params_init_freq(uint16_t *params)
 
 /**
  * @brief 单个推进器参数初始化
- * @param params propeller_parameters结构体参数
+ * @param params propeller_attr_t 结构体参数
  */
 void propeller_params_init(propeller_attr_t *params)
 {
-    params->enabled = 1;
-    params->reversed = 0;
+    params->enabled = true;
+    params->reversed = false;
     params->channel = 0;
     params->deadzone_upper = 25;
     params->deadzone_lower = -25;
@@ -81,6 +81,10 @@ void propeller_params_init(propeller_attr_t *params)
     params->power_negative = 0.4;
 }
 
+/**
+ * @brief 所有推进器参数初始化
+ * @param params propeller_attr_t 结构体参数
+ */
 void propeller_params_all_init(propeller_t *params)
 {
     propeller_params_init_freq(&params->pwm_freq_calibration);

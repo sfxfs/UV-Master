@@ -45,21 +45,21 @@ void uvm_init(bool debug_mode)
     }
 
     if (rov_config_init(&uvmInfo) < 0)
-        exit(-1);
+        exit(EXIT_FAILURE);
 
     if (jsonrpc_server_run(&uvmInfo) < 0)
-        exit(-1);
+        exit(EXIT_FAILURE);
 
     if (rov_device_run(&uvmInfo) < 0)
     {
         jsonrpc_server_stop();
-        exit(-1);
+        exit(EXIT_FAILURE);
     }
 
     if (rov_control_run(&uvmInfo) < 0)
     {
         uvm_deinit();
-        exit(-1);
+        exit(EXIT_FAILURE);
     }
 }
 

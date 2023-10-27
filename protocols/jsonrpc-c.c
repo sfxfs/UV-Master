@@ -508,9 +508,9 @@ static int __jrpc_server_start(struct jrpc_server *server) {
 }
 
 int jrpc_server_init_with_ev_loop(struct jrpc_server *server, 
-        int port_number, struct ev_loop *loop) {
+        int port_number, struct ev_loop *loop_ptr) {
 	memset(server, 0, sizeof(struct jrpc_server));
-	server->loop = loop;
+	server->loop = loop_ptr;
 	server->port_number = port_number;
 	char * debug_level_env = getenv("JRPC_DEBUG");
 	if (debug_level_env == NULL)

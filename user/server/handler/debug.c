@@ -18,7 +18,7 @@ cJSON *set_debug_mode_enabled_handler(jrpc_context *ctx, cJSON *params, cJSON *i
 {
     if (params == NULL)
         return cJSON_CreateNull();
-
+    ((struct status_flag *)ctx->data)->debug_mode = params->child->valueint;
     return cJSON_CreateNull();
 }
 

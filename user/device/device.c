@@ -30,7 +30,7 @@
 static void write_to_propeller(propeller_t *param)
 {
     #define PWM_COTROLLER_WRITE(propeller) \
-        pwm_controller_write(param->propeller.channel, 0.0f, 7.5 + constrain(2.5 * param->propeller.power_cur, -2.5, 2.5));\
+        pwm_controller_write(param->propeller.channel, 0.0f, 7.5f + constrain(2.5f * param->propeller.power_cur, -2.5f, 2.5f));\
         param->propeller.power_last = param->propeller.power_cur;\
         param->propeller.power_cur = 0;
 
@@ -49,7 +49,6 @@ void *propeller_thread(void *arg)
 
     for (int i = 0; i < 16; i++)
         pwm_controller_write(i, 0, 0);
-
 
     for (;;)
     {

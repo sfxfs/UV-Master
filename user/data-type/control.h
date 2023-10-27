@@ -7,6 +7,7 @@
 struct status_flag
 {
     bool lose_clt;
+    bool debug_mode;
 };
 
 struct pid_scale_attr

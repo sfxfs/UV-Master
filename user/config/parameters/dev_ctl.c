@@ -57,6 +57,10 @@ void dev_ctl_params_init(pwmDev_attr_t *params)
     params->step = 50;
 }
 
+/**
+ * @brief 所有PWM设备参数初始化
+ * @param params 结构体参数
+ */
 void dev_ctl_params_all_init(device_t *params)
 {
     dev_ctl_params_init(&params->light);
