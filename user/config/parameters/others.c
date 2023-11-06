@@ -30,14 +30,9 @@ void server_params_read_from_root(struct server_config *params, cJSON *node)
 {
     if (node == NULL)
         return;
-    char *temp = cJSON_GetObjectItem(node, "port")->valuestring;
-    if (temp != NULL)
-    {
-        size_t size = (strlen(temp) + 1) * sizeof(char);    // +1 for '\0'
-        params->port = malloc(size);
-        memset(params->port, '\0', size);
-        strcpy(params->port, temp);
-    }
+    if (params->port != NULL)
+        free(params->port);
+    params->port = cjson_value_analysis_string(node, "port");
     params->clt_timeout = cjson_value_analysis_int(node, "timeout");
 }
 
@@ -47,7 +42,11 @@ void server_params_read_from_root(struct server_config *params, cJSON *node)
  */
 void server_params_init(struct server_config *params)
 {
-    params->port = "8888";
+    if (params->port != NULL)
+        free(params->port);
+    params->port = malloc(5 * sizeof(char));
+    memset(params->port, '\0', 5 * sizeof(char));
+    strcpy(params->port, "8888");
     params->clt_timeout = 3000;
 }
 

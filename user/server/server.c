@@ -54,7 +54,7 @@ static void debug_handler_reg(struct rov_info* info)
     rpc_add_method(&rpc, set_debug_mode_enabled_handler, "set_debug_mode_enabled", NULL);
     rpc_add_method(&rpc, set_propeller_pwm_freq_calibration_handler, "set_propeller_pwm_freq_calibration", info);
     rpc_add_method(&rpc, set_propeller_values_handler, "set_propeller_values", info);
-    rpc_add_method(&rpc, load_handler, "load_parameters", info);
+    rpc_add_method(&rpc, load_handler, "load_parameters", NULL);
     rpc_add_method(&rpc, save_handler, "save_parameters", info);
 }
 

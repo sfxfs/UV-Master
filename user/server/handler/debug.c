@@ -65,7 +65,8 @@ cJSON *set_propeller_values_handler(jrpc_context *ctx, cJSON *params, cJSON *id)
  */
 cJSON *save_handler(jrpc_context *ctx, cJSON *params, cJSON *id)
 {
-    rov_config_write_json_to_file(params);
+    if (rov_config_write_json_to_file(params) == 0)
+        rov_config_read_from_file(ctx->data);
     return cJSON_CreateNull();
 }
 
