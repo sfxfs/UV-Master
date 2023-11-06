@@ -1,5 +1,8 @@
 #include "utils.h"
 
+#include <stdlib.h>
+#include <string.h>
+
 /**
  * @brief 获取 json 内对应值
  * @param params cjson结构体

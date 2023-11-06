@@ -1,8 +1,8 @@
+#include "rpc_cjson.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-#include "rpc_cjson.h"
 
 /**
  * @brief 添加回调方法
