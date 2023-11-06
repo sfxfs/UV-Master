@@ -29,7 +29,8 @@ target_link_libraries(uvmaster
 						uvLogSys
 						uvProtocols
 						uvUtils
+						m
 						pthread
 						i2c
 						gpiod
-						ev)
+						onion)

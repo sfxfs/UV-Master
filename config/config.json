@@ -5,226 +5,209 @@
 			"reversed":	false,
 			"enabled":	true,
 			"channel":	0,
-			"deadzone_lower":	0,
-			"deadzone_upper":	0,
-			"power_positive":	0.400000,
-			"power_negative":	0.400000
+			"deadzone_upper":	25,
+			"deadzone_lower":	-25,
+			"power_positive":	0.40000000596046448,
+			"power_negative":	0.40000000596046448
 		},
 		"front_left":	{
 			"reversed":	false,
 			"enabled":	true,
 			"channel":	0,
-			"deadzone_lower":	0,
-			"deadzone_upper":	0,
-			"power_positive":	0.400000,
-			"power_negative":	0.400000
+			"deadzone_upper":	25,
+			"deadzone_lower":	-25,
+			"power_positive":	0.40000000596046448,
+			"power_negative":	0.40000000596046448
 		},
 		"center_right":	{
 			"reversed":	false,
 			"enabled":	true,
 			"channel":	0,
-			"deadzone_lower":	0,
-			"deadzone_upper":	0,
-			"power_positive":	0.400000,
-			"power_negative":	0.400000
+			"deadzone_upper":	25,
+			"deadzone_lower":	-25,
+			"power_positive":	0.40000000596046448,
+			"power_negative":	0.40000000596046448
 		},
 		"center_left":	{
 			"reversed":	false,
 			"enabled":	true,
 			"channel":	0,
-			"deadzone_lower":	0,
-			"deadzone_upper":	0,
-			"power_positive":	0.400000,
-			"power_negative":	0.400000
+			"deadzone_upper":	25,
+			"deadzone_lower":	-25,
+			"power_positive":	0.40000000596046448,
+			"power_negative":	0.40000000596046448
 		},
 		"back_right":	{
 			"reversed":	false,
 			"enabled":	true,
 			"channel":	0,
-			"deadzone_lower":	0,
-			"deadzone_upper":	0,
-			"power_positive":	0.400000,
-			"power_negative":	0.400000
+			"deadzone_upper":	25,
+			"deadzone_lower":	-25,
+			"power_positive":	0.40000000596046448,
+			"power_negative":	0.40000000596046448
 		},
 		"back_left":	{
 			"reversed":	false,
 			"enabled":	true,
 			"channel":	0,
-			"deadzone_lower":	0,
-			"deadzone_upper":	0,
-			"power_positive":	0.400000,
-			"power_negative":	0.400000
-		}
-	},
-	"pid_clt_params":	{
-		"yaw_lock":	{
-			"p":	0.100000,
-			"i":	0,
-			"d":	0
-		},
-		"depth_lock":	{
-			"p":	0.100000,
-			"i":	0,
-			"d":	0
+			"deadzone_upper":	25,
+			"deadzone_lower":	-25,
+			"power_positive":	0.40000000596046448,
+			"power_negative":	0.40000000596046448
 		}
 	},
 	"dev_ctl_params":	{
-		"light":	{
-			"channel":	0,
-			"pMax":	1000,
-			"nMax":	0,
-			"reset":	500,
-			"speed":	50
-		},
-		"yuntai":	{
-			"channel":	0,
-			"pMax":	1000,
-			"nMax":	0,
-			"reset":	500,
-			"speed":	50
-		},
 		"arm":	{
+			"enabled":	false,
 			"channel":	0,
 			"pMax":	1000,
 			"nMax":	0,
 			"reset":	500,
-			"speed":	50
+			"step":	50
+		},
+		"light":	{
+			"enabled":	false,
+			"channel":	0,
+			"pMax":	1000,
+			"nMax":	0,
+			"reset":	500,
+			"step":	50
 		}
 	},
 	"rocket_ratio_params":	{
-		"rx":	{
+		"L_UD":	{
 			"front_right":	{
 				"reversed":	false,
-				"p":	0.150000,
-				"n":	0.150000
+				"ratio_p":	0.15000000596046448,
+				"ratio_n":	0.15000000596046448
 			},
 			"front_left":	{
 				"reversed":	false,
-				"p":	0.150000,
-				"n":	0.150000
+				"ratio_p":	0.15000000596046448,
+				"ratio_n":	0.15000000596046448
 			},
 			"center_right":	{
 				"reversed":	false,
-				"p":	0.150000,
-				"n":	0.150000
+				"ratio_p":	0.15000000596046448,
+				"ratio_n":	0.15000000596046448
 			},
 			"center_left":	{
 				"reversed":	false,
-				"p":	0.150000,
-				"n":	0.150000
+				"ratio_p":	0.15000000596046448,
+				"ratio_n":	0.15000000596046448
 			},
 			"back_right":	{
 				"reversed":	false,
-				"p":	0.150000,
-				"n":	0.150000
+				"ratio_p":	0.15000000596046448,
+				"ratio_n":	0.15000000596046448
 			},
 			"back_left":	{
 				"reversed":	false,
-				"p":	0.150000,
-				"n":	0.150000
+				"ratio_p":	0.15000000596046448,
+				"ratio_n":	0.15000000596046448
 			}
 		},
-		"ry":	{
+		"L_LR":	{
 			"front_right":	{
 				"reversed":	false,
-				"p":	0.150000,
-				"n":	0.150000
+				"ratio_p":	0.15000000596046448,
+				"ratio_n":	0.15000000596046448
 			},
 			"front_left":	{
 				"reversed":	false,
-				"p":	0.150000,
-				"n":	0.150000
+				"ratio_p":	0.15000000596046448,
+				"ratio_n":	0.15000000596046448
 			},
 			"center_right":	{
 				"reversed":	false,
-				"p":	0.150000,
-				"n":	0.150000
+				"ratio_p":	0.15000000596046448,
+				"ratio_n":	0.15000000596046448
 			},
 			"center_left":	{
 				"reversed":	false,
-				"p":	0.150000,
-				"n":	0.150000
+				"ratio_p":	0.15000000596046448,
+				"ratio_n":	0.15000000596046448
 			},
 			"back_right":	{
 				"reversed":	false,
-				"p":	0.150000,
-				"n":	0.150000
+				"ratio_p":	0.15000000596046448,
+				"ratio_n":	0.15000000596046448
 			},
 			"back_left":	{
 				"reversed":	false,
-				"p":	0.150000,
-				"n":	0.150000
+				"ratio_p":	0.15000000596046448,
+				"ratio_n":	0.15000000596046448
 			}
 		},
-		"rz":	{
+		"R_UD":	{
 			"front_right":	{
 				"reversed":	false,
-				"p":	0.150000,
-				"n":	0.150000
+				"ratio_p":	0.15000000596046448,
+				"ratio_n":	0.15000000596046448
 			},
 			"front_left":	{
 				"reversed":	false,
-				"p":	0.150000,
-				"n":	0.150000
+				"ratio_p":	0.15000000596046448,
+				"ratio_n":	0.15000000596046448
 			},
 			"center_right":	{
 				"reversed":	false,
-				"p":	0.150000,
-				"n":	0.150000
+				"ratio_p":	0.15000000596046448,
+				"ratio_n":	0.15000000596046448
 			},
 			"center_left":	{
 				"reversed":	false,
-				"p":	0.150000,
-				"n":	0.150000
+				"ratio_p":	0.15000000596046448,
+				"ratio_n":	0.15000000596046448
 			},
 			"back_right":	{
 				"reversed":	false,
-				"p":	0.150000,
-				"n":	0.150000
+				"ratio_p":	0.15000000596046448,
+				"ratio_n":	0.15000000596046448
 			},
 			"back_left":	{
 				"reversed":	false,
-				"p":	0.150000,
-				"n":	0.150000
+				"ratio_p":	0.15000000596046448,
+				"ratio_n":	0.15000000596046448
 			}
 		},
-		"ryaw":	{
+		"R_LR":	{
 			"front_right":	{
 				"reversed":	false,
-				"p":	0.150000,
-				"n":	0.150000
+				"ratio_p":	0.15000000596046448,
+				"ratio_n":	0.15000000596046448
 			},
 			"front_left":	{
 				"reversed":	false,
-				"p":	0.150000,
-				"n":	0.150000
+				"ratio_p":	0.15000000596046448,
+				"ratio_n":	0.15000000596046448
 			},
 			"center_right":	{
 				"reversed":	false,
-				"p":	0.150000,
-				"n":	0.150000
+				"ratio_p":	0.15000000596046448,
+				"ratio_n":	0.15000000596046448
 			},
 			"center_left":	{
 				"reversed":	false,
-				"p":	0.150000,
-				"n":	0.150000
+				"ratio_p":	0.15000000596046448,
+				"ratio_n":	0.15000000596046448
 			},
 			"back_right":	{
 				"reversed":	false,
-				"p":	0.150000,
-				"n":	0.150000
+				"ratio_p":	0.15000000596046448,
+				"ratio_n":	0.15000000596046448
 			},
 			"back_left":	{
 				"reversed":	false,
-				"p":	0.150000,
-				"n":	0.150000
+				"ratio_p":	0.15000000596046448,
+				"ratio_n":	0.15000000596046448
 			}
 		}
 	},
 	"others_config_params":	{
 		"server":	{
-			"port":	8888,
-			"timeout":	3
+			"port":	"8888",
+			"timeout":	3000
 		}
 	}
 }

@@ -1,7 +1,7 @@
 #ifndef SERVER_HANDLER_CONTROL_H
 #define SERVER_HANDLER_CONTROL_H
 
-#include <jsonrpc-c.h>
+#include <rpc_cjson.h>
 
 typedef enum move_mode
 {

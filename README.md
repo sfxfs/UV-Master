@@ -5,12 +5,10 @@
 ***本程序使用到的所有开源项目***：
 
 - [cJSON](https://github.com/DaveGamble/cJSON.git) *用于解析 JSON 格式数据*
-- [jsonrpc-c](https://github.com/hmng/jsonrpc-c.git) *tcp 协议的 jsonrpc 服务端*
 - [libgpiod](https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git) *用于驱动芯片的 gpio 外设*
-- [libev](https://github.com/enki/libev.git) *高性能网络事件库*
 - [i2c-tools](https://git.kernel.org/pub/scm/utils/i2c-tools/i2c-tools.git) *用于驱动芯片的 i2c 外设*
 - [Melon](https://github.com/Water-Melon/Melon.git) *C语言扩展功能库*
-- [picohttpparser](https://github.com/h2o/picohttpparser.git) *HTTP 报头解析库*
+- [onion](https://github.com/davidmoreno/onion.git) *简单 HTTP 服务器库*
 - [libdriver](https://github.com/hepingood) *外设驱动库*
 - [EasyLogger](https://github.com/armink/EasyLogger.git) *内存占用小的日志库*
 
@@ -63,3 +61,10 @@
    ```shell
    make
    ```
+
+## 运行
+
+```shell
+sudo ONION_LOG=(noinfo / nodebug / nocolor / syslog) UV_DEBUG=1 ./uvmaster
+```
+

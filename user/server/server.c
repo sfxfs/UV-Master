@@ -3,16 +3,20 @@
 #include <elog.h>
 #include <pthread.h>
 #include <sys/time.h>
-#include <jsonrpc-c.h>
 #include <mln_event.h>
+#include <onion/block.h>
+#include <onion/onion.h>
 
 #include "handler/control.h"
 #include "handler/debug.h"
 #include "handler/info.h"
 #include "server.h"
 
-static struct jrpc_server server = {0};
+static rpc_handle_t rpc = {0};
 static mln_event_t *ev = NULL;
+static onion *o = NULL;
+static onion_url *url = NULL;
+
 
 /**
  * @brief 注册信息相关的回调函数
@@ -20,9 +24,9 @@ static mln_event_t *ev = NULL;
  */
 static void info_handler_reg(struct rov_info* info)
 {
-    jrpc_register_procedure(&server, info_handler, "get_info", &info->device.sensor);
-    jrpc_register_procedure(&server, debug_info_handler, "get_feedbacks", NULL);
-    jrpc_register_procedure(&server, update_handler, "update_firmware", NULL);
+    rpc_add_method(&rpc, info_handler, "get_info", &info->device.sensor);
+    rpc_add_method(&rpc, debug_info_handler, "get_feedbacks", NULL);
+    rpc_add_method(&rpc, update_handler, "update_firmware", NULL);
 }
 
 /**
@@ -31,14 +35,14 @@ static void info_handler_reg(struct rov_info* info)
  */
 static void control_handler_reg(struct rov_info* info)
 {
-    jrpc_register_procedure(&server, move_syn_handler, "move", info);
-    jrpc_register_procedure(&server, move_absolute_handler, "move_absolute", info);
-    jrpc_register_procedure(&server, move_relative_handler, "move_relative", info);
-    jrpc_register_procedure(&server, catcher_handler, "catch", NULL);
-    jrpc_register_procedure(&server, light_handler, "light", NULL);
-    jrpc_register_procedure(&server, depth_handler, "depth", NULL);
-    jrpc_register_procedure(&server, direction_lock_handler, "set_direction_locked", NULL);
-    jrpc_register_procedure(&server, depth_lock_handler, "set_depth_locked", NULL);
+    rpc_add_method(&rpc, move_syn_handler, "move", info);
+    rpc_add_method(&rpc, move_absolute_handler, "move_absolute", info);
+    rpc_add_method(&rpc, move_relative_handler, "move_relative", info);
+    rpc_add_method(&rpc, catcher_handler, "catch", NULL);
+    rpc_add_method(&rpc, light_handler, "light", NULL);
+    rpc_add_method(&rpc, depth_handler, "depth", NULL);
+    rpc_add_method(&rpc, direction_lock_handler, "set_direction_locked", NULL);
+    rpc_add_method(&rpc, depth_lock_handler, "set_depth_locked", NULL);
 }
 
 /**
@@ -47,30 +51,11 @@ static void control_handler_reg(struct rov_info* info)
  */
 static void debug_handler_reg(struct rov_info* info)
 {
-    jrpc_register_procedure(&server, set_debug_mode_enabled_handler, "set_debug_mode_enabled", NULL);
-    jrpc_register_procedure(&server, set_propeller_pwm_freq_calibration_handler, "set_propeller_pwm_freq_calibration", info);
-    jrpc_register_procedure(&server, set_propeller_values_handler, "set_propeller_values", info);
-    jrpc_register_procedure(&server, load_handler, "load_parameters", info);
-    jrpc_register_procedure(&server, save_handler, "save_parameters", info);
-}
-
-/**
- * @brief jsonrpc 线程
- * @param arg 线程传参
- * @return 线程返回值
- */
-void *server_thread(void *arg)
-{
-    rov_info_t *info = (rov_info_t *)arg;
-
-    info_handler_reg(info);
-    control_handler_reg(info);
-    debug_handler_reg(info);
-
-    jrpc_server_run(&server);
-    //running...
-    jrpc_server_destroy(&server);
-    return NULL;
+    rpc_add_method(&rpc, set_debug_mode_enabled_handler, "set_debug_mode_enabled", NULL);
+    rpc_add_method(&rpc, set_propeller_pwm_freq_calibration_handler, "set_propeller_pwm_freq_calibration", info);
+    rpc_add_method(&rpc, set_propeller_values_handler, "set_propeller_values", info);
+    rpc_add_method(&rpc, load_handler, "load_parameters", info);
+    rpc_add_method(&rpc, save_handler, "save_parameters", info);
 }
 
 void *check_lose_thread(void *arg)
@@ -110,6 +95,16 @@ static void check_lose_status(mln_event_t *ev, void *data)
         mln_event_timer_set(ev, info->system.server.config.clt_timeout, data, check_lose_status);
 }
 
+onion_connection_status strip_rpc(void *_, onion_request * req, onion_response * res)
+{
+    const onion_block *dreq = onion_request_get_data(req);
+    char *ret = rpc_process(&rpc, onion_block_data(dreq), onion_block_size(dreq));
+    onion_response_write(res, ret, strlen(ret));
+
+    free(ret);
+    return OCS_PROCESSED;
+}
+
 /**
  * @brief 启动 jsonrpc 服务
  * @param info 含有rov信息的结构体
@@ -120,17 +115,22 @@ int jsonrpc_server_run(struct rov_info* info)
 {
     pthread_cond_init(&info->system.server.recv_cmd_cond, NULL);
 
-    if (jrpc_server_init(&server, info->system.server.config.port) != 0) {
-        log_e("init failed");
-        return -1;
-    }
+    o = onion_new(O_DETACH_LISTEN | O_NO_SIGTERM);
+    onion_set_port(o, info->system.server.config.port);
+    url = onion_root_url(o);
+    onion_url_add(url, "", strip_rpc);
+
+    rpc.debug_level = 2;
+    info_handler_reg(info);
+    control_handler_reg(info);
+    debug_handler_reg(info);
+
     log_i("starting thread");
-    if (pthread_create(&info->system.server.main_tid, NULL, server_thread, info) != 0)
+    if (onion_listen(o) != 0)
     {
         log_e("thread start failed");
         return -1;
     }
-    pthread_detach(info->system.server.main_tid);
 
     if (info->system.server.config.clt_timeout)
     {
@@ -169,6 +169,7 @@ int jsonrpc_server_stop()
     log_i("stop service");
 
     mln_event_free(ev);//释放事件模块
+    onion_free(o);
 
-    return jrpc_server_stop(&server);
+    return 0;
 }

@@ -17,7 +17,7 @@
 #include "config.h"
 
 #define CONFIG_FILE_PATH "config.json"
-#define CONFIG_FILE_LEN 4096
+#define CONFIG_FILE_LEN 6144
 
 /**
  * @brief rov信息初始化

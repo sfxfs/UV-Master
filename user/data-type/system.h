@@ -11,13 +11,12 @@ typedef struct sys_device
 
 struct server_config
 {
-    int port;
+    char *port;
     time_t clt_timeout; // ms
 };
 
 typedef struct sys_server
 {
-    pthread_t main_tid;
     pthread_t loss_status_check_tid;
     pthread_mutex_t loss_status_mtx;
     pthread_cond_t recv_cmd_cond;
