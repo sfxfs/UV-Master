@@ -1,6 +1,8 @@
 #include "utils.h"
-
 #include "others.h"
+
+#include <stdlib.h>
+#include <string.h>
 
 /**
  * @brief 参数转换为Cjson
@@ -13,7 +15,7 @@ cJSON *server_params_add_to_root(struct server_config *params)
     if (node == NULL)
         return NULL;
 
-    cJSON_AddNumberToObject(node, "port", params->port);
+    cJSON_AddStringToObject(node, "port", params->port);
     cJSON_AddNumberToObject(node, "timeout", params->clt_timeout);
 
     return node;
@@ -28,7 +30,9 @@ void server_params_read_from_root(struct server_config *params, cJSON *node)
 {
     if (node == NULL)
         return;
-    params->port = cjson_value_analysis_int(node, "port");
+    if (params->port != NULL)
+        free(params->port);
+    params->port = cjson_value_analysis_string(node, "port");
     params->clt_timeout = cjson_value_analysis_int(node, "timeout");
 }
 
@@ -38,7 +42,11 @@ void server_params_read_from_root(struct server_config *params, cJSON *node)
  */
 void server_params_init(struct server_config *params)
 {
-    params->port = 8888;
+    if (params->port != NULL)
+        free(params->port);
+    params->port = malloc(5 * sizeof(char));
+    memset(params->port, '\0', 5 * sizeof(char));
+    strcpy(params->port, "8888");
     params->clt_timeout = 3000;
 }
 

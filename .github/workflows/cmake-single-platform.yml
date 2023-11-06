@@ -33,7 +33,7 @@ jobs:
 
     - name: Install 3rd lib
       run: |
-          tar zxf ${{github.workspace}}/3rd/armhf-output/ev.tar.gz -C $(pwd)/gcc-linaro-7.5.0-2019.12-x86_64_arm-linux-gnueabihf/arm-linux-gnueabihf/libc/usr
+          tar zxf ${{github.workspace}}/3rd/armhf-output/onion.tar.gz -C $(pwd)/gcc-linaro-7.5.0-2019.12-x86_64_arm-linux-gnueabihf/arm-linux-gnueabihf/libc/usr
           tar zxf ${{github.workspace}}/3rd/armhf-output/gpiod.tar.gz -C $(pwd)/gcc-linaro-7.5.0-2019.12-x86_64_arm-linux-gnueabihf/arm-linux-gnueabihf/libc/usr
           tar zxf ${{github.workspace}}/3rd/armhf-output/i2c.tar.gz -C $(pwd)/gcc-linaro-7.5.0-2019.12-x86_64_arm-linux-gnueabihf/arm-linux-gnueabihf/libc/usr
 
