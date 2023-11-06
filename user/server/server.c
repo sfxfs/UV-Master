@@ -120,7 +120,6 @@ int jsonrpc_server_run(struct rov_info* info)
     url = onion_root_url(o);
     onion_url_add(url, "", strip_rpc);
 
-    rpc.debug_level = 2;
     info_handler_reg(info);
     control_handler_reg(info);
     debug_handler_reg(info);

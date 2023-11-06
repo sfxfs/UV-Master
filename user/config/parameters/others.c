@@ -33,7 +33,7 @@ void server_params_read_from_root(struct server_config *params, cJSON *node)
     char *temp = cJSON_GetObjectItem(node, "port")->valuestring;
     if (temp != NULL)
     {
-        size_t size = (strlen(temp) + 1) * sizeof(char);
+        size_t size = (strlen(temp) + 1) * sizeof(char);    // +1 for '\0'
         params->port = malloc(size);
         memset(params->port, '\0', size);
         strcpy(params->port, temp);
