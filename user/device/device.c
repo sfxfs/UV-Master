@@ -4,16 +4,16 @@
 
 #define LOG_TAG "device.main"
 
+#include "device.h"
+
 #include <elog.h>
 #include <unistd.h>
 #include <pthread.h>
 #include "other_utils.h"
-
-#include "application/pwm_controller.h"
 #include "application/depth_sensor.h"
 #include "application/motion_sensor.h"
+#include "application/pwm_controller.h"
 
-#include "device.h"
 
 #define CALL_FOR_ALL_PROPELLER(function) \
     function(front_left) \

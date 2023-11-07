@@ -1,22 +1,21 @@
 #define LOG_TAG "server.main"
 
+#include "server.h"
+
 #include <elog.h>
 #include <pthread.h>
 #include <sys/time.h>
 #include <mln_event.h>
 #include <onion/block.h>
 #include <onion/onion.h>
-
-#include "handler/control.h"
-#include "handler/debug.h"
 #include "handler/info.h"
-#include "server.h"
+#include "handler/debug.h"
+#include "handler/control.h"
 
 static rpc_handle_t rpc = {0};
 static mln_event_t *ev = NULL;
 static onion *o = NULL;
 static onion_url *url = NULL;
-
 
 /**
  * @brief 注册信息相关的回调函数

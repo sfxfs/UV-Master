@@ -1,8 +1,9 @@
+#include "pid.h"
+
 #include <math.h>
 #include <string.h>
 #include "other_utils.h"
 
-#include "pid.h"
 
 const pid_param_t initial_pid = {                   //初始 pid 参数
         .Expect = 0,                          //期望

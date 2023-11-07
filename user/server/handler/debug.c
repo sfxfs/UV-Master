@@ -33,7 +33,10 @@ cJSON *set_propeller_pwm_freq_calibration_handler(jrpc_context *ctx, cJSON *para
 {
     if (params == NULL)
         return cJSON_CreateNull();
+    rov_info_t *info = (rov_info_t *)ctx->data;
+    pthread_mutex_lock(&info->system.device.power_output_mtx);
     pwm_controller_set_freq((uint16_t)params->child->valueint);
+    pthread_mutex_unlock(&info->system.device.power_output_mtx);
     return cJSON_CreateNull();
 }
 
@@ -54,6 +57,8 @@ cJSON *set_propeller_values_handler(jrpc_context *ctx, cJSON *params, cJSON *id)
     info->propeller.center_right.power_debug = cjson_value_analysis_int(params, "center_right");
     info->propeller.front_left.power_debug  = cjson_value_analysis_int(params, "front_left");
     info->propeller.front_right.power_debug  = cjson_value_analysis_int(params, "front_right");
+
+    pthread_cond_signal(&info->system.server.recv_cmd_cond);
 
     return cJSON_CreateNull();
 }

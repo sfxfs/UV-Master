@@ -116,9 +116,11 @@ static cJSON *rpc_ok(cJSON *result, cJSON *id)
 	cJSON *result_root = cJSON_CreateObject();
 
 	cJSON_AddStringToObject(result_root, "jsonrpc", JRPC_VERSION);
-	if (result)
-		cJSON_AddItemToObject(result_root, "result", result);
-	cJSON_AddItemToObject(result_root, "id", id);
+	cJSON_AddItemToObject(result_root, "result", result);
+	if (id)
+		cJSON_AddItemToObject(result_root, "id", id);
+	else
+		cJSON_AddItemToObject(result_root, "id", cJSON_CreateNull());
 
 	return result_root;
 }
@@ -142,7 +144,10 @@ static cJSON *rpc_err(int code, char *message, cJSON *id)
 
 	cJSON_AddStringToObject(result_root, "jsonrpc", JRPC_VERSION);
 	cJSON_AddItemToObject(result_root, "error", error_root);
-	cJSON_AddItemToObject(result_root, "id", id);
+	if (id)
+		cJSON_AddItemToObject(result_root, "id", id);
+	else
+		cJSON_AddItemToObject(result_root, "id", cJSON_CreateNull());
 
 	return result_root;
 }
@@ -197,6 +202,8 @@ static cJSON *invoke_procedure(rpc_handle_t *handle, char *name, cJSON *params, 
 static cJSON *rpc_invoke_method(rpc_handle_t *handle, cJSON *request)
 {
 	cJSON *method, *params, *id;
+	if (strcmp("2.0", cJSON_GetObjectItem(request, "jsonrpc")->valuestring) != 0)
+		return rpc_err(JRPC_INVALID_REQUEST, "Valid request received: JSONRPC version error.", NULL);
 	method = cJSON_GetObjectItem(request, "method");
 	if (method != NULL && method->type == cJSON_String)
 	{
@@ -219,7 +226,7 @@ static cJSON *rpc_invoke_method(rpc_handle_t *handle, cJSON *request)
 			}
 		}
 	}
-	return rpc_err(JRPC_INVALID_REQUEST, "Valid request received.", NULL);
+	return rpc_err(JRPC_INVALID_REQUEST, "Valid request received: No 'method' member", NULL);
 }
 
 /**
@@ -232,7 +239,7 @@ static cJSON *rpc_invoke_method_array(rpc_handle_t *handle, cJSON *request)
 {
 	int array_size = cJSON_GetArraySize(request);
 	if (array_size <= 0)
-		return rpc_err(JRPC_INVALID_REQUEST, "Valid request received.", NULL);
+		return rpc_err(JRPC_INVALID_REQUEST, "Valid request received: Empty JSON array.", NULL);
 
 	cJSON *return_json_array = cJSON_CreateArray();
 	for (int i = 0; i < array_size; i++)
@@ -252,12 +259,13 @@ char *rpc_process(rpc_handle_t *handle, const char *json_req, size_t req_len)
 {
 	if (handle->debug_level > 1)
 		printf("recv json str:\n%.*s\n", req_len, json_req);
+
 	cJSON *request = cJSON_ParseWithLength(json_req, req_len);
 	if (request == NULL)
 	{
 		if (handle->debug_level > 0)
 			printf("Valid JSON Received\n");
-		return cJSON_PrintUnformatted(rpc_err(JRPC_PARSE_ERROR, "Parse error.", NULL));
+		return cJSON_PrintUnformatted(rpc_err(JRPC_PARSE_ERROR, "Parse error: Not in JSON format.", NULL));
 	}
 
 	cJSON *cjson_return = NULL;
@@ -271,7 +279,7 @@ char *rpc_process(rpc_handle_t *handle, const char *json_req, size_t req_len)
 	}
 	else
 	{
-		cjson_return = rpc_err(JRPC_INVALID_REQUEST, "Valid request received.", NULL);
+		cjson_return = rpc_err(JRPC_INVALID_REQUEST, "Valid request received: Not a JSON object or array.", NULL);
 	}
 
 	char *str_return = cJSON_PrintUnformatted(cjson_return);

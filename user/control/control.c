@@ -1,14 +1,14 @@
 #define LOG_TAG "control.main"
 
+#include "control.h"
+
 #include <elog.h>
 #include <unistd.h>
 #include <pthread.h>
-
+#include "ctrlPart/depth_ctl.h"
 #include "ctrlPart/manual_ctl.h"
 #include "ctrlPart/rotate_ctl.h"
-#include "ctrlPart/depth_ctl.h"
 
-#include "control.h"
 
 /**
  * @brief RPC服务端线程（推进器控制线程）

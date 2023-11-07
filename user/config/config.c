@@ -4,6 +4,8 @@
 
 #define LOG_TAG "config.main"
 
+#include "config.h"
+
 #include <elog.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -14,10 +16,8 @@
 #include "parameters/propeller.h"
 #include "parameters/rocket_ratio.h"
 
-#include "config.h"
-
 #define CONFIG_FILE_PATH "config.json"
-#define CONFIG_FILE_LEN 6144
+#define CONFIG_FILE_MAX_LEN 6144
 
 /**
  * @brief rov信息初始化
@@ -108,12 +108,12 @@ cJSON *rov_config_read_from_file_return_cjson()
         return NULL;
     }
 
-    char buf[CONFIG_FILE_LEN] = {0};
-    size_t read_byte = fread(buf, 1, CONFIG_FILE_LEN, fp);
+    char buf[CONFIG_FILE_MAX_LEN] = {0};
+    size_t read_byte = fread(buf, sizeof(char), CONFIG_FILE_MAX_LEN, fp);
     if (fclose(fp) != 0)
-        log_e("cannot close file");
+        log_e("cannot close config file");
     log_i("read %d bytes of config file", read_byte);
-    if (CONFIG_FILE_LEN == read_byte) //文件内容>=4096字节
+    if (CONFIG_FILE_MAX_LEN == read_byte) //文件内容 >= 缓冲区尺寸
     {
         log_e("size of config file beyond the max len");
         return NULL;
@@ -136,6 +136,7 @@ int rov_config_read_from_file(struct rov_info* info)
         dev_ctl_params_read(info, cJSON_GetObjectItem(params, "dev_params"));
         rocket_ratio_params_read(info, cJSON_GetObjectItem(params, "rocket_ratio_params"));
         others_params_read(info, cJSON_GetObjectItem(params, "others_config_params"));
+        cJSON_Delete(params);
     }
     else
     {
@@ -143,7 +144,6 @@ int rov_config_read_from_file(struct rov_info* info)
         return -1;
     }
 
-    cJSON_Delete(params);
     return 0;
 }
 
