@@ -16,7 +16,7 @@ cJSON* dev_ctl_params_add_to_root(pwmDev_attr_t *params)
     if (node == NULL)
         return NULL;
 
-    cJSON_AddItemToObject(node, "enabled", params->enabled == true ? cJSON_CreateTrue() : cJSON_CreateFalse());
+    cJSON_AddBoolToObject(node, "enabled", params->enabled);
     cJSON_AddNumberToObject(node, "channel", params->channel);
     cJSON_AddNumberToObject(node, "pMax", params->pMax);
     cJSON_AddNumberToObject(node, "nMax", params->nMax);

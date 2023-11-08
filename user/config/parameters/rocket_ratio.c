@@ -16,7 +16,7 @@ static cJSON* _rocket_dir_add_to_root(rocket_propeller_attr_t params)
     if (node == NULL)
         return NULL;
 
-    cJSON_AddItemToObject(node, "reversed", params.reversed == true ? cJSON_CreateTrue() : cJSON_CreateFalse());
+    cJSON_AddBoolToObject(node, "reversed", params.reversed);
     cJSON_AddNumberToObject(node, "ratio_p", params.ratio_p);
     cJSON_AddNumberToObject(node, "ratio_n", params.ratio_n);
 

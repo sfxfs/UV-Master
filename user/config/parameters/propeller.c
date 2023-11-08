@@ -16,8 +16,8 @@ cJSON* propeller_params_add_to_root(propeller_attr_t *params)
     if (node == NULL)
         return NULL;
 
-    cJSON_AddItemToObject(node, "reversed", params->reversed == true ? cJSON_CreateTrue() : cJSON_CreateFalse());
-    cJSON_AddItemToObject(node, "enabled", params->enabled == true ? cJSON_CreateTrue() : cJSON_CreateFalse());
+    cJSON_AddBoolToObject(node, "reversed", params->reversed);
+    cJSON_AddBoolToObject(node, "enabled", params->enabled);
     cJSON_AddNumberToObject(node, "channel", params->channel);
     cJSON_AddNumberToObject(node, "deadzone_upper", params->deadzone_upper);
     cJSON_AddNumberToObject(node, "deadzone_lower", params->deadzone_lower);

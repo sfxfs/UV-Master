@@ -44,8 +44,7 @@ void server_params_init(struct server_config *params)
 {
     if (params->port != NULL)
         free(params->port);
-    params->port = malloc(5 * sizeof(char));
-    memset(params->port, '\0', 5 * sizeof(char));
+    params->port = calloc(5, sizeof(char));
     strcpy(params->port, "8888");
     params->clt_timeout = 3000;
 }

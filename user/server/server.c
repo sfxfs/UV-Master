@@ -71,11 +71,11 @@ void *check_lose_thread(void *arg)
  */
 static void check_lose_status(mln_event_t *ev, void *data)
 {
-    rov_info_t *info = (rov_info_t *)data;
-    if (info == NULL)
+    if (data == NULL)
     {
         return;
     }
+    rov_info_t *info = (rov_info_t *)data;
 
     pthread_mutex_lock(&info->system.server.loss_status_mtx);
     if (info->control.flag.lose_clt == false)
@@ -104,6 +104,32 @@ onion_connection_status strip_rpc(void *_, onion_request * req, onion_response *
     return OCS_PROCESSED;
 }
 
+int loss_ctl_timer_init(struct rov_info* info)
+{
+    pthread_mutex_init(&info->system.server.loss_status_mtx, NULL);
+
+    ev = mln_event_new();
+    if (ev == NULL)
+    {
+        log_w("event init failed");
+        return -1;
+    }
+
+    if (mln_event_timer_set(ev, info->system.server.config.clt_timeout, info, check_lose_status) < 0)
+    {
+        log_w("timer set failed");
+        return -1;
+    }
+
+    if (pthread_create(&info->system.server.loss_status_check_tid, NULL, check_lose_thread, NULL) != 0)
+    {
+        log_w("loss check thread start failed");
+        return -1;
+    }
+    pthread_detach(info->system.server.loss_status_check_tid);
+    return 0;
+}
+
 /**
  * @brief 启动 jsonrpc 服务
  * @param info 含有rov信息的结构体
@@ -115,8 +141,21 @@ int jsonrpc_server_run(struct rov_info* info)
     pthread_cond_init(&info->system.server.recv_cmd_cond, NULL);
 
     o = onion_new(O_DETACH_LISTEN | O_NO_SIGTERM);
-    onion_set_port(o, info->system.server.config.port);
+    if (o == NULL)
+    {
+        log_e("http server init failed");
+        return -1;
+    }
+    if (info->system.server.config.port)
+        onion_set_port(o, info->system.server.config.port);
+    else
+        log_w("the port of http server not set, use \"8080\"");
     url = onion_root_url(o);
+    if (url == NULL)
+    {
+        log_e("onion set url failed");
+        return -1;
+    }
     onion_url_add(url, "", strip_rpc);
 
     info_handler_reg(info);
@@ -131,29 +170,8 @@ int jsonrpc_server_run(struct rov_info* info)
     }
 
     if (info->system.server.config.clt_timeout)
-    {
-        pthread_mutex_init(&info->system.server.loss_status_mtx, NULL);
-
-        ev = mln_event_new();
-        if (ev == NULL)
-        {
-            log_e("event init failed");
-            return -1;
-        }
-
-        if (mln_event_timer_set(ev, info->system.server.config.clt_timeout, info, check_lose_status) < 0)
-        {
-            log_e("timer set failed");
-            return -1;
-        }
-
-        if (pthread_create(&info->system.server.loss_status_check_tid, NULL, check_lose_thread, NULL) != 0)
-        {
-            log_e("loss check thread start failed");
-            return -1;
-        }
-        pthread_detach(info->system.server.loss_status_check_tid);
-    }
+        if (loss_ctl_timer_init(info) != 0)
+            log_w("loss ctl init failed");
 
     return 0;
 }

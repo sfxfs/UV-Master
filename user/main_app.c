@@ -5,6 +5,7 @@
 #define LOG_TAG "uvm.main"
 
 #include <elog.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include "server/server.h"
@@ -27,12 +28,17 @@ void uvm_deinit()
  * @brief uvm初始化
  * @param debug_mode 调试模式
  */
-void uvm_init(bool debug_mode)
+void uvm_init(uint8_t debug_mode)
 {
-    if (debug_mode == true)
+    if (debug_mode != false)
     {
         // 初始化 EasyLogger
-        elog_init();
+        if (elog_init() != ELOG_NO_ERR)
+        {
+            printf("easylogger init error\n");
+            exit(EXIT_FAILURE);
+        }
+        elog_set_filter_lvl(debug_mode);
         /* 设置 EasyLogger 日志格式 */
         elog_set_fmt(ELOG_LVL_ASSERT, ELOG_FMT_ALL);
         elog_set_fmt(ELOG_LVL_ERROR, ELOG_FMT_TIME | ELOG_FMT_LVL | ELOG_FMT_TAG);

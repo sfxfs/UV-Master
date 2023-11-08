@@ -52,9 +52,7 @@ char *cjson_value_analysis_string(cJSON *params, const char *str)
     char *temp = cJSON_GetObjectItem(params, str)->valuestring;
     if (temp == NULL)
         return NULL;
-    size_t size = (strlen(temp) + 1) * sizeof(char);    // +1 for '\0'
-    char *ret_str = malloc(size);
-    memset(ret_str, '\0', size);
+    char *ret_str = calloc(strlen(temp) + 1, sizeof(char));
     strcpy(ret_str, temp);
     return ret_str;
 }
