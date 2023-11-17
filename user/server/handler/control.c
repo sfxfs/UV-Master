@@ -14,28 +14,23 @@ static cJSON *move_analysis(cJSON* params, struct rov_info* info, move_mode_t mo
 {
     if (params == NULL)
         return cJSON_CreateNull();
-    info->rocket.L_UD.value = cjson_value_analysis_double(params, "L_UD");
-    info->rocket.L_LR.value = cjson_value_analysis_double(params, "L_LR");
-    info->rocket.R_UD.value = cjson_value_analysis_double(params, "R_UD");
-    info->rocket.R_LR.value = cjson_value_analysis_double(params, "R_LR");
+    info->rocket.L_UD.value = cjson_value_analysis_double(params, "y");
+    info->rocket.L_LR.value = cjson_value_analysis_double(params, "x");
+    info->rocket.R_UD.value = cjson_value_analysis_double(params, "z");
 
     switch (mode)
     {
-        case rocket_ctl:
+        case rocket_ctl:    // 手柄控制转向
+            info->rocket.R_LR.value = cjson_value_analysis_double(params, "rot");
             break;
-        case abs_ctl:
+        case abs_ctl:   // 绝对转向角度
+            info->rocket.R_LR.value = 0.0;
             break;
-        case rel_clt:
+        case rel_clt:   // 相对转向角度
+            info->rocket.R_LR.value = 0.0;
             break;
         default:
             break;
-    }
-
-    if (info->system.server.config.clt_timeout)
-    {
-        pthread_mutex_lock(&info->system.server.loss_status_mtx);
-        info->control.flag.lose_clt = 0;
-        pthread_mutex_unlock(&info->system.server.loss_status_mtx);
     }
 
     pthread_cond_signal(&info->system.server.recv_cmd_cond);

@@ -12,10 +12,10 @@
 #include "handler/debug.h"
 #include "handler/control.h"
 
-static rpc_handle_t rpc = {0};
-static mln_event_t *ev = NULL;
-static onion *o = NULL;
-static onion_url *url = NULL;
+static rpc_handle_t rpc;
+static mln_event_t *ev;
+static onion *o;
+static onion_url *url;
 
 /**
  * @brief 注册信息相关的回调函数
@@ -59,7 +59,8 @@ static void debug_handler_reg(struct rov_info* info)
 
 void *check_lose_thread(void *arg)
 {
-    for (;;)
+    rov_info_t *info = (rov_info_t *)arg;
+    while (info->system.server.config.clt_timeout)
         mln_event_dispatch(ev);
     return NULL;
 }
@@ -91,16 +92,23 @@ static void check_lose_status(mln_event_t *ev, void *data)
     pthread_mutex_unlock(&info->system.server.loss_status_mtx);
 
     if (info->system.server.config.clt_timeout)
-        mln_event_timer_set(ev, info->system.server.config.clt_timeout, data, check_lose_status);
+        mln_event_timer_set(ev, info->system.server.config.clt_timeout, info, check_lose_status);
 }
 
-onion_connection_status strip_rpc(void *_, onion_request * req, onion_response * res)
+onion_connection_status strip_rpc(void *data, onion_request * req, onion_response * res)
 {
     const onion_block *dreq = onion_request_get_data(req);
     char *ret = rpc_process(&rpc, onion_block_data(dreq), onion_block_size(dreq));
     onion_response_write(res, ret, strlen(ret));
-
     free(ret);
+
+    rov_info_t *info = (rov_info_t *)data;
+    if (info->system.server.config.clt_timeout)
+    {
+        pthread_mutex_lock(&info->system.server.loss_status_mtx);
+        info->control.flag.lose_clt = 0;
+        pthread_mutex_unlock(&info->system.server.loss_status_mtx);
+    }
     return OCS_PROCESSED;
 }
 
@@ -121,7 +129,7 @@ int loss_ctl_timer_init(struct rov_info* info)
         return -1;
     }
 
-    if (pthread_create(&info->system.server.loss_status_check_tid, NULL, check_lose_thread, NULL) != 0)
+    if (pthread_create(&info->system.server.loss_status_check_tid, NULL, check_lose_thread, info) != 0)
     {
         log_w("loss check thread start failed");
         return -1;
@@ -136,7 +144,7 @@ int loss_ctl_timer_init(struct rov_info* info)
  * @param port http 服务的端口
  * @return 成功返回 0，失败返回 -1
  */
-int jsonrpc_server_run(struct rov_info* info)
+int jsonrpc_server_run(struct rov_info* info, uint8_t debug_level)
 {
     pthread_cond_init(&info->system.server.recv_cmd_cond, NULL);
 
@@ -149,15 +157,19 @@ int jsonrpc_server_run(struct rov_info* info)
     if (info->system.server.config.port)
         onion_set_port(o, info->system.server.config.port);
     else
-        log_w("the port of http server not set, use \"8080\"");
+        log_w("port of http server not set, use \"8080\"");
     url = onion_root_url(o);
     if (url == NULL)
     {
         log_e("onion set url failed");
         return -1;
     }
-    onion_url_add(url, "", strip_rpc);
+    onion_url_add_with_data(url, "", strip_rpc, info, NULL);
 
+    if (debug_level == ELOG_LVL_INFO)
+        rpc.debug_level = 1;
+    if (debug_level == ELOG_LVL_DEBUG)
+        rpc.debug_level = 2;
     info_handler_reg(info);
     control_handler_reg(info);
     debug_handler_reg(info);

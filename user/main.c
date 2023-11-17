@@ -5,9 +5,9 @@
 #include <unistd.h>
 #include <sys/stat.h>
 
-extern void uvm_init(unsigned char debug_mode);
-extern void uvm_deinit(void);
-extern void uvm_loop(void);
+extern void uvm_init    (unsigned char debug_level);
+extern void uvm_deinit  (void);
+extern void uvm_loop    (void);
 
 static void exit_uvm(int sig)
 {

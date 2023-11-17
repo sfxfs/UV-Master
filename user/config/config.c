@@ -25,8 +25,6 @@
  */
 static void rov_info_write_initial_value(struct rov_info* info)
 {
-    memset(info, 0, sizeof(rov_info_t));//变量初始化
-
     propeller_params_all_init(&info->propeller);
     rocket_ratio_params_all_init(&info->rocket);
     dev_ctl_params_all_init(&info->device);
@@ -155,6 +153,8 @@ int rov_config_read_from_file(struct rov_info* info)
 int rov_config_init(struct rov_info* info)
 {
     log_i("load to config file");
+    memset(info, 0, sizeof(rov_info_t));//变量初始化
+
     if (0 == access(CONFIG_FILE_PATH, F_OK)) // 0:存在
     {
         if (rov_config_read_from_file(info) < 0)  //能够读取则不做任何事

@@ -26,11 +26,11 @@ void uvm_deinit()
 
 /**
  * @brief uvm初始化
- * @param debug_mode 调试模式
+ * @param debug_level 调试模式
  */
-void uvm_init(uint8_t debug_mode)
+void uvm_init(uint8_t debug_level)
 {
-    if (debug_mode != false)
+    if (debug_level != false)
     {
         // 初始化 EasyLogger
         if (elog_init() != ELOG_NO_ERR)
@@ -38,7 +38,7 @@ void uvm_init(uint8_t debug_mode)
             printf("easylogger init error\n");
             exit(EXIT_FAILURE);
         }
-        elog_set_filter_lvl(debug_mode);
+        elog_set_filter_lvl(debug_level);
         /* 设置 EasyLogger 日志格式 */
         elog_set_fmt(ELOG_LVL_ASSERT, ELOG_FMT_ALL);
         elog_set_fmt(ELOG_LVL_ERROR, ELOG_FMT_TIME | ELOG_FMT_LVL | ELOG_FMT_TAG);
@@ -53,7 +53,7 @@ void uvm_init(uint8_t debug_mode)
     if (rov_config_init(&uvmInfo) < 0)
         exit(EXIT_FAILURE);
 
-    if (jsonrpc_server_run(&uvmInfo) < 0)
+    if (jsonrpc_server_run(&uvmInfo, debug_level) < 0)
         exit(EXIT_FAILURE);
 
     if (rov_device_run(&uvmInfo) < 0)

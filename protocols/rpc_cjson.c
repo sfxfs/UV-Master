@@ -132,7 +132,7 @@ static cJSON *rpc_ok(cJSON *result, cJSON *id)
  * @param id 请求的 id 号
  * @return 返回构造完的数据包
  */
-static cJSON *rpc_err(int code, char *message, cJSON *id)
+static cJSON *rpc_err(rpc_handle_t *handle, int code, char *message, cJSON *id)
 {
 	cJSON *result_root = cJSON_CreateObject();
 	cJSON *error_root = cJSON_CreateObject();
@@ -140,7 +140,16 @@ static cJSON *rpc_err(int code, char *message, cJSON *id)
 		return NULL;
 
 	cJSON_AddNumberToObject(error_root, "code", code);
-	cJSON_AddStringToObject(error_root, "message", message);
+	if (message)
+	{
+		if (handle->message.total++ == 0)
+			handle->message.str_array = malloc(handle->message.total * sizeof(char *));
+		else
+			handle->message.str_array = realloc(handle->message.str_array, handle->message.total * sizeof(char *));
+		handle->message.str_array[handle->message.cur++] = message;
+
+		cJSON_AddStringToObject(error_root, "message", message);
+	}
 
 	cJSON_AddStringToObject(result_root, "jsonrpc", JRPC_VERSION);
 	cJSON_AddItemToObject(result_root, "error", error_root);
@@ -182,12 +191,12 @@ static cJSON *invoke_procedure(rpc_handle_t *handle, char *name, cJSON *params, 
 	{
 		if (handle->debug_level > 0)
 			printf("Method not found: %s\n", name);
-		return rpc_err(JRPC_METHOD_NOT_FOUND, "Method not found.", id);
+		return rpc_err(handle, JRPC_METHOD_NOT_FOUND, strdup("Method not found."), id);
 	}
 	else
 	{
 		if (ctx.error_code)
-			return rpc_err(ctx.error_code, ctx.error_message, id);
+			return rpc_err(handle, ctx.error_code, ctx.error_message, id);
 		else
 			return rpc_ok(returned, id);
 	}
@@ -203,7 +212,7 @@ static cJSON *rpc_invoke_method(rpc_handle_t *handle, cJSON *request)
 {
 	cJSON *method, *params, *id;
 	if (strcmp("2.0", cJSON_GetObjectItem(request, "jsonrpc")->valuestring) != 0)
-		return rpc_err(JRPC_INVALID_REQUEST, "Valid request received: JSONRPC version error.", NULL);
+		return rpc_err(handle, JRPC_INVALID_REQUEST, strdup("Valid request received: JSONRPC version error."), NULL);
 	method = cJSON_GetObjectItem(request, "method");
 	if (method != NULL && method->type == cJSON_String)
 	{
@@ -226,7 +235,7 @@ static cJSON *rpc_invoke_method(rpc_handle_t *handle, cJSON *request)
 			}
 		}
 	}
-	return rpc_err(JRPC_INVALID_REQUEST, "Valid request received: No 'method' member", NULL);
+	return rpc_err(handle, JRPC_INVALID_REQUEST, strdup("Valid request received: No 'method' member"), NULL);
 }
 
 /**
@@ -239,7 +248,7 @@ static cJSON *rpc_invoke_method_array(rpc_handle_t *handle, cJSON *request)
 {
 	int array_size = cJSON_GetArraySize(request);
 	if (array_size <= 0)
-		return rpc_err(JRPC_INVALID_REQUEST, "Valid request received: Empty JSON array.", NULL);
+		return rpc_err(handle, JRPC_INVALID_REQUEST, strdup("Valid request received: Empty JSON array."), NULL);
 
 	cJSON *return_json_array = cJSON_CreateArray();
 	for (int i = 0; i < array_size; i++)
@@ -265,7 +274,7 @@ char *rpc_process(rpc_handle_t *handle, const char *json_req, size_t req_len)
 	{
 		if (handle->debug_level > 0)
 			printf("Valid JSON Received\n");
-		return cJSON_PrintUnformatted(rpc_err(JRPC_PARSE_ERROR, "Parse error: Not in JSON format.", NULL));
+		return cJSON_PrintUnformatted(rpc_err(handle, JRPC_PARSE_ERROR, strdup("Parse error: Not in JSON format."), NULL));
 	}
 
 	cJSON *cjson_return = NULL;
@@ -279,11 +288,18 @@ char *rpc_process(rpc_handle_t *handle, const char *json_req, size_t req_len)
 	}
 	else
 	{
-		cjson_return = rpc_err(JRPC_INVALID_REQUEST, "Valid request received: Not a JSON object or array.", NULL);
+		cjson_return = rpc_err(handle, JRPC_INVALID_REQUEST, strdup("Valid request received: Not a JSON object or array."), NULL);
 	}
 
 	char *str_return = cJSON_PrintUnformatted(cjson_return);
 	cJSON_Delete(cjson_return);
 	cJSON_Delete(request);
+	if (handle->message.total != 0)
+	{
+		for (int i = 0; i < handle->message.total; i++)
+			free(handle->message.str_array[i]);
+		free(handle->message.str_array);
+		memset(&handle->message, 0, sizeof(str_free_t));
+	}
 	return str_return;
 }

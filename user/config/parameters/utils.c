@@ -45,7 +45,7 @@ int cjson_value_analysis_int(cJSON *params, const char *str)
  * @brief 获取 json 内对应值
  * @param params cjson结构体
  * @param str 值对应字符串
- * @return 返回获取到的字符串，用完需要 free
+ * @return 返回获取到的字符串，若没有获取到则为 NULL，用完需要 free
  */
 char *cjson_value_analysis_string(cJSON *params, const char *str)
 {
@@ -53,6 +53,8 @@ char *cjson_value_analysis_string(cJSON *params, const char *str)
     if (temp == NULL)
         return NULL;
     char *ret_str = calloc(strlen(temp) + 1, sizeof(char));
+    if (ret_str == NULL)
+        return NULL;
     strcpy(ret_str, temp);
     return ret_str;
 }

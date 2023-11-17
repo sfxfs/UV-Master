@@ -10,14 +10,18 @@ sudo apt-get install -y cmake ninja-build autoconf automake libtool autoconf-arc
 
 ------
 
-## libev
+## libonion
 
 ```shell
-$ ./configure --prefix=<安装绝对路径> --host=arm-linux-gnueabihf
+$ export CC=arm-linux-gnueabihf-gcc
 
-$ make
+$ export AR=arm-linux-gnueabihf-ar
 
-$ make install
+# 请修改 CMakeLists.txt 来取消编译不需要的模块，以及设置安装路径
+
+$ cmake ...
+
+$ sudo make install
 ```
 
 

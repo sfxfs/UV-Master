@@ -33,10 +33,12 @@ cJSON *set_propeller_pwm_freq_calibration_handler(jrpc_context *ctx, cJSON *para
 {
     if (params == NULL)
         return cJSON_CreateNull();
+
     rov_info_t *info = (rov_info_t *)ctx->data;
     pthread_mutex_lock(&info->system.device.power_output_mtx);
     pwm_controller_set_freq((uint16_t)params->child->valueint);
     pthread_mutex_unlock(&info->system.device.power_output_mtx);
+
     return cJSON_CreateNull();
 }
 
@@ -72,6 +74,11 @@ cJSON *save_handler(jrpc_context *ctx, cJSON *params, cJSON *id)
 {
     if (rov_config_write_json_to_file(params) == 0)
         rov_config_read_from_file(ctx->data);
+    else
+    {
+        ctx->error_code = -32000;
+        ctx->error_message = NULL;
+    }
     return cJSON_CreateNull();
 }
 
