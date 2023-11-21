@@ -11,8 +11,14 @@ extern void uvm_loop    (void);
 
 static void exit_uvm(int sig)
 {
-    printf("info: closing uv-master app...\n");
+    printf("\ninfo: closing uv-master app...\n");
     uvm_deinit();
+    printf( "   __               __                \n"
+            "  /  )             /  )              /\n"
+            " /--<  __  , _    /--<  __  , _     / \n"
+            "/___/_/ (_/_</_  /___/_/ (_/_</_   '  \n"
+            "         /                /       o   \n"
+            "        '                '            \n");
     exit(EXIT_SUCCESS);
 }
 

@@ -1,3 +1,6 @@
+#define LOG_TAG "server.handler.ctl"
+
+#include "elog.h"
 #include "config/parameters/utils.h"
 #include "data_define.h"
 
@@ -33,7 +36,8 @@ static cJSON *move_analysis(cJSON* params, struct rov_info* info, move_mode_t mo
             break;
     }
 
-    pthread_cond_signal(&info->system.server.recv_cmd_cond);
+    log_d("rocket cmd recv, sending cond signal");
+    pthread_cond_signal(&info->system.control.recv_cmd_cond);
 
     return cJSON_CreateNull();
 }

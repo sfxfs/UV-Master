@@ -146,8 +146,6 @@ int loss_ctl_timer_init(struct rov_info* info)
  */
 int jsonrpc_server_run(struct rov_info* info, uint8_t debug_level)
 {
-    pthread_cond_init(&info->system.server.recv_cmd_cond, NULL);
-
     o = onion_new(O_DETACH_LISTEN | O_NO_SIGTERM);
     if (o == NULL)
     {
@@ -196,7 +194,8 @@ int jsonrpc_server_stop()
 {
     log_i("stop service");
 
-    mln_event_free(ev);//释放事件模块
+    if (ev != NULL)
+        mln_event_free(ev);//释放事件模块
     onion_free(o);
 
     return 0;

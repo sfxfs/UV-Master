@@ -20,8 +20,9 @@ void *control_thread(void *arg)
     rov_info_t *info = (rov_info_t *)arg;
     for (;;)
     {
-        pthread_mutex_lock(&info->system.device.power_output_mtx);
-        pthread_cond_wait(&info->system.server.recv_cmd_cond, &info->system.device.power_output_mtx);
+        pthread_mutex_lock(&info->system.control.recv_cmd_mtx);
+        pthread_cond_wait(&info->system.control.recv_cmd_cond, &info->system.control.recv_cmd_mtx);
+        log_d("cmd recv, ask for propeller");
         if (info->control.flag.debug_mode == false)
         {
             rov_manual_control(info);
@@ -30,7 +31,8 @@ void *control_thread(void *arg)
         {
             rov_debug_control(info);
         }
-        pthread_mutex_unlock(&info->system.device.power_output_mtx);
+        pthread_cond_signal(&info->system.device.power_output_cond);
+        pthread_mutex_unlock(&info->system.control.recv_cmd_mtx);
     }
     return NULL;
 }
@@ -42,6 +44,9 @@ void *control_thread(void *arg)
  */
 int rov_control_run(struct rov_info* info)
 {
+    pthread_mutex_init(&info->system.control.recv_cmd_mtx, NULL);
+    pthread_cond_init(&info->system.control.recv_cmd_cond, NULL);
+
     log_i("starting thread");
     if (pthread_create(&info->system.control.main_tid, NULL, control_thread, info) != 0)
     {

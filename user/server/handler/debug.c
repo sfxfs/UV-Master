@@ -60,7 +60,7 @@ cJSON *set_propeller_values_handler(jrpc_context *ctx, cJSON *params, cJSON *id)
     info->propeller.front_left.power_debug  = cjson_value_analysis_int(params, "front_left");
     info->propeller.front_right.power_debug  = cjson_value_analysis_int(params, "front_right");
 
-    pthread_cond_signal(&info->system.server.recv_cmd_cond);
+    pthread_cond_signal(&info->system.control.recv_cmd_cond);
 
     return cJSON_CreateNull();
 }

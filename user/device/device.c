@@ -53,7 +53,11 @@ void *propeller_thread(void *arg)
     for (;;)
     {
         pthread_mutex_lock(&info->system.device.power_output_mtx);
+        pthread_cond_wait(&info->system.device.power_output_cond, &info->system.device.power_output_mtx);
+
+        log_d("write to propeller");
         write_to_propeller(&info->propeller);
+
         pthread_mutex_unlock(&info->system.device.power_output_mtx);
     }
 
@@ -68,6 +72,7 @@ void *propeller_thread(void *arg)
 int rov_device_run(struct rov_info* info)
 {
     pthread_mutex_init(&info->system.device.power_output_mtx, NULL);
+    pthread_cond_init(&info->system.device.power_output_cond, NULL);
 
     log_i("starting pwm controller");
     if (pwm_controller_init(PCA9685_ADDRESS_A000000, info->propeller.pwm_freq_calibration) < 0)
