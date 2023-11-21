@@ -6,6 +6,7 @@
 #include <pthread.h>
 #include <sys/time.h>
 #include <mln_event.h>
+#include <onion/log.h>
 #include <onion/block.h>
 #include <onion/onion.h>
 #include "handler/info.h"
@@ -164,10 +165,18 @@ int jsonrpc_server_run(struct rov_info* info, uint8_t debug_level)
     }
     onion_url_add_with_data(url, "", strip_rpc, info, NULL);
 
+    // 设置 onion 的日志等级
+    if (debug_level <= ELOG_LVL_INFO)
+    {
+        extern int onion_log_flags;
+        onion_log_flags = OF_INIT | OF_NOINFO;
+    }
+    // 设置 jsonrpc 的日志等级
     if (debug_level == ELOG_LVL_INFO)
         rpc.debug_level = 1;
     if (debug_level == ELOG_LVL_DEBUG)
         rpc.debug_level = 2;
+
     info_handler_reg(info);
     control_handler_reg(info);
     debug_handler_reg(info);

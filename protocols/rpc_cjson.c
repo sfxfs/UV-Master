@@ -24,7 +24,7 @@ int rpc_add_method(rpc_handle_t *handle, jrpc_function function_pointer, char *n
 		if (!ptr)
 		{
 			if (handle->debug_level > 0)
-				printf("Cannot alloc mem for func %s\n", name);
+				printf("jsonrpc: Cannot alloc mem for func %s\n", name);
 			return -1;
 		}
 		handle->procedures = ptr;
@@ -99,7 +99,7 @@ int rpc_del_method(rpc_handle_t *handle, char *name)
 	else
 	{
 		if (handle->debug_level > 0)
-			printf("Method '%s' not found\n", name);
+			printf("jsonrpc: Method '%s' not found\n", name);
 		return -1;
 	}
 	return 0;
@@ -190,7 +190,7 @@ static cJSON *invoke_procedure(rpc_handle_t *handle, char *name, cJSON *params, 
 	if (!procedure_found)
 	{
 		if (handle->debug_level > 0)
-			printf("Method not found: %s\n", name);
+			printf("jsonrpc: Method not found: %s\n", name);
 		return rpc_err(handle, JRPC_METHOD_NOT_FOUND, strdup("Method not found."), id);
 	}
 	else
@@ -230,7 +230,7 @@ static cJSON *rpc_invoke_method(rpc_handle_t *handle, cJSON *request)
 														 id->valuestring)
 												   : cJSON_CreateNumber(id->valueint);
 				if (handle->debug_level > 0)
-					printf("Method Invoked: %s\n", method->valuestring);
+					printf("jsonrpc: Method Invoked: %s\n", method->valuestring);
 				return invoke_procedure(handle, method->valuestring, params, id_copy);
 			}
 		}
@@ -267,13 +267,13 @@ static cJSON *rpc_invoke_method_array(rpc_handle_t *handle, cJSON *request)
 char *rpc_process(rpc_handle_t *handle, const char *json_req, size_t req_len)
 {
 	if (handle->debug_level > 1)
-		printf("recv json str:\n%.*s\n", req_len, json_req);
+		printf("jsonrpc: recv json str:\n%.*s\n", req_len, json_req);
 
 	cJSON *request = cJSON_ParseWithLength(json_req, req_len);
 	if (request == NULL)
 	{
 		if (handle->debug_level > 0)
-			printf("Valid JSON Received\n");
+			printf("jsonrpc: Valid JSON Received\n");
 		return cJSON_PrintUnformatted(rpc_err(handle, JRPC_PARSE_ERROR, strdup("Parse error: Not in JSON format."), NULL));
 	}
 

@@ -50,6 +50,13 @@ int main(int argc, char **argv)
             }
         }
     } else {
+        printf("                                _            \n"
+               " /\\ /\\/\\   /\\   /\\/\\   __ _ ___| |_ ___ _ __ \n"
+               "/ / \\ \\ \\ / /  /    \\ / _` / __| __/ _ \\ '__|\n"
+               "\\ \\_/ /\\ V /  / /\\/\\ \\ (_| \\__ \\ ||  __/ |   \n"
+               " \\___/  \\_/   \\/    \\/\\__,_|___/\\__\\___|_|   \n"
+               "                                             \n");
+        printf("info: starting uv-master app...\n");
         unsigned char debug_lvl = 0;
         if (strcmp(debug_env, "debug") == 0)
             debug_lvl = 4;
@@ -60,15 +67,10 @@ int main(int argc, char **argv)
         else if (strcmp(debug_env, "error") == 0)
             debug_lvl = 1;
         else
-            printf("warn: debug level not found...\n");
-
-        printf( "                                _            \n"
-                " /\\ /\\/\\   /\\   /\\/\\   __ _ ___| |_ ___ _ __ \n"
-                "/ / \\ \\ \\ / /  /    \\ / _` / __| __/ _ \\ '__|\n"
-                "\\ \\_/ /\\ V /  / /\\/\\ \\ (_| \\__ \\ ||  __/ |   \n"
-                " \\___/  \\_/   \\/    \\/\\__,_|___/\\__\\___|_|   \n"
-                "                                             \n");
-        printf("info: starting uv-master app...\n");
+        {
+            printf("warn: debug level not found, used level \"info\" ...\n");
+            debug_lvl = 3;
+        }
         uvm_init(debug_lvl);
         for (;;) {
             uvm_loop();
