@@ -65,6 +65,6 @@
 ## 运行
 
 ```shell
-sudo ONION_LOG=(noinfo / nodebug / nocolor / syslog) UV_DEBUG=(error / warn / debug / info) ./uvmaster
+sudo UV_DEBUG=(error / warn / debug / info) ./uvmaster
 ```
 
