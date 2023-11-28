@@ -2,18 +2,19 @@
 // Created by fxf on 9/25/23.
 //
 
-#ifndef ROV_MASTER_ROCKET_RATIO_H
-#define ROV_MASTER_ROCKET_RATIO_H
+#ifndef CONFIG_PARAMS_ROCKET_RATIO_H
+#define CONFIG_PARAMS_ROCKET_RATIO_H
 
 #include <cJSON.h>
-#include "data_define.h"
 
-cJSON* rocket_ratio_params_add_to_root(rocket_axis_attr_t *params);
-void rocket_ratio_params_read_from_root(rocket_axis_attr_t *params, cJSON *node);
-void rocket_ratio_params_init(rocket_axis_attr_t *params);
+#include "../config.h"
 
-void rocket_ratio_params_all_init(rocket_t *params);
-cJSON* rocket_ratio_params_write(struct rov_info* info);
-void rocket_ratio_params_read(struct rov_info* info, cJSON *node);
+cJSON* rocket_ratio_params_add_to_root(struct rocket_ratio_attr *params);
+void rocket_ratio_params_read_from_root(struct rocket_ratio_attr *params, cJSON *node);
+void rocket_ratio_params_init(struct rocket_ratio_attr *params);
 
-#endif //ROV_MASTER_ROCKET_RATIO_H
+void rocket_ratio_params_all_init(struct rocket_ratio_params *params);
+cJSON* rocket_ratio_params_write(struct rocket_ratio_params *params);
+void rocket_ratio_params_read(struct rocket_ratio_params *params, cJSON *node);
+
+#endif //CONFIG_PARAMS_ROCKET_RATIO

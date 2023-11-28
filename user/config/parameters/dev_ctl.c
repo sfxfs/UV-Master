@@ -1,6 +1,7 @@
 //
 // Created by fxf on 23-9-4.
 //
+
 #include "utils.h"
 
 #include "dev_ctl.h"
@@ -10,7 +11,7 @@
  * @param params pwmDev_parameters结构体参数
  * @return Json对象
  */
-cJSON* dev_ctl_params_add_to_root(pwmDev_attr_t *params)
+cJSON* dev_ctl_params_add_to_root(struct dev_ctl_attr *params)
 {
     cJSON* node = cJSON_CreateObject();
     if (node == NULL)
@@ -31,7 +32,7 @@ cJSON* dev_ctl_params_add_to_root(pwmDev_attr_t *params)
  * @param params pwmDev_parameters结构体参数
  * @param node Json对象
  */
-void dev_ctl_params_read_from_root(pwmDev_attr_t *params, cJSON *node)
+void dev_ctl_params_read_from_root(struct dev_ctl_attr *params, cJSON *node)
 {
     if (node == NULL)
         return;
@@ -47,7 +48,7 @@ void dev_ctl_params_read_from_root(pwmDev_attr_t *params, cJSON *node)
  * @brief 单个PWM设备参数初始化
  * @param params pwmDev_parameters结构体参数
  */
-void dev_ctl_params_init(pwmDev_attr_t *params)
+void dev_ctl_params_init(struct dev_ctl_attr *params)
 {
     params->enabled = false;
     params->channel = 0;
@@ -61,10 +62,10 @@ void dev_ctl_params_init(pwmDev_attr_t *params)
  * @brief 所有PWM设备参数初始化
  * @param params 结构体参数
  */
-void dev_ctl_params_all_init(device_t *params)
+void dev_ctl_params_all_init(struct dev_ctl_params *params)
 {
-    dev_ctl_params_init(&params->light);
-    dev_ctl_params_init(&params->arm);
+    for (size_t i = 0; i < DEV_NUM; i++)
+        dev_ctl_params_init(&params->attr[i]);
 }
 
 /**
@@ -72,14 +73,14 @@ void dev_ctl_params_all_init(device_t *params)
  * @param info rov_info结构体参数
  * @return Json对象
  */
-cJSON* dev_ctl_params_write(struct rov_info* info)
+cJSON* dev_ctl_params_write(struct dev_ctl_params *params)
 {
     cJSON *root = cJSON_CreateObject();
     if (root == NULL)
         return NULL;
 
-    cJSON_AddItemToObject(root, "arm", dev_ctl_params_add_to_root(&info->device.arm));
-    cJSON_AddItemToObject(root, "light", dev_ctl_params_add_to_root(&info->device.light));
+    cJSON_AddItemToObject(root, "arm", dev_ctl_params_add_to_root(&params->attr[DEV_CTL_ARM]));
+    cJSON_AddItemToObject(root, "light", dev_ctl_params_add_to_root(&params->attr[DEV_CTL_LIGHT]));
 
     return root;
 }
@@ -89,10 +90,10 @@ cJSON* dev_ctl_params_write(struct rov_info* info)
  * @param info rov_info结构体参数
  * @param node Json对象
  */
-void dev_ctl_params_read(struct rov_info* info, cJSON *node)
+void dev_ctl_params_read(struct dev_ctl_params *params, cJSON *node)
 {
     if (node == NULL)
         return;
-    dev_ctl_params_read_from_root(&info->device.arm, cJSON_GetObjectItem(node, "arm"));
-    dev_ctl_params_read_from_root(&info->device.light, cJSON_GetObjectItem(node, "light"));
+    dev_ctl_params_read_from_root(&params->attr[DEV_CTL_ARM], cJSON_GetObjectItem(node, "arm"));
+    dev_ctl_params_read_from_root(&params->attr[DEV_CTL_LIGHT], cJSON_GetObjectItem(node, "light"));
 }

@@ -1,22 +1,20 @@
 #include "utils.h"
-#include "others.h"
 
-#include <stdlib.h>
-#include <string.h>
+#include "others.h"
 
 /**
  * @brief 参数转换为Cjson
  * @param params server_config 结构体参数（rovinfo中的）
  * @return Cjson object
  */
-cJSON *server_params_add_to_root(struct server_config *params)
+cJSON *server_params_add_to_root(struct server_attr *params)
 {
     cJSON* node = cJSON_CreateObject();
     if (node == NULL)
         return NULL;
 
-    cJSON_AddStringToObject(node, "port", params->port);
-    cJSON_AddNumberToObject(node, "timeout", params->clt_timeout);
+    cJSON_AddNumberToObject(node, "port", params->port);
+    cJSON_AddNumberToObject(node, "timeout", params->timeout);
 
     return node;
 }
@@ -26,36 +24,32 @@ cJSON *server_params_add_to_root(struct server_config *params)
  * @param params server_config 结构体参数
  * @param node Cjson
  */
-void server_params_read_from_root(struct server_config *params, cJSON *node)
+void server_params_read_from_root(struct server_attr *params, cJSON *node)
 {
     if (node == NULL)
         return;
-    if (params->port != NULL)
-        free(params->port);
-    params->port = cjson_value_analysis_string(node, "port");
-    params->clt_timeout = cjson_value_analysis_int(node, "timeout");
+
+    params->port = cjson_value_analysis_int(node, "port");
+    params->timeout = cjson_value_analysis_int(node, "timeout");
 }
 
 /**
  * @brief  server_config结构体参数初始化（掉线时间）
  * @param params server_config结构体参数（server）
  */
-void server_params_init(struct server_config *params)
+void server_params_init(struct server_attr *params)
 {
-    if (params->port != NULL)
-        free(params->port);
-    params->port = calloc(5, sizeof(char));
-    strcpy(params->port, "8888");
-    params->clt_timeout = 3000;
+    params->port = 8888;
+    params->timeout = 3000;
 }
 
 /**
  * @brief 统一参数初始化
  * @param params rov_info结构体参数
  */
-void others_params_all_init(struct rov_info *params)
+void others_params_all_init(struct others_config_params *params)
 {
-    server_params_init(&params->system.server.config);
+    server_params_init(&params->server_attr);
 }
 
 /**
@@ -63,13 +57,13 @@ void others_params_all_init(struct rov_info *params)
  * @param info rov_info结构体参数
  * @return Cjson
  */
-cJSON *others_params_write(struct rov_info *info)
+cJSON *others_params_write(struct others_config_params *params)
 {
     cJSON *root = cJSON_CreateObject();
     if (root == NULL)
         return NULL;
 
-    cJSON_AddItemToObject(root, "server", server_params_add_to_root(&info->system.server.config));
+    cJSON_AddItemToObject(root, "server", server_params_add_to_root(&params->server_attr));
 
     return root;
 }
@@ -79,9 +73,10 @@ cJSON *others_params_write(struct rov_info *info)
  * @param info 
  * @param node 
  */
-void others_params_read(struct rov_info *info, cJSON *node)
+void others_params_read(struct others_config_params *params, cJSON *node)
 {
     if (node == NULL)
         return;
-    server_params_read_from_root(&info->system.server.config, cJSON_GetObjectItem(node, "server"));
+
+    server_params_read_from_root(&params->server_attr, cJSON_GetObjectItem(node, "server"));
 }

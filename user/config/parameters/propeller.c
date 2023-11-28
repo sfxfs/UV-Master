@@ -1,6 +1,7 @@
 //
 // Created by fxf on 23-9-4.
 //
+
 #include "utils.h"
 
 #include "propeller.h"
@@ -10,7 +11,7 @@
  * @param params propeller_parameters结构体参数
  * @return Json对象
  */
-cJSON* propeller_params_add_to_root(propeller_attr_t *params)
+cJSON* propeller_params_add_to_root(struct propeller_attr *params)
 {
     cJSON* node = cJSON_CreateObject();
     if (node == NULL)
@@ -28,23 +29,11 @@ cJSON* propeller_params_add_to_root(propeller_attr_t *params)
 }
 
 /**
- * @brief 推进器频率读取（from Cjson）
- * @param freq propeller.pwm_freq_calibration
- * @param node Cjson
- */
-void propeller_freq_read_from_root(uint16_t *freq, cJSON *node)
-{
-    if (node == NULL)
-        return;
-    *freq = node->valueint;
-}
-
-/**
  * @brief 单个推进器参数读取（from Json）
  * @param params propeller_parameters结构体参数
  * @param node Json对象
  */
-void propeller_params_read_from_root(propeller_attr_t *params, cJSON *node)
+void propeller_params_read_from_root(struct propeller_attr *params, cJSON *node)
 {
     if (node == NULL)
         return;
@@ -58,19 +47,10 @@ void propeller_params_read_from_root(propeller_attr_t *params, cJSON *node)
 }
 
 /**
- * @brief 单个推进器频率初始化（默认50 HZ ）
- * @param params 推进器PWM频率参数（propeller.pwm_freq_calibration）
- */
-void propeller_params_init_freq(uint16_t *params)
-{
-    *params = 50;
-}
-
-/**
  * @brief 单个推进器参数初始化
  * @param params propeller_attr_t 结构体参数
  */
-void propeller_params_init(propeller_attr_t *params)
+void propeller_params_init(struct propeller_attr *params)
 {
     params->enabled = true;
     params->reversed = false;
@@ -85,15 +65,10 @@ void propeller_params_init(propeller_attr_t *params)
  * @brief 所有推进器参数初始化
  * @param params propeller_attr_t 结构体参数
  */
-void propeller_params_all_init(propeller_t *params)
+void propeller_params_all_init(struct propeller_params *params)
 {
-    propeller_params_init_freq(&params->pwm_freq_calibration);
-    propeller_params_init(&params->front_right);
-    propeller_params_init(&params->front_left);
-    propeller_params_init(&params->center_right);
-    propeller_params_init(&params->center_left);
-    propeller_params_init(&params->back_right);
-    propeller_params_init(&params->back_left);
+    for (size_t i = 0; i < PROPELLER_NUM; i++)
+        propeller_params_init(&params->attr[i]);
 }
 
 /**
@@ -101,19 +76,20 @@ void propeller_params_all_init(propeller_t *params)
  * @param info rov_info结构体参数
  * @return Json对象
  */
-cJSON* propeller_params_write(struct rov_info* info)
+cJSON* propeller_params_write(struct propeller_params *params)
 {
     cJSON *root = cJSON_CreateObject();
     if (root == NULL)
         return NULL;
+    int which = PP_FRONT_RIGHT;
 
-    cJSON_AddNumberToObject(root, "pwm_freq_calibration", info->propeller.pwm_freq_calibration);
-    cJSON_AddItemToObject(root, "front_right", propeller_params_add_to_root(&info->propeller.front_right));
-    cJSON_AddItemToObject(root, "front_left", propeller_params_add_to_root(&info->propeller.front_left));
-    cJSON_AddItemToObject(root, "center_right", propeller_params_add_to_root(&info->propeller.center_right));
-    cJSON_AddItemToObject(root, "center_left", propeller_params_add_to_root(&info->propeller.center_left));
-    cJSON_AddItemToObject(root, "back_right", propeller_params_add_to_root(&info->propeller.back_right));
-    cJSON_AddItemToObject(root, "back_left", propeller_params_add_to_root(&info->propeller.back_left));
+    cJSON_AddNumberToObject(root, "pwm_freq_calibration", params->pwm_freq_offset);
+    cJSON_AddItemToObject(root, "front_right", propeller_params_add_to_root(&params->attr[which++]));
+    cJSON_AddItemToObject(root, "front_left", propeller_params_add_to_root(&params->attr[which++]));
+    cJSON_AddItemToObject(root, "center_right", propeller_params_add_to_root(&params->attr[which++]));
+    cJSON_AddItemToObject(root, "center_left", propeller_params_add_to_root(&params->attr[which++]));
+    cJSON_AddItemToObject(root, "back_right", propeller_params_add_to_root(&params->attr[which++]));
+    cJSON_AddItemToObject(root, "back_left", propeller_params_add_to_root(&params->attr[which++]));
 
     return root;
 }
@@ -123,15 +99,17 @@ cJSON* propeller_params_write(struct rov_info* info)
  * @param info rov_info结构体参数
  * @param node Json对象
  */
-void propeller_params_read(struct rov_info* info, cJSON *node)
+void propeller_params_read(struct propeller_params *params, cJSON *node)
 {
     if (node == NULL)
         return;
-    propeller_freq_read_from_root(&info->propeller.pwm_freq_calibration, cJSON_GetObjectItem(node, "pwm_freq_calibration"));
-    propeller_params_read_from_root(&info->propeller.front_right, cJSON_GetObjectItem(node, "front_right"));
-    propeller_params_read_from_root(&info->propeller.front_left, cJSON_GetObjectItem(node, "front_left"));
-    propeller_params_read_from_root(&info->propeller.center_right, cJSON_GetObjectItem(node, "center_right"));
-    propeller_params_read_from_root(&info->propeller.center_left, cJSON_GetObjectItem(node, "center_left"));
-    propeller_params_read_from_root(&info->propeller.back_right, cJSON_GetObjectItem(node, "back_right"));
-    propeller_params_read_from_root(&info->propeller.back_left, cJSON_GetObjectItem(node, "back_left"));
+    int which = PP_FRONT_RIGHT;
+
+    params->pwm_freq_offset = cjson_value_analysis_int(node, "pwm_freq_calibration");
+    propeller_params_read_from_root(&params->attr[which++], cJSON_GetObjectItem(node, "front_right"));
+    propeller_params_read_from_root(&params->attr[which++], cJSON_GetObjectItem(node, "front_left"));
+    propeller_params_read_from_root(&params->attr[which++], cJSON_GetObjectItem(node, "center_right"));
+    propeller_params_read_from_root(&params->attr[which++], cJSON_GetObjectItem(node, "center_left"));
+    propeller_params_read_from_root(&params->attr[which++], cJSON_GetObjectItem(node, "back_right"));
+    propeller_params_read_from_root(&params->attr[which++], cJSON_GetObjectItem(node, "back_left"));
 }

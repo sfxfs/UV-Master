@@ -1,15 +1,16 @@
-#ifndef CONFIG_PARAMS_OTHERS
-#define CONFIG_PARAMS_OTHERS
+#ifndef CONFIG_PARAMS_OTHERS_H
+#define CONFIG_PARAMS_OTHERS_H
 
 #include <cJSON.h>
-#include "data_define.h"
 
-cJSON *server_params_add_to_root(struct server_config *params);
-void server_params_read_from_root(struct server_config *params, cJSON *node);
-void server_params_init(struct server_config *params);
+#include "../config.h"
 
-void others_params_all_init(struct rov_info *params);
-cJSON *others_params_write(struct rov_info *info);
-void others_params_read(struct rov_info *info, cJSON *node);
+cJSON *server_params_add_to_root(struct server_attr *params);
+void server_params_read_from_root(struct server_attr *params, cJSON *node);
+void server_params_init(struct server_attr *params);
+
+void others_params_all_init(struct others_config_params *params);
+cJSON *others_params_write(struct others_config_params *params);
+void others_params_read(struct others_config_params *params, cJSON *node);
 
 #endif

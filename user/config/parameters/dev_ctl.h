@@ -2,18 +2,19 @@
 // Created by fxf on 23-9-4.
 //
 
-#ifndef ROV_MASTER_DEV_CTL_H
-#define ROV_MASTER_DEV_CTL_H
+#ifndef CONFIG_PARAMS_DEV_CTL_H
+#define CONFIG_PARAMS_DEV_CTL_H
 
 #include <cJSON.h>
-#include "data_define.h"
 
-cJSON* dev_ctl_params_add_to_root(pwmDev_attr_t *params);
-void dev_ctl_params_read_from_root(pwmDev_attr_t *params, cJSON *node);
-void dev_ctl_params_init(pwmDev_attr_t *params);
+#include "../config.h"
 
-void dev_ctl_params_all_init(device_t *params);
-cJSON* dev_ctl_params_write(struct rov_info* info);
-void dev_ctl_params_read(struct rov_info* info, cJSON *node);
+cJSON* dev_ctl_params_add_to_root(struct dev_ctl_attr *params);
+void dev_ctl_params_read_from_root(struct dev_ctl_attr *params, cJSON *node);
+void dev_ctl_params_init(struct dev_ctl_attr *params);
 
-#endif //ROV_MASTER_DEV_CTL_H
+void dev_ctl_params_all_init(struct dev_ctl_params *params);
+cJSON* dev_ctl_params_write(struct dev_ctl_params *params);
+void dev_ctl_params_read(struct dev_ctl_params *params, cJSON *node);
+
+#endif //UV_MASTER_DEV_CTL_H

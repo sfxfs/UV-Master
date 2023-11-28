@@ -52,9 +52,5 @@ char *cjson_value_analysis_string(cJSON *params, const char *str)
     char *temp = cJSON_GetObjectItem(params, str)->valuestring;
     if (temp == NULL)
         return NULL;
-    char *ret_str = calloc(strlen(temp) + 1, sizeof(char));
-    if (ret_str == NULL)
-        return NULL;
-    strcpy(ret_str, temp);
-    return ret_str;
+    return strdup(temp);
 }

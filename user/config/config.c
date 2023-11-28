@@ -16,19 +16,16 @@
 #include "parameters/propeller.h"
 #include "parameters/rocket_ratio.h"
 
-#define CONFIG_FILE_PATH "config.json"
-#define CONFIG_FILE_MAX_LEN 6144
-
 /**
  * @brief rov信息初始化
  * @param info rov_info结构体参数
  */
-static void rov_info_write_initial_value(struct rov_info* info)
+static void uv_info_initial_value(uv_config_t *handle)
 {
-    propeller_params_all_init(&info->propeller);
-    rocket_ratio_params_all_init(&info->rocket);
-    dev_ctl_params_all_init(&info->device);
-    others_params_all_init(info);
+    propeller_params_all_init(&handle->data.propeller);
+    rocket_ratio_params_all_init(&handle->data.rocket_ratio);
+    dev_ctl_params_all_init(&handle->data.dev_ctl);
+    others_params_all_init(&handle->data.others);
 }
 
 /**
@@ -36,7 +33,7 @@ static void rov_info_write_initial_value(struct rov_info* info)
  * @param params json 类型配置数据
  * @return 0：成功  -1：失败
  */
-int rov_config_write_json_to_file(cJSON *params)
+static int write_config_file(const char *config_file_path, cJSON *params)
 {
     char *temp = cJSON_Print(params);
     if (temp == NULL)
@@ -44,11 +41,11 @@ int rov_config_write_json_to_file(cJSON *params)
         log_e("cjson print error, invaild cjson data");
         return -1;
     }
-    FILE *fp = fopen(CONFIG_FILE_PATH, "w");
+    FILE *fp = fopen(config_file_path, "w");
     if (fp == NULL)
     {
         //使用“写入”方式创建文件
-        fp = fopen(CONFIG_FILE_PATH, "wt+");
+        fp = fopen(config_file_path, "wt+");
         if(fp == NULL)
         {
             log_e("error in creating config file");
@@ -56,13 +53,15 @@ int rov_config_write_json_to_file(cJSON *params)
             return -1;
         }
     }
-    if (fputs(temp, fp) < 0)   //写入文件
+    int flen = fputs(temp, fp);
+    if (flen < 0)   //写入文件
     {
         log_e("error in fputs config file");
         fclose(fp);
         free(temp);
         return -1;
     }
+    log_i("write %d bytes to config file", flen);
 
     fclose(fp);
     free(temp);
@@ -74,16 +73,16 @@ int rov_config_write_json_to_file(cJSON *params)
  * @param info rov_info结构体参数
  * @return 0：成功  -1：失败
  */
-int rov_config_write_to_file(struct rov_info* info)
+int uv_config_write(uv_config_t *handle)
 {
     cJSON* params = cJSON_CreateObject();
 
-    cJSON_AddItemToObject(params, "propeller_params", propeller_params_write(info));
-    cJSON_AddItemToObject(params, "dev_ctl_params", dev_ctl_params_write(info));
-    cJSON_AddItemToObject(params, "rocket_ratio_params", rocket_ratio_params_write(info));
-    cJSON_AddItemToObject(params, "others_config_params", others_params_write(info));
+    cJSON_AddItemToObject(params, "propeller_params", propeller_params_write(&handle->data.propeller));
+    cJSON_AddItemToObject(params, "dev_ctl_params", dev_ctl_params_write(&handle->data.dev_ctl));
+    cJSON_AddItemToObject(params, "rocket_ratio_params", rocket_ratio_params_write(&handle->data.rocket_ratio));
+    cJSON_AddItemToObject(params, "others_config_params", others_params_write(&handle->data.others));
 
-    if (rov_config_write_json_to_file(params) != 0)
+    if (write_config_file(handle->file_path, params) != 0)
     {
         cJSON_Delete(params);
         return -1;
@@ -97,27 +96,38 @@ int rov_config_write_to_file(struct rov_info* info)
  * @brief 读取配置文件（记得用完要 delete）
  * @return 由读取到的配置文件创建的 cjson 结构体
  */
-cJSON *rov_config_read_from_file_return_cjson()
+static cJSON *read_config_file(const char *config_file_path)
 {
-    FILE *fp = fopen(CONFIG_FILE_PATH, "r");
+    FILE *fp = fopen(config_file_path, "r");
     if (fp == NULL)
     {
         log_e("file no exist");
         return NULL;
     }
 
-    char buf[CONFIG_FILE_MAX_LEN] = {0};
-    size_t read_byte = fread(buf, sizeof(char), CONFIG_FILE_MAX_LEN, fp);
+    fseek(fp, 0, SEEK_END);
+    const int file_size = ftell(fp);
+    fseek(fp, 0, SEEK_SET);
+
+    char *buf = calloc(file_size + 1, sizeof(char));
+    size_t read_byte = fread(buf, sizeof(char), file_size, fp);
     if (fclose(fp) != 0)
-        log_e("cannot close config file");
-    log_i("read %d bytes of config file", read_byte);
-    if (CONFIG_FILE_MAX_LEN == read_byte) //文件内容 >= 缓冲区尺寸
     {
-        log_e("size of config file beyond the max len");
+        log_e("cannot close config file");
+    }
+    log_i("read %d bytes of config file", read_byte);
+    if (file_size != read_byte)
+    {
+        log_e("config file read incomplete");
+        free(buf);
         return NULL;
     }
 
-    return cJSON_Parse(buf);
+    buf[file_size] = '\0';
+    cJSON * json_return = cJSON_Parse(buf);
+    free(buf);
+
+    return json_return;
 }
 
 /**
@@ -125,15 +135,15 @@ cJSON *rov_config_read_from_file_return_cjson()
  * @param info rov_info结构体参数
  * @return 0：成功 -1：失败
  */
-int rov_config_read_from_file(struct rov_info* info)
+int uv_config_read(uv_config_t *handle)
 {
-    cJSON *params = rov_config_read_from_file_return_cjson();
+    cJSON *params = read_config_file(handle->file_path);
     if (params != NULL) // 非空，解析
     {
-        propeller_params_read(info, cJSON_GetObjectItem(params, "propeller_params"));
-        dev_ctl_params_read(info, cJSON_GetObjectItem(params, "dev_params"));
-        rocket_ratio_params_read(info, cJSON_GetObjectItem(params, "rocket_ratio_params"));
-        others_params_read(info, cJSON_GetObjectItem(params, "others_config_params"));
+        propeller_params_read(&handle->data.propeller, cJSON_GetObjectItem(params, "propeller_params"));
+        dev_ctl_params_read(&handle->data.dev_ctl, cJSON_GetObjectItem(params, "dev_ctl_params"));
+        rocket_ratio_params_read(&handle->data.rocket_ratio, cJSON_GetObjectItem(params, "rocket_ratio_params"));
+        others_params_read(&handle->data.others, cJSON_GetObjectItem(params, "others_config_params"));
         cJSON_Delete(params);
     }
     else
@@ -150,28 +160,38 @@ int rov_config_read_from_file(struct rov_info* info)
  * @param info rov_info结构体参数
  * @return 0：成功 -1：失败
  */
-int rov_config_init(struct rov_info* info)
+uv_config_t *uv_config_init(const char *config_file_path)
 {
     log_i("load to config file");
-    memset(info, 0, sizeof(rov_info_t));//变量初始化
-
-    if (0 == access(CONFIG_FILE_PATH, F_OK)) // 0:存在
+    uv_config_t *handle_return = calloc(1, sizeof(uv_config_t));
+    if (handle_return == NULL)
     {
-        if (rov_config_read_from_file(info) < 0)  //能够读取则不做任何事
+        log_e("cannot alloc mem for config data");
+        return NULL;
+    }
+
+    if (0 == access(config_file_path, F_OK)) // 0:存在
+    {
+        if (uv_config_read(handle_return) < 0)  //能够读取则不做任何事
         {
             log_e("cannot read config file");
-            return -1;
+            free(handle_return);
+            return NULL;
         }
     }
     else
     {
         log_w("config file not exist, create it");
-        rov_info_write_initial_value(info); //初始化Rov_info
-        if (rov_config_write_to_file(info) < 0) //创建并将Rov_info信息写至config
+        uv_info_initial_value(handle_return); //初始化Rov_info
+        if (uv_config_write(handle_return) < 0) //创建并将Rov_info信息写至config
         {
             log_e("cannot write config file");
-            return -1;
+            free(handle_return);
+            return NULL;
         }
     }
-    return 0;
+
+    handle_return->file_path = strdup(config_file_path);
+
+    return handle_return;
 }
