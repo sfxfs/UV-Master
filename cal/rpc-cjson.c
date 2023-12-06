@@ -266,6 +266,16 @@ static cJSON *rpc_invoke_method_array(rpc_handle_t *handle, cJSON *request)
  */
 char *rpc_process(rpc_handle_t *handle, const char *json_req, size_t req_len)
 {
+	char *str_return = NULL;
+
+	if (json_req == NULL || req_len <= 0)
+	{
+		if (handle->debug_level > 0)
+			printf("jsonrpc: Empty Request\n");
+		str_return = cJSON_PrintUnformatted(rpc_err(handle, JRPC_PARSE_ERROR, strdup("Parse error: Not in JSON format."), NULL));
+		goto req_error;
+	}
+
 	if (handle->debug_level > 1)
 		printf("jsonrpc: recv json str:\n%.*s\n", req_len, json_req);
 
@@ -274,7 +284,8 @@ char *rpc_process(rpc_handle_t *handle, const char *json_req, size_t req_len)
 	{
 		if (handle->debug_level > 0)
 			printf("jsonrpc: Valid JSON Received\n");
-		return cJSON_PrintUnformatted(rpc_err(handle, JRPC_PARSE_ERROR, strdup("Parse error: Not in JSON format."), NULL));
+		str_return = cJSON_PrintUnformatted(rpc_err(handle, JRPC_PARSE_ERROR, strdup("Parse error: Not in JSON format."), NULL));
+		goto req_error;
 	}
 
 	cJSON *cjson_return = NULL;
@@ -291,9 +302,11 @@ char *rpc_process(rpc_handle_t *handle, const char *json_req, size_t req_len)
 		cjson_return = rpc_err(handle, JRPC_INVALID_REQUEST, strdup("Valid request received: Not a JSON object or array."), NULL);
 	}
 
-	char *str_return = cJSON_PrintUnformatted(cjson_return);
+	str_return = cJSON_PrintUnformatted(cjson_return);
 	cJSON_Delete(cjson_return);
 	cJSON_Delete(request);
+
+req_error:
 	if (handle->message.total != 0)
 	{
 		for (int i = 0; i < handle->message.total; i++)
@@ -301,5 +314,6 @@ char *rpc_process(rpc_handle_t *handle, const char *json_req, size_t req_len)
 		free(handle->message.str_array);
 		memset(&handle->message, 0, sizeof(str_free_t));
 	}
+
 	return str_return;
 }
