@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <pthread.h>
 
 #include "rpc-cjson.h"
 #include "tcp-server.h"
@@ -10,6 +11,7 @@
 
 jrpc_server_t *server;
 rpc_handle_t rpc;
+pthread_t server_tid;
 
 static char *uvm_strstr(const char *p1, int len, const char *p2)
 {
@@ -73,6 +75,13 @@ static char *on_recv(const char *data, int len)
     return resp;
 }
 
+static void *server_thread(void *arg)
+{
+    for (;;)
+        tcp_server_run_loop(server);
+    return NULL;
+}
+
 int uvm_cal_start()
 {
     server = tcp_server_init(RPC_PORT);
@@ -82,10 +91,17 @@ int uvm_cal_start()
     }
     tcp_server_set_debug_level(server, RPC_LOG_LEVEL);
     tcp_server_set_recv_handle(server, on_recv);
+
+    if (pthread_create(&server_tid, NULL, server_thread, NULL) != 0)
+    {
+        return -1;
+    }
+    pthread_detach(server_tid);
     return 0;
 }
 
 int uvm_cal_stop()
 {
-
+    pthread_cancel(server_tid);
+    return tcp_server_deinit(server);
 }

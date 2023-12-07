@@ -126,6 +126,9 @@ typedef struct {
     (from_struct)->_element[sizeof((from_struct)->_element)-1] = '\0'; \
     cJSON_AddStringToObject(to_json, #_element, (from_struct)->_element);
 
+#define S2J_JSON_SET__Bool_ELEMENT(to_json, from_struct, _element) \
+    cJSON_AddBoolToObject(to_json, #_element, (from_struct)->_element);
+
 #define S2J_JSON_ARRAY_SET_int_ELEMENT(to_json, from_struct, _element, index) \
     cJSON_AddItemToArray(to_json, cJSON_CreateInt((from_struct)->_element[index]));
 

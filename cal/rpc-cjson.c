@@ -277,7 +277,7 @@ char *rpc_process(rpc_handle_t *handle, const char *json_req, size_t req_len)
 	}
 
 	if (handle->debug_level > 1)
-		printf("jsonrpc: recv json str:\n%.*s\n", req_len, json_req);
+		printf("jsonrpc: recv json str:\n%.*s\n", (int)req_len, json_req);
 
 	cJSON *request = cJSON_ParseWithLength(json_req, req_len);
 	if (request == NULL)
