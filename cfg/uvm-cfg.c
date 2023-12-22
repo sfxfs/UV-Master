@@ -9,15 +9,20 @@
 
 #define CONFIG_FILE_PATH "config.json"
 
-static void uvm_cfg_initialize_value(config_data data_s)
+static config_data uvm_cfg_initialize_value()
 {
+    config_data data_s = {0};
+
     data_s.dev_ctl = dev_ctl_create_with_init_val();
     data_s.propeller = propeller_create_with_init_val();
     data_s.rocket_ratio = rocket_ratio_create_with_init_val();
     data_s.others = others_create_with_init_val();
+
+    data_s.read_succeed = true;
+    return data_s;
 }
 
-void uvm_cfg_free (config_data data_s)
+void uvm_cfg_delete(config_data data_s)
 {
     if (data_s.dev_ctl)
         free(data_s.dev_ctl);
@@ -29,26 +34,130 @@ void uvm_cfg_free (config_data data_s)
         free(data_s.others);
 }
 
-config_data uvm_cfg_read ()
-{
+static char* read_from_file(const char* filename) {
+    FILE* file;
+    long file_size;
+    char* buffer;
 
+    // 打开文件
+    file = fopen(filename, "r");
+    if (file == NULL) {
+        printf("无法打开文件.\n");
+        return NULL;
+    }
+
+    // 定位文件末尾以获取文件大小
+    fseek(file, 0L, SEEK_END);
+    file_size = ftell(file);
+    rewind(file);
+
+    // 分配内存来存储文件内容
+    buffer = (char*)malloc(file_size + 1);
+    if (buffer == NULL) {
+        printf("内存分配失败.\n");
+        fclose(file);
+        return NULL;
+    }
+
+    // 读取文件内容到缓冲区
+    if (fread(buffer, file_size, 1, file) != 1) {
+        printf("读取文件失败.\n");
+        fclose(file);
+        free(buffer);
+        return NULL;
+    }
+
+    // 在缓冲区末尾添加字符串结束符
+    buffer[file_size] = '\0';
+
+    // 关闭文件
+    fclose(file);
+
+    return buffer;
 }
 
-config_data uvm_cfg_init ()
+config_data uvm_cfg_read ()
 {
     config_data config = {0};
 
-    if (0 == access(CONFIG_FILE_PATH, F_OK)) // 0:存在
+    char *data = read_from_file(CONFIG_FILE_PATH);
+    if (data == NULL)
     {
-        config = uvm_cfg_read();
+        return config;
     }
-    else
+    cJSON *json = cJSON_Parse(data);
+    free(data);
+    if (json == NULL)
     {
-        uvm_cfg_initialize_value(config); //初始化Rov_info
-        if (uvm_cfg_write(config) < 0) //创建并将Rov_info信息写至config
+        return config;
+    }
+
+    config.others = others_j2s(cJSON_GetObjectItem(json, "others_params"));
+    config.dev_ctl = dev_ctl_j2s(cJSON_GetObjectItem(json, "dev_ctl_params"));
+    config.propeller = propeller_j2s(cJSON_GetObjectItem(json, "propeller_params"));
+    config.rocket_ratio = rocket_ratio_j2s(cJSON_GetObjectItem(json, "rocket_ratio_params"));
+
+    cJSON_Delete(json);
+
+    config.read_succeed = true;
+    return config;
+}
+
+static int write_to_file(const char* filename, const char* content) {
+    FILE* file;
+
+    // 打开文件以进行写入
+    file = fopen(filename, "w");
+    if (file == NULL)
+    {
+        file = fopen(CONFIG_FILE_PATH, "wt+");
+        if (file == NULL)
         {
-            printf("config write error...");
+            printf("无法打开文件.\n");
+            return -1;
         }
     }
+
+    // 写入内容到文件
+    if (fprintf(file, "%s", content) < 0) {
+        printf("写入文件失败.\n");
+    }
+
+    // 关闭文件
+    fclose(file);
+    return 0;
+}
+
+int uvm_cfg_write(config_data data_s)
+{
+    cJSON *json = cJSON_CreateObject();
+
+    cJSON_AddItemToObject(json, "others_params", others_s2j(data_s.others));
+    cJSON_AddItemToObject(json, "dev_ctl_params", dev_ctl_s2j(data_s.dev_ctl));
+    cJSON_AddItemToObject(json, "propeller_params", propeller_s2j(data_s.propeller));
+    cJSON_AddItemToObject(json, "rocket_ratio_params", rocket_ratio_s2j(data_s.rocket_ratio));
+
+    char *str = cJSON_Print(json);
+    cJSON_Delete(json);
+
+    int ret = write_to_file(CONFIG_FILE_PATH, str);
+    free(str);
+
+    return ret;
+}
+
+config_data uvm_cfg_init()
+{
+    if (0 == access(CONFIG_FILE_PATH, F_OK)) // 0:存在
+    {
+        return uvm_cfg_read();
+    }
+
+    config_data config = uvm_cfg_initialize_value(); // 初始化Rov_info
+    if (uvm_cfg_write(config) < 0)    // 创建并将Rov_info信息写至config
+    {
+        printf("config write error...\n");
+    }
+
     return config;
 }

@@ -27,7 +27,7 @@ set(CMAKE_C_FLAGS_DEBUG   "-O0 -g -Wall")
 set(CMAKE_C_FLAGS_RELEASE "-O3 -w -DNDEBUG")
 
 # add_subdirectory(src)
-# add_subdirectory(hal)
+add_subdirectory(hal)
 add_subdirectory(cal)
 add_subdirectory(cfg)
 add_subdirectory(exlibs)

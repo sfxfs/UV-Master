@@ -5,7 +5,7 @@
 
 static const dev_ctl_params default_params = {
     .arm_attr = {
-        .channel = 0,
+        .channel = 6,
         .enabled = false,
         .nMax = 500,
         .pMax = 2500,
@@ -13,7 +13,7 @@ static const dev_ctl_params default_params = {
         .step = 100,
     },
     .light_attr = {
-        .channel = 0,
+        .channel = 7,
         .enabled = false,
         .nMax = 500,
         .pMax = 2500,

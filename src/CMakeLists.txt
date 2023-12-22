@@ -1,6 +1,6 @@
 project(uvm-src)
 
-add_subdirectory(comm)
+add_subdirectory(rpc)
 add_subdirectory(ctrl)
 add_subdirectory(dev)
 add_subdirectory(log)

@@ -16,7 +16,7 @@ typedef struct
 } config_data;
 
 /* ess */
-void        uvm_cfg_free  (config_data data_s);
+void        uvm_cfg_delete(config_data data_s);
 config_data uvm_cfg_init  (void);
 config_data uvm_cfg_read  (void);
 int         uvm_cfg_write (config_data data_s);
