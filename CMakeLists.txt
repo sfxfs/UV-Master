@@ -1,6 +1,16 @@
 cmake_minimum_required(VERSION 3.5)
 project(UV-Master)
 
+set(CMAKE_SYSTEM_NAME Linux)
+set(CMAKE_SYSTEM_PROCESSOR arm)
+
+if(NOT CMAKE_C_COMPILER)
+    set(CMAKE_C_COMPILER arm-linux-gnueabihf-gcc)
+endif()
+if(NOT CMAKE_CXX_COMPILER)
+    set(CMAKE_CXX_COMPILER arm-linux-gnueabihf-g++)
+endif()
+
 set(CMAKE_VERBOSE_MAKEFILE ON)
 
 set(CMAKE_C_STANDARD 11)
