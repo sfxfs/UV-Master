@@ -4,7 +4,7 @@ add_library(${PROJECT_NAME} SHARED
             cJSON/cJSON.c
             cJSON/cJSON_Utils.c
             struct2json/s2j.c)
-add_library(libexlib ALIAS ${PROJECT_NAME})
+add_library(libex ALIAS ${PROJECT_NAME})
 
 target_include_directories(${PROJECT_NAME}
     PUBLIC 

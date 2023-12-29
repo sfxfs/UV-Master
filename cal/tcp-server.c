@@ -91,7 +91,7 @@ void tcp_server_run_loop(jrpc_server_t *handle)
             {
                 inet_ntop(AF_INET, (char *)&(handle->cli_addr.sin_addr),
                           handle->buf_head, sizeof(handle->cli_addr));
-                printf("[+] connected with %s:%d\n", handle->buf_head,
+                printf("tcp: connected with %s:%d\n", handle->buf_head,
                        ntohs(handle->cli_addr.sin_port));
             }
 
@@ -118,14 +118,14 @@ void tcp_server_run_loop(jrpc_server_t *handle)
                     bzero(handle->buf_head + buf_used, handle->buf_size - buf_used);
                     buf_free = handle->buf_size - buf_used;
                     if (handle->debug_level > 1)
-                		printf("[+] buf resize to: %d B\n", handle->buf_size);
+                		printf("tcp: buf resize to: %d B\n", handle->buf_size);
                     continue;
                 }
                 if (bytes_read <= 0)
                     break;
 
                 if (handle->debug_level > 1)
-                	printf("[+] data recv: \n%.*s\n", buf_used, handle->buf_head);
+                	printf("tcp: data recv: \n%.*s\n", buf_used, handle->buf_head);
 
                 char *ret_str = handle->handle_recv(handle->buf_head, buf_used);
                 write(handle->events[i].data.fd, ret_str, strlen(ret_str));
@@ -137,13 +137,13 @@ void tcp_server_run_loop(jrpc_server_t *handle)
         else
         {
             if (handle->debug_level != 0)
-            	printf("[+] unexpected\n");
+            	printf("tcp: unexpected\n");
         }
         /* check if the connection is closing */
         if (handle->events[i].events & (EPOLLRDHUP | EPOLLHUP))
         {
             if (handle->debug_level != 0)
-                printf("[+] connection closed\n");
+                printf("tcp: connection closed\n");
             epoll_ctl(handle->epfd, EPOLL_CTL_DEL,
                       handle->events[i].data.fd, NULL);
             close(handle->events[i].data.fd);

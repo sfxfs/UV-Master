@@ -87,6 +87,7 @@ int uvm_cal_start()
     server = tcp_server_init(RPC_PORT);
     if (server == NULL)
     {
+        printf("CAL: Server init failed.\n");
         return -1;
     }
     tcp_server_set_debug_level(server, RPC_LOG_LEVEL);
@@ -94,6 +95,7 @@ int uvm_cal_start()
 
     if (pthread_create(&server_tid, NULL, server_thread, NULL) != 0)
     {
+        printf("CAL: Thread start failed.\n");
         return -1;
     }
     pthread_detach(server_tid);

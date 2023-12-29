@@ -20,13 +20,13 @@ set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/output)
 set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/output/lib)
 
 if(NOT CMAKE_BUILD_TYPE)
-    set(CMAKE_BUILD_TYPE Debug)
+    set(CMAKE_BUILD_TYPE Release)
 endif()
 
 set(CMAKE_C_FLAGS_DEBUG   "-O0 -g -Wall")
 set(CMAKE_C_FLAGS_RELEASE "-O3 -w -DNDEBUG")
 
-# add_subdirectory(src)
+add_subdirectory(src)
 add_subdirectory(hal)
 add_subdirectory(cal)
 add_subdirectory(cfg)
