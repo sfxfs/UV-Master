@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "cJSON.h"
+#include "s2j.h"
+
 #include "dev_ctl.h"
 
 static const dev_ctl_params default_params = {
@@ -46,7 +49,7 @@ static cJSON *struct_to_json_dev_ctl_attr (dev_ctl_attr *attr_struct)
     return attr_json;
 }
 
-cJSON *dev_ctl_s2j (dev_ctl_params *params)
+void *dev_ctl_s2j (dev_ctl_params *params)
 {
     s2j_create_json_obj(json_params);
 
@@ -70,7 +73,7 @@ static dev_ctl_attr *json_to_struct_dev_ctl_attr(cJSON *attr_json)
     return attr_struct;
 }
 
-dev_ctl_params *dev_ctl_j2s (cJSON *json)
+dev_ctl_params *dev_ctl_j2s (void *json)
 {
     s2j_create_struct_obj(params_struct, dev_ctl_params);
     (void)json_temp;

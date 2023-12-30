@@ -1,9 +1,6 @@
 #ifndef UVM_CFG_PROPELLER_H
 #define UVM_CFG_PROPELLER_H
 
-#include "cJSON.h"
-#include "s2j.h"
-
 #include <stdint.h>
 #include <stdbool.h>
 
@@ -30,7 +27,7 @@ typedef struct
 } propeller_params;
 
 propeller_params *propeller_create_with_init_val (void);
-cJSON *propeller_s2j (propeller_params *params);
-propeller_params *propeller_j2s (cJSON *json);
+void *propeller_s2j (propeller_params *params);
+propeller_params *propeller_j2s (void *json);
 
 #endif

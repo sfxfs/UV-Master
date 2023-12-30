@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "cJSON.h"
+#include "s2j.h"
+
 #include "rocket_ratio.h"
 
 static const rocket_ratio_params default_params = {
@@ -194,7 +197,7 @@ static cJSON *struct_to_json_rocket_ratio_axis_attr (rocket_ratio_axis_attr *att
     return attr_json;
 }
 
-cJSON *rocket_ratio_s2j (rocket_ratio_params *params)
+void *rocket_ratio_s2j (rocket_ratio_params *params)
 {
     s2j_create_json_obj(json_params);
 
@@ -233,7 +236,7 @@ static rocket_ratio_axis_attr *json_to_struct_rocket_ratio_axis_attr(cJSON *attr
     return attr_struct;
 }
 
-rocket_ratio_params *rocket_ratio_j2s (cJSON *json)
+rocket_ratio_params *rocket_ratio_j2s (void *json)
 {
     s2j_create_struct_obj(params_struct, rocket_ratio_params);
     (void)json_temp;

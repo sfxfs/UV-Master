@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "cJSON.h"
+#include "s2j.h"
+
 #include "others.h"
 
 static others_params default_params = {
@@ -30,7 +33,7 @@ static cJSON *struct_to_json_server_attr (server_attr *attr_struct)
     return attr_json;
 }
 
-cJSON *others_s2j (others_params *params)
+void *others_s2j (others_params *params)
 {
     s2j_create_json_obj(json_params);
 
@@ -49,7 +52,7 @@ static server_attr *json_to_struct_server_attr(cJSON *attr_json)
     return attr_struct;
 }
 
-others_params *others_j2s (cJSON *json)
+others_params *others_j2s (void *json)
 {
     s2j_create_struct_obj(params_struct, others_params);
     (void)json_temp;

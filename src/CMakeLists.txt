@@ -5,13 +5,20 @@ add_subdirectory(ctrl)
 add_subdirectory(dev)
 add_subdirectory(log)
 
-add_executable(${PROJECT_NAME} main.c)
+add_executable(uvmaster main.c)
 
-target_link_libraries(${PROJECT_NAME}
+target_link_libraries(uvmaster
     libex
     libhal
     libcal
     libcfg
     pthread
     m
+)
+
+target_include_directories(uvmaster
+    PUBLIC
+        ../cal
+        ../cfg
+        ../hal
 )

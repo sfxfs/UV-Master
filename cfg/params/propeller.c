@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "cJSON.h"
+#include "s2j.h"
+
 #include "propeller.h"
 
 static const propeller_params default_params = {
@@ -86,7 +89,7 @@ static cJSON *struct_to_json_propeller_attr (propeller_attr *attr_struct)
     return attr_json;
 }
 
-cJSON *propeller_s2j (propeller_params *params)
+void *propeller_s2j (propeller_params *params)
 {
     s2j_create_json_obj(json_params);
 
@@ -116,7 +119,7 @@ static propeller_attr *json_to_struct_propeller_attr(cJSON *attr_json)
     return attr_struct;
 }
 
-propeller_params *propeller_j2s (cJSON *json)
+propeller_params *propeller_j2s (void *json)
 {
     s2j_create_struct_obj(params_struct, propeller_params);
     (void)json_temp;

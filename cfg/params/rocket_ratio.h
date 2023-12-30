@@ -1,9 +1,6 @@
 #ifndef UVM_CFG_ROCKET_RATIO_H
 #define UVM_CFG_ROCKET_RATIO_H
 
-#include "cJSON.h"
-#include "s2j.h"
-
 #include <stdint.h>
 #include <stdbool.h>
 
@@ -34,7 +31,7 @@ typedef struct
 } rocket_ratio_params;
 
 rocket_ratio_params *rocket_ratio_create_with_init_val (void);
-cJSON *rocket_ratio_s2j (rocket_ratio_params *params);
-rocket_ratio_params *rocket_ratio_j2s (cJSON *json);
+void *rocket_ratio_s2j (rocket_ratio_params *params);
+rocket_ratio_params *rocket_ratio_j2s (void *json);
 
 #endif

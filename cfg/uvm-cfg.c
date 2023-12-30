@@ -3,6 +3,8 @@
 #include <unistd.h>
 #include <string.h>
 
+#include "cJSON.h"
+
 #include "uvm-cfg.h"
 
 #define CONFIG_FILE_PATH "config.json"
@@ -59,7 +61,9 @@ static char* read_from_file(const char* filename) {
     }
 
     // 读取文件内容到缓冲区
-    if (fread(buffer, file_size, 1, file) != 1) {
+    int bytes_read = fread(buffer, file_size, 1, file);
+    printf("CFG: successfully read %d bytes.\n", bytes_read);
+    if (bytes_read != 1) {
         printf("CFG: Failed read from file.\n");
         fclose(file);
         free(buffer);

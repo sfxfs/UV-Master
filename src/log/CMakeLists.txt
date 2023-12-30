@@ -1,4 +1,4 @@
-project(UVM-src-log)
+project(uvm-src-log)
 
 add_library(${PROJECT_NAME} STATIC log.c)
 add_library(src::liblog ALIAS ${PROJECT_NAME})

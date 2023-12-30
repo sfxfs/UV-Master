@@ -1,9 +1,6 @@
 #ifndef UVM_CFG_DEV_CTL_H
 #define UVM_CFG_DEV_CTL_H
 
-#include "cJSON.h"
-#include "s2j.h"
-
 #include <stdint.h>
 #include <stdbool.h>
 
@@ -24,7 +21,7 @@ typedef struct
 } dev_ctl_params;
 
 dev_ctl_params *dev_ctl_create_with_init_val (void);
-cJSON *dev_ctl_s2j (dev_ctl_params *params);
-dev_ctl_params *dev_ctl_j2s (cJSON *json);
+void *dev_ctl_s2j (dev_ctl_params *params);
+dev_ctl_params *dev_ctl_j2s (void *json);
 
 #endif

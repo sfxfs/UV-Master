@@ -1,9 +1,6 @@
 #ifndef UVM_CFG_OTHERS_H
 #define UVM_CFG_OTHERS_H
 
-#include "cJSON.h"
-#include "s2j.h"
-
 #include <stdint.h>
 #include <stdbool.h>
 
@@ -19,7 +16,7 @@ typedef struct
 } others_params;
 
 others_params *others_create_with_init_val (void);
-cJSON *others_s2j (others_params *params);
-others_params *others_j2s (cJSON *json);
+void *others_s2j (others_params *params);
+others_params *others_j2s (void *json);
 
 #endif
