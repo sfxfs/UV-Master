@@ -36,6 +36,16 @@
 
 #include "driver_pca9685_interface.h"
 
+#include <gpio.h>
+#include <iic.h>
+#include <delay.h>
+#include <stdarg.h>
+
+#define PCA9685_I2C_DEV "/dev/i2c-0"
+#define PCA9685_GPIO_NUM 123
+
+static int pca9685_fd;
+
 /**
  * @brief  interface iic bus init
  * @return status code
@@ -45,6 +55,12 @@
  */
 uint8_t pca9685_interface_iic_init(void)
 {
+    pca9685_fd = uvm_i2c_init(PCA9685_I2C_DEV);
+    if (pca9685_fd < 0)
+    {
+        printf("pca9685 intf: iic dev init failed\n");
+        return 1;
+    }
     return 0;
 }
 
@@ -57,7 +73,12 @@ uint8_t pca9685_interface_iic_init(void)
  */
 uint8_t pca9685_interface_iic_deinit(void)
 {
-    return 0;
+    if (uvm_i2c_deinit(pca9685_fd) < 0) {
+        printf("pca9685 intf: iic close fd failed\n");
+        return 1;
+    }
+    else
+        return 0;
 }
 
 /**
@@ -73,7 +94,12 @@ uint8_t pca9685_interface_iic_deinit(void)
  */
 uint8_t pca9685_interface_iic_write(uint8_t addr, uint8_t reg, uint8_t *buf, uint16_t len)
 {
-    return 0;
+    if (uvm_i2c_write(pca9685_fd, addr, reg, len, buf) < 0) {
+        printf("pca9685 intf: iic write to device failed\n");
+        return 1;
+    }
+    else
+        return 0;
 }
 
 /**
@@ -89,7 +115,12 @@ uint8_t pca9685_interface_iic_write(uint8_t addr, uint8_t reg, uint8_t *buf, uin
  */
 uint8_t pca9685_interface_iic_read(uint8_t addr, uint8_t reg, uint8_t *buf, uint16_t len)
 {
-    return 0;
+    if (uvm_i2c_read(pca9685_fd, addr, reg, len, buf) < 0) {
+        printf("pca9685 intf: iic read from device failed\n");
+        return 1;
+    }
+    else
+        return 0;
 }
 
 /**
@@ -101,6 +132,11 @@ uint8_t pca9685_interface_iic_read(uint8_t addr, uint8_t reg, uint8_t *buf, uint
  */
 uint8_t pca9685_interface_oe_init(void)
 {
+    if (uvm_gpio_export_direction(PCA9685_GPIO_NUM, GPIO_DIRECTION_OUTPUT) != 0)
+    {
+        printf("pca9685 intf: gpio dev init failed\n");
+        return 2;
+    }
     return 0;
 }
 
@@ -113,6 +149,11 @@ uint8_t pca9685_interface_oe_init(void)
  */
 uint8_t pca9685_interface_oe_deinit(void)
 {
+    if (uvm_gpio_unexport(PCA9685_GPIO_NUM) != 0)
+    {
+        printf("pca9685 intf: gpio dev deinit failed\n");
+        return 1;
+    }
     return 0;
 }
 
@@ -126,6 +167,11 @@ uint8_t pca9685_interface_oe_deinit(void)
  */
 uint8_t pca9685_interface_oe_write(uint8_t value)
 {
+    if (uvm_gpio_set_value(PCA9685_GPIO_NUM, value) != 0)
+    {
+        printf("pca9685 intf: gpio dev set value failed\n");
+        return 1;
+    }
     return 0;
 }
 
@@ -136,7 +182,7 @@ uint8_t pca9685_interface_oe_write(uint8_t value)
  */
 void pca9685_interface_delay_ms(uint32_t ms)
 {
-
+    uvm_delay(ms);
 }
 
 /**
@@ -146,5 +192,8 @@ void pca9685_interface_delay_ms(uint32_t ms)
  */
 void pca9685_interface_debug_print(const char *const fmt, ...)
 {
-    
+    va_list temp_va;
+	va_start(temp_va, fmt);
+	printf(fmt, temp_va);
+	va_end(temp_va);
 }

@@ -7,5 +7,7 @@ add_library(src::libdev ALIAS ${PROJECT_NAME})
 
 target_include_directories(${PROJECT_NAME}
     PUBLIC 
+        ../log
         ../../cfg
+        ../../hal
 )

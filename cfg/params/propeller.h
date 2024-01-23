@@ -9,9 +9,9 @@ typedef struct
     bool reversed;
     bool enabled;
     int16_t channel;
-    int16_t deadzone_upper;
+    int16_t deadzone_upper; // us
     int16_t deadzone_lower;
-    float power_positive;
+    float power_positive; // -1.0 ~ 1.0
     float power_negative;
 } propeller_attr;
 

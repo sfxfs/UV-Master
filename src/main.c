@@ -1,4 +1,4 @@
-#include <uvm-cfg.h>
+#include <cfg/uvm-cfg.h>
 
 int main(int argc, char **argv)
 {

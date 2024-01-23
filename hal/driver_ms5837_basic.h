@@ -37,7 +37,7 @@
 #ifndef DRIVER_MS5837_BASIC_H
 #define DRIVER_MS5837_BASIC_H
 
-#include "driver_ms5837_interface.h"
+#include "intf/driver_ms5837_interface.h"
 
 #ifdef __cplusplus
 extern "C"{
