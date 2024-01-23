@@ -3,6 +3,7 @@
 #include <string.h>
 #include <pthread.h>
 
+#include "rpc-fun.h"
 #include "rpc-cjson.h"
 #include "tcp-server.h"
 
@@ -92,6 +93,8 @@ int uvm_cal_start()
     }
     tcp_server_set_debug_level(server, RPC_LOG_LEVEL);
     tcp_server_set_recv_handle(server, on_recv);
+    extern config_data uvm_config;
+    add_all_handler(&rpc, &uvm_config);
 
     if (pthread_create(&server_tid, NULL, server_thread, NULL) != 0)
     {

@@ -28,9 +28,9 @@ static int per_motor_init(propeller_attr *attr)
             return 0;
 }
 
-int uvm_motor_init(motor_config *cfg, int16_t pwm_freq_offset)
+int uvm_motor_init(propeller_params *cfg)
 {
-    if (pca9685_basic_init(PCA9685_ADDRESS_A000000, 50 + pwm_freq_offset) != 0)
+    if (pca9685_basic_init(PCA9685_ADDRESS_A000000, 50 + cfg->pwm_freq_offset) != 0)
     {
         log_error("pca9685 init failed.");
         return -1;
@@ -66,7 +66,7 @@ static int per_motor_write(propeller_attr *attr, float power_percent)
     return 0;
 }
 
-int uvm_motor_write(motor_config *cfg, motor_power_req req)
+int uvm_motor_write(propeller_params *cfg, motor_power_req req)
 {
     int ret = 0;
     #define PWM_COTROLLER_WRITE(propeller) ret += per_motor_write(&cfg->propeller, req.propeller);

@@ -8,11 +8,15 @@ add_subdirectory(log)
 add_executable(uvmaster main.c)
 
 target_link_libraries(uvmaster
-    libhal
-    libcal
-    libcfg
     pthread
     m
+    src::libctrl
+    src::libdev
+    src::liblog
+    src::librpc
+    libhal
+    libcfg
+    libcal
 )
 
 target_include_directories(uvmaster

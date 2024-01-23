@@ -8,7 +8,7 @@
 
 static const propeller_params default_params = {
     .pwm_freq_offset = 0,
-    .front_right_attr = {
+    .front_right = {
         .channel = 0,
         .enabled = true,
         .reversed = false,
@@ -17,7 +17,7 @@ static const propeller_params default_params = {
         .power_positive = 0.5,
         .power_negative = 0.5,
     },
-    .front_left_attr = {
+    .front_left = {
         .channel = 1,
         .enabled = true,
         .reversed = false,
@@ -26,7 +26,7 @@ static const propeller_params default_params = {
         .power_positive = 0.5,
         .power_negative = 0.5,
     },
-    .center_right_attr = {
+    .center_right = {
         .channel = 2,
         .enabled = true,
         .reversed = false,
@@ -35,7 +35,7 @@ static const propeller_params default_params = {
         .power_positive = 0.5,
         .power_negative = 0.5,
     },
-    .center_left_attr = {
+    .center_left = {
         .channel = 3,
         .enabled = true,
         .reversed = false,
@@ -44,7 +44,7 @@ static const propeller_params default_params = {
         .power_positive = 0.5,
         .power_negative = 0.5,
     },
-    .back_right_attr = {
+    .back_right = {
         .channel = 4,
         .enabled = true,
         .reversed = false,
@@ -53,7 +53,7 @@ static const propeller_params default_params = {
         .power_positive = 0.5,
         .power_negative = 0.5,
     },
-    .back_left_attr = {
+    .back_left = {
         .channel = 5,
         .enabled = true,
         .reversed = false,
@@ -94,12 +94,12 @@ void *propeller_s2j (propeller_params *params)
     s2j_create_json_obj(json_params);
 
     s2j_json_set_basic_element(json_params, params, int, pwm_freq_offset);
-    s2j_json_set_struct_element_by_func(json_params, params, propeller_attr, front_right_attr);
-    s2j_json_set_struct_element_by_func(json_params, params, propeller_attr, front_left_attr);
-    s2j_json_set_struct_element_by_func(json_params, params, propeller_attr, center_right_attr);
-    s2j_json_set_struct_element_by_func(json_params, params, propeller_attr, center_left_attr);
-    s2j_json_set_struct_element_by_func(json_params, params, propeller_attr, back_right_attr);
-    s2j_json_set_struct_element_by_func(json_params, params, propeller_attr, back_left_attr);
+    s2j_json_set_struct_element_by_func(json_params, params, propeller_attr, front_right);
+    s2j_json_set_struct_element_by_func(json_params, params, propeller_attr, front_left);
+    s2j_json_set_struct_element_by_func(json_params, params, propeller_attr, center_right);
+    s2j_json_set_struct_element_by_func(json_params, params, propeller_attr, center_left);
+    s2j_json_set_struct_element_by_func(json_params, params, propeller_attr, back_right);
+    s2j_json_set_struct_element_by_func(json_params, params, propeller_attr, back_left);
 
     return json_params;
 }
@@ -125,12 +125,12 @@ propeller_params *propeller_j2s (void *json)
     (void)json_temp;
 
     s2j_struct_get_basic_element(params_struct, json, int, pwm_freq_offset);
-    s2j_struct_get_struct_element_by_func(params_struct, json, propeller_attr, front_right_attr);
-    s2j_struct_get_struct_element_by_func(params_struct, json, propeller_attr, front_left_attr);
-    s2j_struct_get_struct_element_by_func(params_struct, json, propeller_attr, center_right_attr);
-    s2j_struct_get_struct_element_by_func(params_struct, json, propeller_attr, center_left_attr);
-    s2j_struct_get_struct_element_by_func(params_struct, json, propeller_attr, back_right_attr);
-    s2j_struct_get_struct_element_by_func(params_struct, json, propeller_attr, back_left_attr);
+    s2j_struct_get_struct_element_by_func(params_struct, json, propeller_attr, front_right);
+    s2j_struct_get_struct_element_by_func(params_struct, json, propeller_attr, front_left);
+    s2j_struct_get_struct_element_by_func(params_struct, json, propeller_attr, center_right);
+    s2j_struct_get_struct_element_by_func(params_struct, json, propeller_attr, center_left);
+    s2j_struct_get_struct_element_by_func(params_struct, json, propeller_attr, back_right);
+    s2j_struct_get_struct_element_by_func(params_struct, json, propeller_attr, back_left);
 
     return params_struct;
 }

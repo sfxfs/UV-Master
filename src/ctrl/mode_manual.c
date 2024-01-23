@@ -34,8 +34,8 @@ static motor_power_req per_rocket_axis(rocket_ratio_axis_attr config, double axi
 motor_power_req uvm_manual_ctrl(rocket_ratio_params *config, double x, double y, double z, double r)
 {
     motor_power_req req = {0};
-
     motor_power_req per_axis_req;
+
     #define PWM_COTROLLER_WRITE(propeller) \
         req.propeller += per_axis_req.propeller;
 
