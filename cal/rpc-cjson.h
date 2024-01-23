@@ -1,7 +1,7 @@
 #ifndef UVM_CAL_JSONRPC_H
 #define UVM_CAL_JSONRPC_H
 
-#include "cJSON.h"
+#include "cjson/cJSON.h"
 
 #define JRPC_VERSION "2.0"
 

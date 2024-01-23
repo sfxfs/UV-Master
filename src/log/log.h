@@ -14,7 +14,6 @@
 #include <time.h>
 
 #define LOG_VERSION "0.1.0"
-#define LOG_USE_COLOR
 
 typedef struct {
   va_list ap;

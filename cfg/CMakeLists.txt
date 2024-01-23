@@ -10,6 +10,9 @@ add_library(${PROJECT_NAME} SHARED
 add_library(libcfg ALIAS ${PROJECT_NAME})
 
 target_include_directories(${PROJECT_NAME}
-    PUBLIC
-        cjson
+    PUBLIC 
+        .
+        ../src
+        ../cal
+        ../hal
 )

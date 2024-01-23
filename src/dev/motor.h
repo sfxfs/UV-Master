@@ -3,6 +3,10 @@
 
 #include <params/propeller.h>
 
+#define PROPELLER_DUTY_MID 1500 // us
+#define PROPELLER_DUTY_MIN 1000 // us
+#define PROPELLER_DUTY_MAX 2000 // us
+
 typedef struct
 {
     propeller_attr front_right;

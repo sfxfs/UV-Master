@@ -12,9 +12,9 @@ add_library(${PROJECT_NAME} SHARED  ${intf_srcs}
 add_library(libhal ALIAS ${PROJECT_NAME})
 
 target_include_directories(${PROJECT_NAME}
-    PUBLIC
+    PUBLIC 
         .
-        ./drv
-        ./intf
-        ./utils
+        ../src
+        ../cfg
+        ../cal
 )

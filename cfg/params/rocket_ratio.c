@@ -1,44 +1,44 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "cJSON.h"
-#include "s2j.h"
+#include "cjson/cJSON.h"
+#include "cjson/s2j.h"
 
 #include "rocket_ratio.h"
 
 static const rocket_ratio_params default_params = {
     .x = {
-        .front_right_attr = {
+        .front_right = {
             .enabled = true,
             .reversed = false,
             .ratio_p = 0.3,
             .ratio_n = 0.3,
         },
-        .front_left_attr = {
+        .front_left = {
             .enabled = true,
             .reversed = false,
             .ratio_p = 0.3,
             .ratio_n = 0.3,
         },
-        .center_right_attr = {
+        .center_right = {
             .enabled = true,
             .reversed = false,
             .ratio_p = 0.3,
             .ratio_n = 0.3,
         },
-        .center_left_attr = {
+        .center_left = {
             .enabled = true,
             .reversed = false,
             .ratio_p = 0.3,
             .ratio_n = 0.3,
         },
-        .back_right_attr = {
+        .back_right = {
             .enabled = true,
             .reversed = false,
             .ratio_p = 0.3,
             .ratio_n = 0.3,
         },
-        .back_left_attr = {
+        .back_left = {
             .enabled = true,
             .reversed = false,
             .ratio_p = 0.3,
@@ -46,37 +46,37 @@ static const rocket_ratio_params default_params = {
         },
     },
     .y = {
-        .front_right_attr = {
+        .front_right = {
             .enabled = true,
             .reversed = false,
             .ratio_p = 0.3,
             .ratio_n = 0.3,
         },
-        .front_left_attr = {
+        .front_left = {
             .enabled = true,
             .reversed = false,
             .ratio_p = 0.3,
             .ratio_n = 0.3,
         },
-        .center_right_attr = {
+        .center_right = {
             .enabled = true,
             .reversed = false,
             .ratio_p = 0.3,
             .ratio_n = 0.3,
         },
-        .center_left_attr = {
+        .center_left = {
             .enabled = true,
             .reversed = false,
             .ratio_p = 0.3,
             .ratio_n = 0.3,
         },
-        .back_right_attr = {
+        .back_right = {
             .enabled = true,
             .reversed = false,
             .ratio_p = 0.3,
             .ratio_n = 0.3,
         },
-        .back_left_attr = {
+        .back_left = {
             .enabled = true,
             .reversed = false,
             .ratio_p = 0.3,
@@ -84,37 +84,37 @@ static const rocket_ratio_params default_params = {
         },
     },
     .z = {
-        .front_right_attr = {
+        .front_right = {
             .enabled = false,
             .reversed = false,
             .ratio_p = 0.3,
             .ratio_n = 0.3,
         },
-        .front_left_attr = {
+        .front_left = {
             .enabled = false,
             .reversed = false,
             .ratio_p = 0.3,
             .ratio_n = 0.3,
         },
-        .center_right_attr = {
+        .center_right = {
             .enabled = true,
             .reversed = false,
             .ratio_p = 0.3,
             .ratio_n = 0.3,
         },
-        .center_left_attr = {
+        .center_left = {
             .enabled = true,
             .reversed = false,
             .ratio_p = 0.3,
             .ratio_n = 0.3,
         },
-        .back_right_attr = {
+        .back_right = {
             .enabled = false,
             .reversed = false,
             .ratio_p = 0.3,
             .ratio_n = 0.3,
         },
-        .back_left_attr = {
+        .back_left = {
             .enabled = false,
             .reversed = false,
             .ratio_p = 0.3,
@@ -122,37 +122,37 @@ static const rocket_ratio_params default_params = {
         },
     },
     .r = {
-        .front_right_attr = {
+        .front_right = {
             .enabled = true,
             .reversed = false,
             .ratio_p = 0.3,
             .ratio_n = 0.3,
         },
-        .front_left_attr = {
+        .front_left = {
             .enabled = true,
             .reversed = false,
             .ratio_p = 0.3,
             .ratio_n = 0.3,
         },
-        .center_right_attr = {
+        .center_right = {
             .enabled = true,
             .reversed = false,
             .ratio_p = 0.3,
             .ratio_n = 0.3,
         },
-        .center_left_attr = {
+        .center_left = {
             .enabled = true,
             .reversed = false,
             .ratio_p = 0.3,
             .ratio_n = 0.3,
         },
-        .back_right_attr = {
+        .back_right = {
             .enabled = true,
             .reversed = false,
             .ratio_p = 0.3,
             .ratio_n = 0.3,
         },
-        .back_left_attr = {
+        .back_left = {
             .enabled = true,
             .reversed = false,
             .ratio_p = 0.3,
@@ -187,12 +187,12 @@ static cJSON *struct_to_json_rocket_ratio_axis_attr (rocket_ratio_axis_attr *att
 {
     s2j_create_json_obj(attr_json);
 
-    s2j_json_set_struct_element_by_func(attr_json, attr_struct, rocket_ratio_propeller_attr, front_right_attr);
-    s2j_json_set_struct_element_by_func(attr_json, attr_struct, rocket_ratio_propeller_attr, front_left_attr);
-    s2j_json_set_struct_element_by_func(attr_json, attr_struct, rocket_ratio_propeller_attr, center_right_attr);
-    s2j_json_set_struct_element_by_func(attr_json, attr_struct, rocket_ratio_propeller_attr, center_left_attr);
-    s2j_json_set_struct_element_by_func(attr_json, attr_struct, rocket_ratio_propeller_attr, back_right_attr);
-    s2j_json_set_struct_element_by_func(attr_json, attr_struct, rocket_ratio_propeller_attr, back_left_attr);
+    s2j_json_set_struct_element_by_func(attr_json, attr_struct, rocket_ratio_propeller_attr, front_right);
+    s2j_json_set_struct_element_by_func(attr_json, attr_struct, rocket_ratio_propeller_attr, front_left);
+    s2j_json_set_struct_element_by_func(attr_json, attr_struct, rocket_ratio_propeller_attr, center_right);
+    s2j_json_set_struct_element_by_func(attr_json, attr_struct, rocket_ratio_propeller_attr, center_left);
+    s2j_json_set_struct_element_by_func(attr_json, attr_struct, rocket_ratio_propeller_attr, back_right);
+    s2j_json_set_struct_element_by_func(attr_json, attr_struct, rocket_ratio_propeller_attr, back_left);
 
     return attr_json;
 }
@@ -226,12 +226,12 @@ static rocket_ratio_axis_attr *json_to_struct_rocket_ratio_axis_attr(cJSON *attr
     s2j_create_struct_obj(attr_struct, rocket_ratio_axis_attr);
     (void)json_temp;
 
-    s2j_struct_get_struct_element_by_func(attr_struct, attr_json, rocket_ratio_propeller_attr, front_right_attr);
-    s2j_struct_get_struct_element_by_func(attr_struct, attr_json, rocket_ratio_propeller_attr, front_left_attr);
-    s2j_struct_get_struct_element_by_func(attr_struct, attr_json, rocket_ratio_propeller_attr, center_right_attr);
-    s2j_struct_get_struct_element_by_func(attr_struct, attr_json, rocket_ratio_propeller_attr, center_left_attr);
-    s2j_struct_get_struct_element_by_func(attr_struct, attr_json, rocket_ratio_propeller_attr, back_right_attr);
-    s2j_struct_get_struct_element_by_func(attr_struct, attr_json, rocket_ratio_propeller_attr, back_left_attr);
+    s2j_struct_get_struct_element_by_func(attr_struct, attr_json, rocket_ratio_propeller_attr, front_right);
+    s2j_struct_get_struct_element_by_func(attr_struct, attr_json, rocket_ratio_propeller_attr, front_left);
+    s2j_struct_get_struct_element_by_func(attr_struct, attr_json, rocket_ratio_propeller_attr, center_right);
+    s2j_struct_get_struct_element_by_func(attr_struct, attr_json, rocket_ratio_propeller_attr, center_left);
+    s2j_struct_get_struct_element_by_func(attr_struct, attr_json, rocket_ratio_propeller_attr, back_right);
+    s2j_struct_get_struct_element_by_func(attr_struct, attr_json, rocket_ratio_propeller_attr, back_left);
 
     return attr_struct;
 }

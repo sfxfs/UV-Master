@@ -1,6 +1,6 @@
 #include "motor.h"
 
-#include <log.h>
+#include <log/log.h>
 #include <driver_pca9685_basic.h>
 
 #define CALL_FOR_ALL_PROPELLER(function) \
@@ -11,13 +11,13 @@
     function(back_left) \
     function(back_right)
 
-#define us2percent(us) (((float)us)/20000.0f)*100.0f
+#define us2percent(us) (((float)us)/20000.0f)*100.0f // 一个周期 20 ms
 #define constrain(amt,low,high) ((amt)<(low)?(low):((amt)>(high)?(high):(amt))) //限幅函数
 
 static int per_motor_init(propeller_attr *attr)
 {
     if (attr->enabled == true)
-        if (pca9685_basic_write(attr->channel, 0.0f, us2percent(1500)) != 0)
+        if (pca9685_basic_write(attr->channel, 0.0f, us2percent(PROPELLER_DUTY_MID)) != 0)
             return -1;
         else
             return 0;
@@ -30,7 +30,7 @@ static int per_motor_init(propeller_attr *attr)
 
 int uvm_motor_init(motor_config *cfg, int16_t pwm_freq_offset)
 {
-    if (pca9685_basic_init(PCA9685_ADDRESS_A000000, 50 + pwm_freq_offset) != 0) // 一个周期 20 ms
+    if (pca9685_basic_init(PCA9685_ADDRESS_A000000, 50 + pwm_freq_offset) != 0)
     {
         log_error("pca9685 init failed.");
         return -1;
@@ -48,17 +48,17 @@ int uvm_motor_init(motor_config *cfg, int16_t pwm_freq_offset)
     return 0;
 }
 
-static int per_motor_write(propeller_attr *attr, float power_persent)
+static int per_motor_write(propeller_attr *attr, float power_percent)
 {
     if (attr->enabled == true)
     {
-        if (power_persent != 0)
+        if (power_percent != 0)
         {
-            power_persent = power_persent + us2percent(power_persent > 0 ? attr->deadzone_upper : attr->deadzone_lower); // 加入死区偏移
-            power_persent = power_persent * attr->reversed == true ? -1 : 1; // 是否反转
-            power_persent = constrain(power_persent, attr->power_negative, attr->power_positive); // 限制最大输出
+            power_percent = power_percent + us2percent(power_percent > 0 ? attr->deadzone_upper : attr->deadzone_lower); // 加入死区偏移
+            power_percent = power_percent * attr->reversed == true ? -1 : 1; // 是否反转
+            power_percent = constrain(power_percent, attr->power_negative, attr->power_positive); // 限制最大输出
         }
-        if (pca9685_basic_write(attr->channel, 0.0f, power_persent) != 0)
+        if (pca9685_basic_write(attr->channel, 0.0f, power_percent) != 0)
             return -1;
         else
             return 0;

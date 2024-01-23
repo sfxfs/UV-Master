@@ -3,7 +3,7 @@
 #include <unistd.h>
 #include <string.h>
 
-#include "cJSON.h"
+#include "cjson/cJSON.h"
 
 #include "uvm-cfg.h"
 

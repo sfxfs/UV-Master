@@ -37,7 +37,7 @@
 #ifndef DRIVER_PCA9685_INTERFACE_H
 #define DRIVER_PCA9685_INTERFACE_H
 
-#include "drv/driver_pca9685.h"
+#include "../drv/driver_pca9685.h"
 
 #ifdef __cplusplus
 extern "C"{

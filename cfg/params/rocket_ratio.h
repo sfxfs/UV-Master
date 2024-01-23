@@ -14,12 +14,12 @@ typedef struct
 
 typedef struct
 {
-    rocket_ratio_propeller_attr front_right_attr;
-    rocket_ratio_propeller_attr front_left_attr;
-    rocket_ratio_propeller_attr center_right_attr;
-    rocket_ratio_propeller_attr center_left_attr;
-    rocket_ratio_propeller_attr back_right_attr;
-    rocket_ratio_propeller_attr back_left_attr;
+    rocket_ratio_propeller_attr front_right;
+    rocket_ratio_propeller_attr front_left;
+    rocket_ratio_propeller_attr center_right;
+    rocket_ratio_propeller_attr center_left;
+    rocket_ratio_propeller_attr back_right;
+    rocket_ratio_propeller_attr back_left;
 } rocket_ratio_axis_attr;
 
 typedef struct
