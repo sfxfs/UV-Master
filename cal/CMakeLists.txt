@@ -1,16 +1,8 @@
 project(uvm-cal)
 
 add_library(${PROJECT_NAME} SHARED
-			uvm-cal.c
-            tcp-server.c
-            rpc-fun.c
-            rpc-cjson.c)
-add_library(libcal ALIAS ${PROJECT_NAME})
+            uvm_cal.c
+            rpc_cjson.c
+            tcp_server.c)
 
-target_include_directories(${PROJECT_NAME}
-    PUBLIC 
-        .
-        ../src
-        ../cfg
-        ../hal
-)
+target_include_directories(${PROJECT_NAME} PUBLIC ../3rd/cjson)

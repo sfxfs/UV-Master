@@ -1,18 +1,12 @@
 project(uvm-cfg)
 
-aux_source_directory(params cfg_srcs)
-aux_source_directory(cjson cj_srcs)
-
 add_library(${PROJECT_NAME} SHARED
-            uvm-cfg.c
-            ${cfg_srcs}
-            ${cj_srcs})
-add_library(libcfg ALIAS ${PROJECT_NAME})
+            uvm_cfg.c
+            cfg_dev_ctl.c
+            cfg_others.c
+            cfg_propeller.c
+            cfg_rocket_ratio.c)
 
-target_include_directories(${PROJECT_NAME}
-    PUBLIC 
-        .
-        ../src
-        ../cal
-        ../hal
-)
+target_include_directories(${PROJECT_NAME} PUBLIC
+                            ../3rd/cjson
+                            ../3rd/s2j)
