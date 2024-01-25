@@ -11,6 +11,8 @@ add_library(${PROJECT_NAME} SHARED
             interface_pca9685.c
             pca9685.c)
 
+target_link_libraries(${PROJECT_NAME} m)
+
 target_include_directories(${PROJECT_NAME} PUBLIC
                             utils
                             ../3rd/clog)

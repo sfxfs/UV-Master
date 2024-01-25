@@ -2,7 +2,7 @@
 #include <uvm_cfg.h>
 #include <uvm_cal.h>
 #include "rpc/rpc_fun.h"
-#include "motor.h"
+#include "dev/motor.h"
 
 config_data uvm_config;
 uvm_cal_t uvm_cal;

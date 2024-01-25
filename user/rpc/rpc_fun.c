@@ -1,8 +1,9 @@
 #include "rpc_fun.h"
 
+#include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include "ctrl.c"
+#include "control.h"
 #include "cJSON.h"
 
 /**

@@ -1,8 +1,11 @@
-add_subdirectory(rpc)
-add_subdirectory(ctrl)
-add_subdirectory(dev)
+aux_source_directory(rpc rpc_srcs)
+aux_source_directory(ctrl ctrl_srcs)
+aux_source_directory(dev dev_srcs)
 
-add_executable(uvmaster main.c)
+add_executable(uvmaster main.c
+                        ${dev_srcs}
+                        ${ctrl_srcs}
+                        ${rpc_srcs})
 
 target_link_libraries(uvmaster
     m
@@ -13,13 +16,13 @@ target_link_libraries(uvmaster
     uvm-cal
     uvm-cfg
     uvm-hal
-    uvm-user-rpc
-    uvm-user-dev
-    uvm-user-ctrl
 )
 
 target_include_directories(uvmaster PUBLIC
+                            .
                             ../cal
                             ../cfg
+                            ../hal
                             ../3rd/clog
+                            ../3rd/cjson
                             )

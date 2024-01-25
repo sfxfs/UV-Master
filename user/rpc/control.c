@@ -1,6 +1,7 @@
-#include "ctrl.h"
-#include "mode_manual.h"
-#include "motor.h"
+#include "control.h"
+
+#include "ctrl/mode_manual.h"
+#include "dev/motor.h"
 #include "log.h"
 
 int rpc_manual_ctrl(config_data *cfg, double x, double y, double z, double r)
