@@ -60,8 +60,9 @@ int uvm_i2c_write(int fd, uint8_t addr, uint8_t reg, uint8_t len, uint8_t *val)
     union i2c_smbus_data data;
 
     data.block[0] = len; /* block[0] is used for length */
-    memcpy(&data.block[1], val, len);
-    return i2c_smbus_access(fd, I2C_SMBUS_WRITE, reg, I2C_SMBUS_BLOCK_DATA, &data);
+    if (val)
+        memcpy(&data.block[1], val, len);
+    return i2c_smbus_access(fd, I2C_SMBUS_WRITE, reg, I2C_SMBUS_I2C_BLOCK_DATA, &data);
 }
 
 int uvm_i2c_read(int fd, uint8_t addr, uint8_t reg, uint8_t len, uint8_t *val)
@@ -75,9 +76,10 @@ int uvm_i2c_read(int fd, uint8_t addr, uint8_t reg, uint8_t len, uint8_t *val)
     union i2c_smbus_data data;
 
     data.block[0] = len;
-    if (i2c_smbus_access(fd, I2C_SMBUS_READ, reg, I2C_SMBUS_BLOCK_DATA, &data) != 0)
+    if (i2c_smbus_access(fd, I2C_SMBUS_READ, reg, I2C_SMBUS_I2C_BLOCK_DATA, &data) != 0) // 请勿使用 I2C_SMBUS_BLOCK_DATA 会导致 SG
         return -1;
-    memcpy(val, &data.block[1], len);
+    if (val)
+        memcpy(val, &data.block[1], len);
     return 0;
 }
 

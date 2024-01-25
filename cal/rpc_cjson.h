@@ -36,7 +36,6 @@ typedef struct rpc_handle
 {
     int procedure_count;
 	struct jrpc_procedure *procedures;
-	int debug_level;
 	str_free_t message;
 } rpc_handle_t;
 

@@ -1,5 +1,6 @@
 #include "rpc_cjson.h"
 
+#include "log.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -23,8 +24,7 @@ int rpc_add_method(rpc_handle_t *handle, jrpc_function function_pointer, char *n
 											 sizeof(struct jrpc_procedure) * handle->procedure_count);
 		if (!ptr)
 		{
-			if (handle->debug_level > 0)
-				printf("jsonrpc: Cannot alloc mem for func %s\n", name);
+			log_error("Cannot alloc mem for func %s", name);
 			return -1;
 		}
 		handle->procedures = ptr;
@@ -98,8 +98,7 @@ int rpc_del_method(rpc_handle_t *handle, char *name)
 	}
 	else
 	{
-		if (handle->debug_level > 0)
-			printf("jsonrpc: Method '%s' not found\n", name);
+		log_error("Method '%s' not found.", name);
 		return -1;
 	}
 	return 0;
@@ -189,8 +188,7 @@ static cJSON *invoke_procedure(rpc_handle_t *handle, char *name, cJSON *params, 
 	}
 	if (!procedure_found)
 	{
-		if (handle->debug_level > 0)
-			printf("jsonrpc: Method not found: %s\n", name);
+		log_error("Method '%s' not found.", name);
 		return rpc_err(handle, JRPC_METHOD_NOT_FOUND, strdup("Method not found."), id);
 	}
 	else
@@ -217,23 +215,20 @@ static cJSON *rpc_invoke_method(rpc_handle_t *handle, cJSON *request)
 	if (method != NULL && method->type == cJSON_String)
 	{
 		params = cJSON_GetObjectItem(request, "params");
-		if (params == NULL || params->type == cJSON_Array || params->type == cJSON_Object)
+		id = cJSON_GetObjectItem(request, "id");
+		if (id->type == cJSON_NULL || id->type == cJSON_String || id->type == cJSON_Int)
 		{
-			id = cJSON_GetObjectItem(request, "id");
-			if (id == NULL || id->type == cJSON_String || id->type == cJSON_Number)
-			{
-				// We have to copy ID because using it on the reply and deleting the response Object will also delete ID
-				cJSON *id_copy = NULL;
-				if (id != NULL)
-					id_copy =
-						(id->type == cJSON_String) ? cJSON_CreateString(
-														 id->valuestring)
-												   : cJSON_CreateNumber(id->valueint);
-				if (handle->debug_level > 0)
-					printf("jsonrpc: Method Invoked: %s\n", method->valuestring);
-				return invoke_procedure(handle, method->valuestring, params, id_copy);
-			}
+			// We have to copy ID because using it on the reply and deleting the response Object will also delete ID
+			cJSON *id_copy = NULL;
+			if (id != NULL)
+				id_copy =
+					(id->type == cJSON_String) ? cJSON_CreateString(
+													 id->valuestring)
+											   : cJSON_CreateNumber(id->valueint);
+			log_debug("Method Invoked: %s.", method->valuestring);
+			return invoke_procedure(handle, method->valuestring, params, id_copy);
 		}
+		return rpc_err(handle, JRPC_INVALID_REQUEST, strdup("Valid request received: No 'id' member"), NULL);
 	}
 	return rpc_err(handle, JRPC_INVALID_REQUEST, strdup("Valid request received: No 'method' member"), NULL);
 }
@@ -270,20 +265,17 @@ char *rpc_process(rpc_handle_t *handle, const char *json_req, size_t req_len)
 
 	if (json_req == NULL || req_len <= 0)
 	{
-		if (handle->debug_level > 0)
-			printf("jsonrpc: Empty Request\n");
+		log_error("Empty Request Received.");
 		str_return = cJSON_PrintUnformatted(rpc_err(handle, JRPC_PARSE_ERROR, strdup("Parse error: Not in JSON format."), NULL));
 		goto req_error;
 	}
 
-	if (handle->debug_level > 1)
-		printf("jsonrpc: recv json str:\n%.*s\n", (int)req_len, json_req);
+	log_debug("Recv json str:\n%.*s", (int)req_len, json_req);
 
 	cJSON *request = cJSON_ParseWithLength(json_req, req_len);
 	if (request == NULL)
 	{
-		if (handle->debug_level > 0)
-			printf("jsonrpc: Valid JSON Received\n");
+		log_error("Valid JSON Received.");
 		str_return = cJSON_PrintUnformatted(rpc_err(handle, JRPC_PARSE_ERROR, strdup("Parse error: Not in JSON format."), NULL));
 		goto req_error;
 	}

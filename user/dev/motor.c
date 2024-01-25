@@ -30,15 +30,18 @@ static int per_motor_init(propeller_attr *attr)
 
 int uvm_motor_init(propeller_params *cfg)
 {
+    log_debug("pca9685 init starting.");
     if (pca9685_basic_init(PCA9685_ADDRESS_A000000, 50 + cfg->pwm_freq_offset) != 0)
     {
-        log_error("pca9685 init failed.");
+        log_error("motor init failed due to pca9685.");
         return -1;
     }
+    log_debug("pca9685 init finished.");
     int ret = 0;
     #define PWM_COTROLLER_WRITE(propeller) ret += per_motor_init(&cfg->propeller);
     CALL_FOR_ALL_PROPELLER(PWM_COTROLLER_WRITE);
     #undef PWM_COTROLLER_WRITE
+    log_debug("motor init finished.");
     if (ret != 0)
     {
         log_error("one of pca9685 channel write failed.");

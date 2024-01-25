@@ -9,4 +9,5 @@ add_library(${PROJECT_NAME} SHARED
 
 target_include_directories(${PROJECT_NAME} PUBLIC
                             ../3rd/cjson
-                            ../3rd/s2j)
+                            ../3rd/s2j
+                            ../3rd/clog)

@@ -36,13 +36,14 @@
 
 #include "interface_pca9685.h"
 
+#include "log.h"
 #include <gpio.h>
 #include <iic.h>
 #include <delay.h>
 #include <stdarg.h>
 
 #define PCA9685_I2C_DEV "/dev/i2c-0"
-#define PCA9685_GPIO_NUM 123
+#define PCA9685_GPIO_NUM 203 // PG11 = ( 7 - 1) * 32 + 11
 
 static int pca9685_fd;
 
@@ -58,7 +59,7 @@ uint8_t pca9685_interface_iic_init(void)
     pca9685_fd = uvm_i2c_init(PCA9685_I2C_DEV);
     if (pca9685_fd < 0)
     {
-        printf("pca9685 intf: iic dev init failed\n");
+        log_error("iic dev init failed.");
         return 1;
     }
     return 0;
@@ -74,7 +75,7 @@ uint8_t pca9685_interface_iic_init(void)
 uint8_t pca9685_interface_iic_deinit(void)
 {
     if (uvm_i2c_deinit(pca9685_fd) < 0) {
-        printf("pca9685 intf: iic close fd failed\n");
+        log_error("iic close fd failed.");
         return 1;
     }
     else
@@ -95,7 +96,7 @@ uint8_t pca9685_interface_iic_deinit(void)
 uint8_t pca9685_interface_iic_write(uint8_t addr, uint8_t reg, uint8_t *buf, uint16_t len)
 {
     if (uvm_i2c_write(pca9685_fd, addr, reg, len, buf) < 0) {
-        printf("pca9685 intf: iic write to device failed\n");
+        log_error("iic write to device failed.");
         return 1;
     }
     else
@@ -116,7 +117,7 @@ uint8_t pca9685_interface_iic_write(uint8_t addr, uint8_t reg, uint8_t *buf, uin
 uint8_t pca9685_interface_iic_read(uint8_t addr, uint8_t reg, uint8_t *buf, uint16_t len)
 {
     if (uvm_i2c_read(pca9685_fd, addr, reg, len, buf) < 0) {
-        printf("pca9685 intf: iic read from device failed\n");
+        log_error("iic read from device failed.");
         return 1;
     }
     else
@@ -132,10 +133,11 @@ uint8_t pca9685_interface_iic_read(uint8_t addr, uint8_t reg, uint8_t *buf, uint
  */
 uint8_t pca9685_interface_oe_init(void)
 {
-    if (uvm_gpio_export_direction(PCA9685_GPIO_NUM, GPIO_DIRECTION_OUTPUT) != 0)
+    int ret = uvm_gpio_export_direction(PCA9685_GPIO_NUM, GPIO_DIRECTION_OUTPUT);
+    if (ret < 0)
     {
-        printf("pca9685 intf: gpio dev init failed\n");
-        return 2;
+        log_error("gpio device init failed with ret: %s", strerror(ret));
+        return 1;
     }
     return 0;
 }
@@ -149,9 +151,9 @@ uint8_t pca9685_interface_oe_init(void)
  */
 uint8_t pca9685_interface_oe_deinit(void)
 {
-    if (uvm_gpio_unexport(PCA9685_GPIO_NUM) != 0)
+    if (uvm_gpio_unexport(PCA9685_GPIO_NUM) < 0)
     {
-        printf("pca9685 intf: gpio dev deinit failed\n");
+        log_error("gpio dev deinit failed.");
         return 1;
     }
     return 0;
@@ -167,9 +169,9 @@ uint8_t pca9685_interface_oe_deinit(void)
  */
 uint8_t pca9685_interface_oe_write(uint8_t value)
 {
-    if (uvm_gpio_set_value(PCA9685_GPIO_NUM, value) != 0)
+    if (uvm_gpio_set_value(PCA9685_GPIO_NUM, value) < 0)
     {
-        printf("pca9685 intf: gpio dev set value failed\n");
+        log_error("gpio dev set value failed.");
         return 1;
     }
     return 0;

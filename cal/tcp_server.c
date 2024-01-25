@@ -1,5 +1,6 @@
 #include "tcp_server.h"
 
+#include "log.h"
 #include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -88,13 +89,10 @@ void tcp_server_run_loop(jrpc_server_t *handle)
                 accept(handle->listen_sock,
                        (struct sockaddr *)&handle->cli_addr,
                        (unsigned int *)&handle->socklen);
-            if (handle->debug_level != 0)
-            {
                 inet_ntop(AF_INET, (char *)&(handle->cli_addr.sin_addr),
                           handle->buf_head, sizeof(handle->cli_addr));
-                printf("tcp: connected with %s:%d\n", handle->buf_head,
+                log_debug("Connected with %s:%d.", handle->buf_head,
                        ntohs(handle->cli_addr.sin_port));
-            }
 
             setnonblocking(handle->conn_sock);
             epoll_ctl_add(handle->epfd, handle->conn_sock,
@@ -118,17 +116,16 @@ void tcp_server_run_loop(jrpc_server_t *handle)
                     handle->buf_head = realloc(handle->buf_head, handle->buf_size *= 2);
                     bzero(handle->buf_head + buf_used, handle->buf_size - buf_used);
                     buf_free = handle->buf_size - buf_used;
-                    if (handle->debug_level > 1)
-                		printf("tcp: buf resize to: %d B\n", handle->buf_size);
+                	log_debug("Recv buf resize to: %d Byte", handle->buf_size);
                     continue;
                 }
                 if (bytes_read <= 0)
                     break;
 
-                if (handle->debug_level > 1)
-                	printf("tcp: data recv: \n%.*s\n", buf_used, handle->buf_head);
+                log_debug("Data recv: \n%.*s", buf_used, handle->buf_head);
 
                 char *ret_str = handle->handle_recv(handle->buf_head, buf_used, handle->arg2recv);
+                log_debug("Data send: \n%s", ret_str);
                 write(handle->events[i].data.fd, ret_str, strlen(ret_str));
                 free(ret_str);
 
@@ -137,14 +134,12 @@ void tcp_server_run_loop(jrpc_server_t *handle)
         }
         else
         {
-            if (handle->debug_level != 0)
-            	printf("tcp: unexpected\n");
+            log_error("Unexpected error.");
         }
         /* check if the connection is closing */
         if (handle->events[i].events & (EPOLLRDHUP | EPOLLHUP))
         {
-            if (handle->debug_level != 0)
-                printf("tcp: connection closed\n");
+            log_debug("Connection closed.");
             epoll_ctl(handle->epfd, EPOLL_CTL_DEL,
                       handle->events[i].data.fd, NULL);
             close(handle->events[i].data.fd);

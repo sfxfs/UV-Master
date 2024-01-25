@@ -1,11 +1,11 @@
 #include "uvm_cfg.h"
 
+#include "log.h"
+#include "cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
-
-#include "cJSON.h"
 
 #define CONFIG_FILE_PATH "config.json"
 
@@ -43,7 +43,7 @@ static char* read_from_file(const char* filename) {
     // 打开文件
     file = fopen(filename, "r");
     if (file == NULL) {
-        printf("CFG: Unable to open config file.\n");
+        log_error("Unable to open config file.");
         return NULL;
     }
 
@@ -55,20 +55,20 @@ static char* read_from_file(const char* filename) {
     // 分配内存来存储文件内容
     buffer = (char*)malloc(file_size + 1);
     if (buffer == NULL) {
-        printf("CFG: Failed to alloc memory.\n");
+        log_error("Failed to alloc memory.");
         fclose(file);
         return NULL;
     }
 
     // 读取文件内容到缓冲区
     int bytes_read = fread(buffer, file_size, 1, file);
-    printf("CFG: successfully read %d bytes.\n", bytes_read);
     if (bytes_read != 1) {
-        printf("CFG: Failed read from file.\n");
+        log_error("Failed read from file.");
         fclose(file);
         free(buffer);
         return NULL;
     }
+    log_info("Successfully read %ld bytes.", file_size);
 
     // 在缓冲区末尾添加字符串结束符
     buffer[file_size] = '\0';
@@ -103,7 +103,10 @@ config_data uvm_cfg_read ()
     cJSON_Delete(json);
 
     if (config.dev_ctl && config.propeller && config.rocket_ratio && config.others)
+    {
         config.read_succeed = true;
+        log_info("Config file read succeed.");
+    }
     return config;
 }
 
@@ -117,14 +120,14 @@ static int write_to_file(const char* filename, const char* content) {
         file = fopen(CONFIG_FILE_PATH, "wt+");
         if (file == NULL)
         {
-            printf("CFG: Unable to open config file.\n");
+            log_error("Unable to open config file.");
             return -1;
         }
     }
 
     // 写入内容到文件
     if (fprintf(file, "%s", content) < 0) {
-        printf("CFG: write to file failed.\n");
+        log_error("Write to file failed.");
     }
 
     // 关闭文件
@@ -159,9 +162,9 @@ config_data uvm_cfg_init()
 
     config_data config = uvm_cfg_initialize_value(); // 初始化Rov_info
     if (uvm_cfg_write(config) < 0)    // 创建并将Rov_info信息写至config
-    {
-        printf("CFG: Config file write error...\n");
-    }
+        log_error("Config file write error.");
+    else
+        log_info("Config file write succeed.");
 
     return config;
 }

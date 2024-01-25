@@ -14,7 +14,7 @@ typedef struct uvm_cal
     pthread_t server_tid;
 } uvm_cal_t;
 
-int uvm_cal_init (uvm_cal_t *handler, uint16_t http_port, int debug_lvl);
+int uvm_cal_init (uvm_cal_t *handler, uint16_t http_port);
 int uvm_cal_start_thread (uvm_cal_t *handler);
 int uvm_cal_stop_thread (uvm_cal_t *handler);
 

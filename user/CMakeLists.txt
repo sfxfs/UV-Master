@@ -13,9 +13,13 @@ target_link_libraries(uvmaster
     uvm-cal
     uvm-cfg
     uvm-hal
+    uvm-user-rpc
+    uvm-user-dev
+    uvm-user-ctrl
 )
 
 target_include_directories(uvmaster PUBLIC
                             ../cal
-                            ../hal
-                            ../cfg)
+                            ../cfg
+                            ../3rd/clog
+                            )

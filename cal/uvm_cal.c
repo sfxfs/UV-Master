@@ -1,5 +1,6 @@
 #include "uvm_cal.h"
 
+#include "log.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -75,7 +76,7 @@ static void *server_thread(void *arg)
     return NULL;
 }
 
-int uvm_cal_init (uvm_cal_t *handler, uint16_t http_port, int debug_lvl)
+int uvm_cal_init (uvm_cal_t *handler, uint16_t http_port)
 {
     if (handler)
         memset(handler, 0, sizeof(uvm_cal_t));
@@ -84,11 +85,11 @@ int uvm_cal_init (uvm_cal_t *handler, uint16_t http_port, int debug_lvl)
     handler->server = tcp_server_init(http_port, &handler->rpc);
     if (handler->server == NULL)
     {
-        printf("CAL: Server init failed.\n");
+        log_error("Server init failed.");
         return -2;
     }
-    tcp_server_set_debug_level(handler->server, debug_lvl);
     tcp_server_set_recv_handle(handler->server, on_recv);
+    log_info("Server init success.");
     return 0;
 }
 
@@ -96,7 +97,7 @@ int uvm_cal_start_thread (uvm_cal_t *handler)
 {
     if (pthread_create(&handler->server_tid, NULL, server_thread, handler->server) != 0)
     {
-        printf("CAL: Thread start failed.\n");
+        log_error("Thread start failed.");
         return -1;
     }
     pthread_detach(handler->server_tid);
@@ -105,6 +106,7 @@ int uvm_cal_start_thread (uvm_cal_t *handler)
 
 int uvm_cal_stop_thread (uvm_cal_t *handler)
 {
-    pthread_cancel(handler->server_tid);
+    if (pthread_cancel(handler->server_tid) != 0)
+        log_warn("Thread stop failed.");
     return tcp_server_deinit(handler->server);
 }
