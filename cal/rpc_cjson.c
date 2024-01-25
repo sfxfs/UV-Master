@@ -270,7 +270,7 @@ char *rpc_process(rpc_handle_t *handle, const char *json_req, size_t req_len)
 		goto req_error;
 	}
 
-	log_debug("Recv json str:\n%.*s", (int)req_len, json_req);
+	log_trace("Recv json str:\n%.*s", (int)req_len, json_req);
 
 	cJSON *request = cJSON_ParseWithLength(json_req, req_len);
 	if (request == NULL)

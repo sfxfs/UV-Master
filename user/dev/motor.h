@@ -4,8 +4,7 @@
 #include <cfg_propeller.h>
 
 #define PROPELLER_DUTY_MID 1500 // us
-#define PROPELLER_DUTY_MIN 1000 // us
-#define PROPELLER_DUTY_MAX 2000 // us
+#define PROPELLER_DUTY_OFFSET_MAX 500 // us
 
 typedef struct
 {

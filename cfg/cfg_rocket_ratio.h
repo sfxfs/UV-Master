@@ -14,6 +14,7 @@ typedef struct
 
 typedef struct
 {
+    bool enabled;
     rocket_ratio_propeller_attr front_right;
     rocket_ratio_propeller_attr front_left;
     rocket_ratio_propeller_attr center_right;

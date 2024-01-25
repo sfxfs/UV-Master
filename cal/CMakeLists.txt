@@ -5,7 +5,9 @@ add_library(${PROJECT_NAME} SHARED
             rpc_cjson.c
             tcp_server.c)
 
-target_link_libraries(${PROJECT_NAME} cjson)
+target_link_libraries(${PROJECT_NAME}
+                        cjson
+                        pthread)
 
 target_include_directories(${PROJECT_NAME} PUBLIC
                             ../3rd/cjson

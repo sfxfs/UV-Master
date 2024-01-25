@@ -25,7 +25,7 @@
 	},
 	"propeller_params":	{
 		"pwm_freq_offset":	0,
-		"front_right_attr":	{
+		"front_right":	{
 			"reversed":	false,
 			"enabled":	true,
 			"channel":	0,
@@ -34,7 +34,7 @@
 			"power_positive":	0.5,
 			"power_negative":	0.5
 		},
-		"front_left_attr":	{
+		"front_left":	{
 			"reversed":	false,
 			"enabled":	true,
 			"channel":	1,
@@ -43,7 +43,7 @@
 			"power_positive":	0.5,
 			"power_negative":	0.5
 		},
-		"center_right_attr":	{
+		"center_right":	{
 			"reversed":	false,
 			"enabled":	true,
 			"channel":	2,
@@ -52,7 +52,7 @@
 			"power_positive":	0.5,
 			"power_negative":	0.5
 		},
-		"center_left_attr":	{
+		"center_left":	{
 			"reversed":	false,
 			"enabled":	true,
 			"channel":	3,
@@ -61,7 +61,7 @@
 			"power_positive":	0.5,
 			"power_negative":	0.5
 		},
-		"back_right_attr":	{
+		"back_right":	{
 			"reversed":	false,
 			"enabled":	true,
 			"channel":	4,
@@ -70,7 +70,7 @@
 			"power_positive":	0.5,
 			"power_negative":	0.5
 		},
-		"back_left_attr":	{
+		"back_left":	{
 			"reversed":	false,
 			"enabled":	true,
 			"channel":	5,
@@ -82,37 +82,38 @@
 	},
 	"rocket_ratio_params":	{
 		"x":	{
-			"front_right_attr":	{
+			"enabled":	true,
+			"front_right":	{
 				"enabled":	true,
 				"reversed":	false,
 				"ratio_p":	0.300000011920929,
 				"ratio_n":	0.300000011920929
 			},
-			"front_left_attr":	{
+			"front_left":	{
 				"enabled":	true,
 				"reversed":	false,
 				"ratio_p":	0.300000011920929,
 				"ratio_n":	0.300000011920929
 			},
-			"center_right_attr":	{
+			"center_right":	{
 				"enabled":	true,
 				"reversed":	false,
 				"ratio_p":	0.300000011920929,
 				"ratio_n":	0.300000011920929
 			},
-			"center_left_attr":	{
+			"center_left":	{
 				"enabled":	true,
 				"reversed":	false,
 				"ratio_p":	0.300000011920929,
 				"ratio_n":	0.300000011920929
 			},
-			"back_right_attr":	{
+			"back_right":	{
 				"enabled":	true,
 				"reversed":	false,
 				"ratio_p":	0.300000011920929,
 				"ratio_n":	0.300000011920929
 			},
-			"back_left_attr":	{
+			"back_left":	{
 				"enabled":	true,
 				"reversed":	false,
 				"ratio_p":	0.300000011920929,
@@ -120,37 +121,38 @@
 			}
 		},
 		"y":	{
-			"front_right_attr":	{
+			"enabled":	true,
+			"front_right":	{
 				"enabled":	true,
 				"reversed":	false,
 				"ratio_p":	0.300000011920929,
 				"ratio_n":	0.300000011920929
 			},
-			"front_left_attr":	{
+			"front_left":	{
 				"enabled":	true,
 				"reversed":	false,
 				"ratio_p":	0.300000011920929,
 				"ratio_n":	0.300000011920929
 			},
-			"center_right_attr":	{
+			"center_right":	{
 				"enabled":	true,
 				"reversed":	false,
 				"ratio_p":	0.300000011920929,
 				"ratio_n":	0.300000011920929
 			},
-			"center_left_attr":	{
+			"center_left":	{
 				"enabled":	true,
 				"reversed":	false,
 				"ratio_p":	0.300000011920929,
 				"ratio_n":	0.300000011920929
 			},
-			"back_right_attr":	{
+			"back_right":	{
 				"enabled":	true,
 				"reversed":	false,
 				"ratio_p":	0.300000011920929,
 				"ratio_n":	0.300000011920929
 			},
-			"back_left_attr":	{
+			"back_left":	{
 				"enabled":	true,
 				"reversed":	false,
 				"ratio_p":	0.300000011920929,
@@ -158,37 +160,38 @@
 			}
 		},
 		"z":	{
-			"front_right_attr":	{
+			"enabled":	true,
+			"front_right":	{
 				"enabled":	false,
 				"reversed":	false,
 				"ratio_p":	0.300000011920929,
 				"ratio_n":	0.300000011920929
 			},
-			"front_left_attr":	{
+			"front_left":	{
 				"enabled":	false,
 				"reversed":	false,
 				"ratio_p":	0.300000011920929,
 				"ratio_n":	0.300000011920929
 			},
-			"center_right_attr":	{
+			"center_right":	{
 				"enabled":	true,
 				"reversed":	false,
 				"ratio_p":	0.300000011920929,
 				"ratio_n":	0.300000011920929
 			},
-			"center_left_attr":	{
+			"center_left":	{
 				"enabled":	true,
 				"reversed":	false,
 				"ratio_p":	0.300000011920929,
 				"ratio_n":	0.300000011920929
 			},
-			"back_right_attr":	{
+			"back_right":	{
 				"enabled":	false,
 				"reversed":	false,
 				"ratio_p":	0.300000011920929,
 				"ratio_n":	0.300000011920929
 			},
-			"back_left_attr":	{
+			"back_left":	{
 				"enabled":	false,
 				"reversed":	false,
 				"ratio_p":	0.300000011920929,
@@ -196,37 +199,38 @@
 			}
 		},
 		"r":	{
-			"front_right_attr":	{
+			"enabled":	true,
+			"front_right":	{
 				"enabled":	true,
 				"reversed":	false,
 				"ratio_p":	0.300000011920929,
 				"ratio_n":	0.300000011920929
 			},
-			"front_left_attr":	{
+			"front_left":	{
 				"enabled":	true,
 				"reversed":	false,
 				"ratio_p":	0.300000011920929,
 				"ratio_n":	0.300000011920929
 			},
-			"center_right_attr":	{
+			"center_right":	{
 				"enabled":	true,
 				"reversed":	false,
 				"ratio_p":	0.300000011920929,
 				"ratio_n":	0.300000011920929
 			},
-			"center_left_attr":	{
+			"center_left":	{
 				"enabled":	true,
 				"reversed":	false,
 				"ratio_p":	0.300000011920929,
 				"ratio_n":	0.300000011920929
 			},
-			"back_right_attr":	{
+			"back_right":	{
 				"enabled":	true,
 				"reversed":	false,
 				"ratio_p":	0.300000011920929,
 				"ratio_n":	0.300000011920929
 			},
-			"back_left_attr":	{
+			"back_left":	{
 				"enabled":	true,
 				"reversed":	false,
 				"ratio_p":	0.300000011920929,

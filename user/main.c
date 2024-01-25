@@ -9,7 +9,7 @@ uvm_cal_t uvm_cal;
 
 int main(int argc, char **argv)
 {
-    // log_set_level(LOG_INFO);
+    log_set_level(LOG_DEBUG);
     uvm_config = uvm_cfg_init();
     if (uvm_config.read_succeed != true)
     {

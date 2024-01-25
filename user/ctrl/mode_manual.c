@@ -1,4 +1,5 @@
 #include "mode_manual.h"
+#include "log.h"
 
 #define CALL_FOR_ALL_PROPELLER(function) \
     function(front_left) \
@@ -16,8 +17,8 @@ static float per_motor(rocket_ratio_propeller_attr config, double axis)
 
     if (config.enabled == true)
     {
-        motor_power_percent = axis * axis > 0 ? config.ratio_p : config.ratio_n; // 乘以功率系数
-        motor_power_percent = motor_power_percent * config.reversed == true ? -1 : 1; // 是否反转
+        motor_power_percent = axis * (axis > 0 ? config.ratio_p : config.ratio_n); // 乘以功率系数
+        motor_power_percent = motor_power_percent * (config.reversed == true ? -1.0f : 1.0f); // 是否反转
     }
     return motor_power_percent;
 }
@@ -39,14 +40,26 @@ motor_power_req uvm_manual_ctrl(rocket_ratio_params *config, double x, double y,
     #define PWM_COTROLLER_WRITE(propeller) \
         req.propeller += per_axis_req.propeller;
 
-    per_axis_req = per_rocket_axis(config->x, x);
-    CALL_FOR_ALL_PROPELLER(PWM_COTROLLER_WRITE);
-    per_axis_req = per_rocket_axis(config->y, y);
-    CALL_FOR_ALL_PROPELLER(PWM_COTROLLER_WRITE);
-    per_axis_req = per_rocket_axis(config->z, z);
-    CALL_FOR_ALL_PROPELLER(PWM_COTROLLER_WRITE);
-    per_axis_req = per_rocket_axis(config->r, r);
-    CALL_FOR_ALL_PROPELLER(PWM_COTROLLER_WRITE);
+    if (config->x.enabled == true)
+    {
+        per_axis_req = per_rocket_axis(config->x, x);
+        CALL_FOR_ALL_PROPELLER(PWM_COTROLLER_WRITE);
+    }
+    if (config->y.enabled == true)
+    {
+        per_axis_req = per_rocket_axis(config->y, y);
+        CALL_FOR_ALL_PROPELLER(PWM_COTROLLER_WRITE);
+    }
+    if (config->z.enabled == true)
+    {
+        per_axis_req = per_rocket_axis(config->z, z);
+        CALL_FOR_ALL_PROPELLER(PWM_COTROLLER_WRITE);
+    }
+    if (config->r.enabled == true)
+    {
+        per_axis_req = per_rocket_axis(config->r, r);
+        CALL_FOR_ALL_PROPELLER(PWM_COTROLLER_WRITE);
+    }
 
     #undef PWM_COTROLLER_WRITE
     return req;

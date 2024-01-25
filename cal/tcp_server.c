@@ -122,10 +122,10 @@ void tcp_server_run_loop(jrpc_server_t *handle)
                 if (bytes_read <= 0)
                     break;
 
-                log_debug("Data recv: \n%.*s", buf_used, handle->buf_head);
+                log_trace("Data recv: \n%.*s", buf_used, handle->buf_head);
 
                 char *ret_str = handle->handle_recv(handle->buf_head, buf_used, handle->arg2recv);
-                log_debug("Data send: \n%s", ret_str);
+                log_trace("Data send: \n%s", ret_str);
                 write(handle->events[i].data.fd, ret_str, strlen(ret_str));
                 free(ret_str);
 
