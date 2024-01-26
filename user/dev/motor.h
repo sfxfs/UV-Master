@@ -17,6 +17,7 @@ typedef struct
 } motor_power_req;
 
 int uvm_motor_init(propeller_params *cfg);
+int uvm_motor_deinit(void);
 int uvm_motor_write(propeller_params *cfg, motor_power_req req);
 
 #endif

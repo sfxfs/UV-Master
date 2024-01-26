@@ -11,7 +11,7 @@
     function(back_left) \
     function(back_right)
 
-#define us2percent(us) (((float)(us)*100.0f)/20000.0f) // 一个周期 20 ms
+#define us2percent(us) (((us)*100.0)/20000.0) // 一个周期 20 ms
 #define constrain(amt,low,high) ((amt)<(low)?(low):((amt)>(high)?(high):(amt))) //限幅函数
 
 static int per_motor_init(propeller_attr *attr)
@@ -44,11 +44,16 @@ int uvm_motor_init(propeller_params *cfg)
     log_debug("motor init finished.");
     if (ret != 0)
     {
-        log_error("one of pca9685 channel write failed.");
+        log_error("some of pca9685 channel write failed.");
         pca9685_basic_deinit();
         return -2;
     }
     return 0;
+}
+
+int uvm_motor_deinit()
+{
+    return -pca9685_basic_deinit();
 }
 
 static int per_motor_write(propeller_attr *attr, float power_percent)
@@ -64,7 +69,6 @@ static int per_motor_write(propeller_attr *attr, float power_percent)
             duty_offset *= attr->reversed == true ? -1 : 1;
         }
         log_trace("powerp:%f duty_offset:%d", power_percent, duty_offset);
-        log_trace("duty:%lf", us2percent(PROPELLER_DUTY_MID) + us2percent(duty_offset));
         if (pca9685_basic_write(attr->channel, 0.0f, us2percent(PROPELLER_DUTY_MID) + us2percent(duty_offset)) != 0)
             return -1;
         else

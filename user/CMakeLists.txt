@@ -3,6 +3,7 @@ aux_source_directory(ctrl ctrl_srcs)
 aux_source_directory(dev dev_srcs)
 
 add_executable(uvmaster main.c
+                        uvm.c
                         ${dev_srcs}
                         ${ctrl_srcs}
                         ${rpc_srcs})
