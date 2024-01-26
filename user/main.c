@@ -27,12 +27,12 @@ int main(int argc, char **argv)
     if (geteuid() != 0)
     {
         printf("error: please run as root...\n");
-        exit(EXIT_SUCCESS);
+        exit(EXIT_FAILURE);
     }
 
     signal(SIGINT, exit_uvm);
 
-    char * debug_env = getenv("UV_DEBUG");
+    char * debug_env = argv[1];
     if (debug_env == NULL) {
         pid_t pid = fork();
         if (pid > 0) {
@@ -44,7 +44,7 @@ int main(int argc, char **argv)
             close(STDOUT_FILENO);
             close(STDERR_FILENO);;
 
-            uvm_init(0);
+            uvm_init(6);
             for (;;) {
                 uvm_loop();
             }
@@ -57,19 +57,21 @@ int main(int argc, char **argv)
                " \\___/  \\_/   \\/    \\/\\__,_|___/\\__\\___|_|   \n"
                "                                             \n");
         printf("info: starting uv-master app...\n");
-        unsigned char debug_lvl = 0;
+        unsigned char debug_lvl;
         if (strcmp(debug_env, "debug") == 0)
-            debug_lvl = 4;
-        else if (strcmp(debug_env, "info") == 0)
-            debug_lvl = 3;
-        else if (strcmp(debug_env, "warn") == 0)
-            debug_lvl = 2;
-        else if (strcmp(debug_env, "error") == 0)
             debug_lvl = 1;
+        else if (strcmp(debug_env, "info") == 0)
+            debug_lvl = 2;
+        else if (strcmp(debug_env, "warn") == 0)
+            debug_lvl = 3;
+        else if (strcmp(debug_env, "error") == 0)
+            debug_lvl = 4;
+        else if (strcmp(debug_env, "fatal") == 0)
+            debug_lvl = 5;
         else
         {
             printf("warn: debug level not found, used level \"info\" ...\n");
-            debug_lvl = 3;
+            debug_lvl = 2;
         }
         uvm_init(debug_lvl);
         for (;;) {

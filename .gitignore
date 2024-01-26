@@ -51,9 +51,11 @@ Module.symvers
 Mkfile.old
 dkms.conf
 
+# IDEs
 .vscode/
 .idea/
 
+# Output Files
 *build*/
 lib/
 output/

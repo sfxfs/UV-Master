@@ -1,0 +1,241 @@
+{
+	"others_params":	{
+		"server_config":	{
+			"port":	8888,
+			"timeout":	0
+		}
+	},
+	"dev_ctl_params":	{
+		"arm_attr":	{
+			"enabled":	false,
+			"channel":	6,
+			"pMax":	2500,
+			"nMax":	500,
+			"reset":	1500,
+			"step":	100
+		},
+		"light_attr":	{
+			"enabled":	false,
+			"channel":	7,
+			"pMax":	2500,
+			"nMax":	500,
+			"reset":	1500,
+			"step":	100
+		}
+	},
+	"propeller_params":	{
+		"pwm_freq_offset":	0,
+		"front_right":	{
+			"reversed":	false,
+			"enabled":	true,
+			"channel":	0,
+			"deadzone_upper":	25,
+			"deadzone_lower":	-25,
+			"power_positive":	0.5,
+			"power_negative":	0.5
+		},
+		"front_left":	{
+			"reversed":	false,
+			"enabled":	true,
+			"channel":	1,
+			"deadzone_upper":	25,
+			"deadzone_lower":	-25,
+			"power_positive":	0.5,
+			"power_negative":	0.5
+		},
+		"center_right":	{
+			"reversed":	false,
+			"enabled":	true,
+			"channel":	2,
+			"deadzone_upper":	25,
+			"deadzone_lower":	-25,
+			"power_positive":	0.5,
+			"power_negative":	0.5
+		},
+		"center_left":	{
+			"reversed":	false,
+			"enabled":	true,
+			"channel":	3,
+			"deadzone_upper":	25,
+			"deadzone_lower":	-25,
+			"power_positive":	0.5,
+			"power_negative":	0.5
+		},
+		"back_right":	{
+			"reversed":	false,
+			"enabled":	true,
+			"channel":	4,
+			"deadzone_upper":	25,
+			"deadzone_lower":	-25,
+			"power_positive":	0.5,
+			"power_negative":	0.5
+		},
+		"back_left":	{
+			"reversed":	false,
+			"enabled":	true,
+			"channel":	5,
+			"deadzone_upper":	25,
+			"deadzone_lower":	-25,
+			"power_positive":	0.5,
+			"power_negative":	0.5
+		}
+	},
+	"rocket_ratio_params":	{
+		"x":	{
+			"enabled":	true,
+			"front_right":	{
+				"enabled":	true,
+				"reversed":	false,
+				"ratio_p":	0.300000011920929,
+				"ratio_n":	0.300000011920929
+			},
+			"front_left":	{
+				"enabled":	true,
+				"reversed":	false,
+				"ratio_p":	0.300000011920929,
+				"ratio_n":	0.300000011920929
+			},
+			"center_right":	{
+				"enabled":	true,
+				"reversed":	false,
+				"ratio_p":	0.300000011920929,
+				"ratio_n":	0.300000011920929
+			},
+			"center_left":	{
+				"enabled":	true,
+				"reversed":	false,
+				"ratio_p":	0.300000011920929,
+				"ratio_n":	0.300000011920929
+			},
+			"back_right":	{
+				"enabled":	true,
+				"reversed":	false,
+				"ratio_p":	0.300000011920929,
+				"ratio_n":	0.300000011920929
+			},
+			"back_left":	{
+				"enabled":	true,
+				"reversed":	false,
+				"ratio_p":	0.300000011920929,
+				"ratio_n":	0.300000011920929
+			}
+		},
+		"y":	{
+			"enabled":	true,
+			"front_right":	{
+				"enabled":	true,
+				"reversed":	false,
+				"ratio_p":	0.300000011920929,
+				"ratio_n":	0.300000011920929
+			},
+			"front_left":	{
+				"enabled":	true,
+				"reversed":	false,
+				"ratio_p":	0.300000011920929,
+				"ratio_n":	0.300000011920929
+			},
+			"center_right":	{
+				"enabled":	true,
+				"reversed":	false,
+				"ratio_p":	0.300000011920929,
+				"ratio_n":	0.300000011920929
+			},
+			"center_left":	{
+				"enabled":	true,
+				"reversed":	false,
+				"ratio_p":	0.300000011920929,
+				"ratio_n":	0.300000011920929
+			},
+			"back_right":	{
+				"enabled":	true,
+				"reversed":	false,
+				"ratio_p":	0.300000011920929,
+				"ratio_n":	0.300000011920929
+			},
+			"back_left":	{
+				"enabled":	true,
+				"reversed":	false,
+				"ratio_p":	0.300000011920929,
+				"ratio_n":	0.300000011920929
+			}
+		},
+		"z":	{
+			"enabled":	true,
+			"front_right":	{
+				"enabled":	false,
+				"reversed":	false,
+				"ratio_p":	0.300000011920929,
+				"ratio_n":	0.300000011920929
+			},
+			"front_left":	{
+				"enabled":	false,
+				"reversed":	false,
+				"ratio_p":	0.300000011920929,
+				"ratio_n":	0.300000011920929
+			},
+			"center_right":	{
+				"enabled":	true,
+				"reversed":	false,
+				"ratio_p":	0.300000011920929,
+				"ratio_n":	0.300000011920929
+			},
+			"center_left":	{
+				"enabled":	true,
+				"reversed":	false,
+				"ratio_p":	0.300000011920929,
+				"ratio_n":	0.300000011920929
+			},
+			"back_right":	{
+				"enabled":	false,
+				"reversed":	false,
+				"ratio_p":	0.300000011920929,
+				"ratio_n":	0.300000011920929
+			},
+			"back_left":	{
+				"enabled":	false,
+				"reversed":	false,
+				"ratio_p":	0.300000011920929,
+				"ratio_n":	0.300000011920929
+			}
+		},
+		"r":	{
+			"enabled":	true,
+			"front_right":	{
+				"enabled":	true,
+				"reversed":	false,
+				"ratio_p":	0.300000011920929,
+				"ratio_n":	0.300000011920929
+			},
+			"front_left":	{
+				"enabled":	true,
+				"reversed":	false,
+				"ratio_p":	0.300000011920929,
+				"ratio_n":	0.300000011920929
+			},
+			"center_right":	{
+				"enabled":	true,
+				"reversed":	false,
+				"ratio_p":	0.300000011920929,
+				"ratio_n":	0.300000011920929
+			},
+			"center_left":	{
+				"enabled":	true,
+				"reversed":	false,
+				"ratio_p":	0.300000011920929,
+				"ratio_n":	0.300000011920929
+			},
+			"back_right":	{
+				"enabled":	true,
+				"reversed":	false,
+				"ratio_p":	0.300000011920929,
+				"ratio_n":	0.300000011920929
+			},
+			"back_left":	{
+				"enabled":	true,
+				"reversed":	false,
+				"ratio_p":	0.300000011920929,
+				"ratio_n":	0.300000011920929
+			}
+		}
+	}
+}

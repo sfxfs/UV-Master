@@ -1,34 +1,29 @@
-cmake_minimum_required(VERSION 3.5)
+aux_source_directory(rpc rpc_srcs)
+aux_source_directory(ctrl ctrl_srcs)
+aux_source_directory(dev dev_srcs)
 
-include_directories(../protocols)
-include_directories(../log-sys)
-include_directories(../drivers)
-include_directories(../utils)
-include_directories(../utils/libmelon)
+add_executable(uvmaster main.c
+                        uvm.c
+                        ${dev_srcs}
+                        ${ctrl_srcs}
+                        ${rpc_srcs})
 
-include_directories(.)
+target_link_libraries(uvmaster
+    m
+    pthread
+    cjson
+    clog
+    s2j
+    uvm-cal
+    uvm-cfg
+    uvm-hal
+)
 
-aux_source_directory(control control_srcs)
-aux_source_directory(control/ctrlPart ctrlPart_srcs)
-
-aux_source_directory(device device_srcs)
-aux_source_directory(device/application application_srcs)
-aux_source_directory(device/interface interface_srcs)
-
-aux_source_directory(server/handler handler_srcs)
-aux_source_directory(server server_srcs)
-
-aux_source_directory(config config_srcs)
-aux_source_directory(config/parameters parameters_srcs)
-
-add_library(uvUser STATIC
-        	main_app.c
-			${control_srcs}
-			${ctrlPart_srcs}
-			${application_srcs}
-			${device_srcs}
-			${interface_srcs}
-			${handler_srcs}
-			${server_srcs}
-			${config_srcs}
-			${parameters_srcs})
+target_include_directories(uvmaster PUBLIC
+                            .
+                            ../cal
+                            ../cfg
+                            ../hal
+                            ../3rd/clog
+                            ../3rd/cjson
+                            )
