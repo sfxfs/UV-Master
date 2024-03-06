@@ -37,6 +37,14 @@ jrpc_server_t *tcp_server_init(uint16_t port, void *arg)
     handle->listen_sock = socket(AF_INET, SOCK_STREAM, 0);
     if (handle->listen_sock < 0)
     {
+        log_debug("Get socket fd failed.");
+        free(handle);
+        return NULL;
+    }
+
+    int reuse = 1;
+    if (setsockopt(handle->listen_sock, SOL_SOCKET, SO_REUSEADDR, &reuse, sizeof(reuse)) < 0)
+    {
         free(handle);
         return NULL;
     }
@@ -50,6 +58,7 @@ jrpc_server_t *tcp_server_init(uint16_t port, void *arg)
     int ret = bind(handle->listen_sock, (struct sockaddr *)&handle->srv_addr, sizeof(struct sockaddr_in));
     if (ret != 0)
     {
+        log_debug("Bind port to %d failed.", port);
         free(handle);
         return NULL;
     }

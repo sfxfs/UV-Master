@@ -31,7 +31,7 @@ static double cjson_value_analysis_double(cJSON *params,const char *str)
  * @param str 值对应字符串
  * @return 获得的整形数，若没有获取到则为 0
  */
-static int cjson_value_analysis_int(cJSON *params, const char *str)
+static __attribute__((__unused__)) int cjson_value_analysis_int(cJSON *params, const char *str)
 {
     cJSON* cjson_temp = NULL;
     int value;
@@ -50,7 +50,7 @@ static int cjson_value_analysis_int(cJSON *params, const char *str)
  * @param str 值对应字符串
  * @return 返回获取到的字符串，若没有获取到则为 NULL，用完需要 free
  */
-static char *cjson_value_analysis_string(cJSON *params, const char *str)
+static __attribute__((__unused__)) char *cjson_value_analysis_string(cJSON *params, const char *str)
 {
     char *temp = cJSON_GetObjectItem(params, str)->valuestring;
     if (temp == NULL)

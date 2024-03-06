@@ -9,6 +9,8 @@
 static const rocket_ratio_params default_params = {
     .x = {
         .enabled = true,
+        .deadzone_p = 0.0000005,
+        .deadzone_n = - 0.0000005,
         .front_right = {
             .enabled = true,
             .reversed = false,
@@ -48,6 +50,8 @@ static const rocket_ratio_params default_params = {
     },
     .y = {
         .enabled = true,
+        .deadzone_p = 0.0000005,
+        .deadzone_n = - 0.0000005,
         .front_right = {
             .enabled = true,
             .reversed = false,
@@ -87,6 +91,8 @@ static const rocket_ratio_params default_params = {
     },
     .z = {
         .enabled = true,
+        .deadzone_p = 0.0000005,
+        .deadzone_n = - 0.0000005,
         .front_right = {
             .enabled = false,
             .reversed = false,
@@ -126,6 +132,8 @@ static const rocket_ratio_params default_params = {
     },
     .r = {
         .enabled = true,
+        .deadzone_p = 0.0000005,
+        .deadzone_n = - 0.0000005,
         .front_right = {
             .enabled = true,
             .reversed = false,
@@ -192,6 +200,8 @@ static cJSON *struct_to_json_rocket_ratio_axis_attr (rocket_ratio_axis_attr *att
     s2j_create_json_obj(attr_json);
 
     s2j_json_set_basic_element(attr_json, attr_struct, bool, enabled);
+    s2j_json_set_basic_element(attr_json, attr_struct, double, deadzone_p);
+    s2j_json_set_basic_element(attr_json, attr_struct, double, deadzone_n);
     s2j_json_set_struct_element_by_func(attr_json, attr_struct, rocket_ratio_propeller_attr, front_right);
     s2j_json_set_struct_element_by_func(attr_json, attr_struct, rocket_ratio_propeller_attr, front_left);
     s2j_json_set_struct_element_by_func(attr_json, attr_struct, rocket_ratio_propeller_attr, center_right);
@@ -232,6 +242,8 @@ static rocket_ratio_axis_attr *json_to_struct_rocket_ratio_axis_attr(cJSON *attr
     (void)json_temp;
 
     s2j_struct_get_basic_element(attr_struct, attr_json, int, enabled);
+    s2j_struct_get_basic_element(attr_struct, attr_json, double, deadzone_p);
+    s2j_struct_get_basic_element(attr_struct, attr_json, double, deadzone_n);
     s2j_struct_get_struct_element_by_func(attr_struct, attr_json, rocket_ratio_propeller_attr, front_right);
     s2j_struct_get_struct_element_by_func(attr_struct, attr_json, rocket_ratio_propeller_attr, front_left);
     s2j_struct_get_struct_element_by_func(attr_struct, attr_json, rocket_ratio_propeller_attr, center_right);

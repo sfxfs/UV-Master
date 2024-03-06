@@ -40,22 +40,22 @@ motor_power_req uvm_manual_ctrl(rocket_ratio_params *config, double x, double y,
     #define PWM_COTROLLER_WRITE(propeller) \
         req.propeller += per_axis_req.propeller;
 
-    if (config->x.enabled == true)
+    if (config->x.enabled == true && (x >= config->x.deadzone_p || x <= config->x.deadzone_n))
     {
         per_axis_req = per_rocket_axis(config->x, x);
         CALL_FOR_ALL_PROPELLER(PWM_COTROLLER_WRITE);
     }
-    if (config->y.enabled == true)
+    if (config->y.enabled == true && (y >= config->y.deadzone_p || y <= config->y.deadzone_n))
     {
         per_axis_req = per_rocket_axis(config->y, y);
         CALL_FOR_ALL_PROPELLER(PWM_COTROLLER_WRITE);
     }
-    if (config->z.enabled == true)
+    if (config->z.enabled == true && (z >= config->z.deadzone_p || z <= config->z.deadzone_n))
     {
         per_axis_req = per_rocket_axis(config->z, z);
         CALL_FOR_ALL_PROPELLER(PWM_COTROLLER_WRITE);
     }
-    if (config->r.enabled == true)
+    if (config->r.enabled == true && (r >= config->r.deadzone_p || r <= config->r.deadzone_n))
     {
         per_axis_req = per_rocket_axis(config->r, r);
         CALL_FOR_ALL_PROPELLER(PWM_COTROLLER_WRITE);
