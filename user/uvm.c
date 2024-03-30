@@ -16,8 +16,7 @@ void uvm_init (unsigned char debug_level)
     else
         log_set_level(debug_level);
 
-    uvm_config = uvm_cfg_init();
-    if (uvm_config.read_succeed != true)
+    if (uvm_cfg_init(uvm_config) != 0)
     {
         log_error("load config file failed.");
         exit(EXIT_FAILURE);

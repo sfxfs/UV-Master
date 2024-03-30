@@ -8,7 +8,6 @@
 
 typedef struct
 {
-    bool read_succeed;
     propeller_params *propeller;
     dev_ctl_params *dev_ctl;
     rocket_ratio_params *rocket_ratio;
@@ -17,12 +16,12 @@ typedef struct
 
 /* ess */
 void        uvm_cfg_delete(config_data data_s);
-config_data uvm_cfg_init  (void);
-config_data uvm_cfg_read  (void);
+int uvm_cfg_init  (config_data data_s);
+int uvm_cfg_read  (config_data data_s);
 int         uvm_cfg_write (config_data data_s);
 
 /* add */
-int uvm_cfg_read_cjson (void *cjson);
-int uvm_cfg_write_cjson (void *cjson);
+// int uvm_cfg_read_cjson (void *cjson);
+// int uvm_cfg_write_cjson (void *cjson);
 
 #endif
