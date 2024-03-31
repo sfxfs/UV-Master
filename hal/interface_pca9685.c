@@ -196,6 +196,6 @@ void pca9685_interface_debug_print(const char *const fmt, ...)
 {
     va_list temp_va;
 	va_start(temp_va, fmt);
-	printf(fmt, temp_va);
+	log_error(fmt, temp_va);
 	va_end(temp_va);
 }

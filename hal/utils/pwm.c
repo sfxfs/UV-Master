@@ -1,3 +1,4 @@
+#include "log.h"
 #include <errno.h>
 #include <stdio.h>
 #include <string.h>
@@ -21,7 +22,7 @@ int uvm_pwm_export(uint32_t pwm)
         return ret;
 
     if (!access(file, F_OK)) {
-        printf("warning: pwm %d, file (%s) has exist\n", pwm, file);
+        log_warn("pwm %d, file (%s) has exist", pwm, file);
         return 0;
     }
     return write_sysfs_int("export", path, 0);
@@ -183,7 +184,7 @@ int uvm_pwm_deinit(uint32_t pwm) {
 
     ret = uvm_pwm_unexport(pwm);
     if (ret < 0) {
-        printf("uvm_pwm_unexport fail\n");
+        log_warn("pwm unexport fail");
         return ret;
     }
     return 0;

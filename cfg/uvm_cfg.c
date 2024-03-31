@@ -7,34 +7,41 @@
 #include <unistd.h>
 #include <string.h>
 
-static int uvm_cfg_initialize_value(config_data data_s)
+static int uvm_cfg_initialize_value(config_data *data_s)
 {
     uvm_cfg_delete(data_s);
-    data_s.dev_ctl = dev_ctl_create_with_init_val();
-    data_s.propeller = propeller_create_with_init_val();
-    data_s.rocket_ratio = rocket_ratio_create_with_init_val();
-    data_s.others = others_create_with_init_val();
 
-    if (data_s.dev_ctl && data_s.propeller && data_s.rocket_ratio && data_s.others)
+    data_s->dev_ctl = dev_ctl_create_with_init_val();
+    data_s->propeller = propeller_create_with_init_val();
+    data_s->rocket_ratio = rocket_ratio_create_with_init_val();
+    data_s->others = others_create_with_init_val();
+
+    if (data_s->dev_ctl && data_s->propeller && data_s->rocket_ratio && data_s->others)
         return 0;
     return -1;
 }
 
-void uvm_cfg_delete(config_data data_s)
+void uvm_cfg_delete(config_data *data_s)
 {
-    if (data_s.dev_ctl)
-        free(data_s.dev_ctl);
-    if (data_s.propeller)
-        free(data_s.propeller);
-    if (data_s.rocket_ratio)
-        free(data_s.rocket_ratio);
-    if (data_s.others)
-        free(data_s.others);
-    bzero(&data_s, sizeof(config_data));
+    if (!data_s)
+        return;
+
+    if (data_s->dev_ctl)
+        free(data_s->dev_ctl);
+    if (data_s->propeller)
+        free(data_s->propeller);
+    if (data_s->rocket_ratio)
+        free(data_s->rocket_ratio);
+    if (data_s->others)
+        free(data_s->others);
+    bzero(data_s, sizeof(config_data));
 }
 
-int uvm_cfg_read (config_data data_s)
+int uvm_cfg_read (config_data *data_s)
 {
+    if (!data_s)
+        return -1;
+
     uvm_cfg_delete(data_s);
 
     char *data = uvm_intf_read_from_file();
@@ -49,14 +56,14 @@ int uvm_cfg_read (config_data data_s)
         return -2;
     }
 
-    data_s.others = others_j2s(cJSON_GetObjectItem(json, "others_params"));
-    data_s.dev_ctl = dev_ctl_j2s(cJSON_GetObjectItem(json, "dev_ctl_params"));
-    data_s.propeller = propeller_j2s(cJSON_GetObjectItem(json, "propeller_params"));
-    data_s.rocket_ratio = rocket_ratio_j2s(cJSON_GetObjectItem(json, "rocket_ratio_params"));
+    data_s->others = others_j2s(cJSON_GetObjectItem(json, "others_params"));
+    data_s->dev_ctl = dev_ctl_j2s(cJSON_GetObjectItem(json, "dev_ctl_params"));
+    data_s->propeller = propeller_j2s(cJSON_GetObjectItem(json, "propeller_params"));
+    data_s->rocket_ratio = rocket_ratio_j2s(cJSON_GetObjectItem(json, "rocket_ratio_params"));
 
     cJSON_Delete(json);
 
-    if (data_s.dev_ctl && data_s.propeller && data_s.rocket_ratio && data_s.others)
+    if (data_s->dev_ctl && data_s->propeller && data_s->rocket_ratio && data_s->others)
     {
         log_info("Config file read succeed.");
         return 0;
@@ -66,13 +73,16 @@ int uvm_cfg_read (config_data data_s)
 
 
 
-int uvm_cfg_write(config_data data_s)
+int uvm_cfg_write(config_data *data_s)
 {
+    if (!data_s)
+        return -1;
+
     void *temp = NULL;
     cJSON *json = cJSON_CreateObject();
 
-    if (data_s.others)
-        cJSON_AddItemToObject(json, "others_params", others_s2j(data_s.others));
+    if (data_s->others)
+        cJSON_AddItemToObject(json, "others_params", others_s2j(data_s->others));
     else
     {
         temp = others_create_with_init_val();
@@ -80,8 +90,8 @@ int uvm_cfg_write(config_data data_s)
         free(temp);
     }
 
-    if (data_s.dev_ctl)
-        cJSON_AddItemToObject(json, "dev_ctl_params", dev_ctl_s2j(data_s.dev_ctl));
+    if (data_s->dev_ctl)
+        cJSON_AddItemToObject(json, "dev_ctl_params", dev_ctl_s2j(data_s->dev_ctl));
     else
     {
         temp = dev_ctl_create_with_init_val();
@@ -89,8 +99,8 @@ int uvm_cfg_write(config_data data_s)
         free(temp);
     }
 
-    if (data_s.propeller)
-        cJSON_AddItemToObject(json, "propeller_params", propeller_s2j(data_s.propeller));
+    if (data_s->propeller)
+        cJSON_AddItemToObject(json, "propeller_params", propeller_s2j(data_s->propeller));
     else
     {
         temp = propeller_create_with_init_val();
@@ -98,8 +108,8 @@ int uvm_cfg_write(config_data data_s)
         free(temp);
     }
 
-    if (data_s.rocket_ratio)
-        cJSON_AddItemToObject(json, "rocket_ratio_params", rocket_ratio_s2j(data_s.rocket_ratio));
+    if (data_s->rocket_ratio)
+        cJSON_AddItemToObject(json, "rocket_ratio_params", rocket_ratio_s2j(data_s->rocket_ratio));
     else
     {
         temp = rocket_ratio_create_with_init_val();
@@ -116,8 +126,13 @@ int uvm_cfg_write(config_data data_s)
     return ret;
 }
 
-int uvm_cfg_init(config_data data_s)
+int uvm_cfg_init(config_data *data_s)
 {
+    if (!data_s)
+        return -1;
+
+    bzero(data_s, sizeof(config_data));
+
     if (0 == access(CONFIG_FILE_PATH, F_OK)) // 0:存在
     {
         return uvm_cfg_read(data_s);

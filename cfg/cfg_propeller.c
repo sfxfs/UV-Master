@@ -1,10 +1,9 @@
-#include <stdio.h>
-#include <stdlib.h>
+#include "cfg_propeller.h"
 
 #include "cJSON.h"
 #include "s2j.h"
-
-#include "cfg_propeller.h"
+#include <stdio.h>
+#include <stdlib.h>
 
 static const propeller_params default_params = {
     .pwm_freq_offset = 0,

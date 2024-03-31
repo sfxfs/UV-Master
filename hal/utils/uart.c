@@ -1,4 +1,6 @@
+#include "log.h"
 #include <stdio.h>
+#include <errno.h>
 #include <fcntl.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -19,7 +21,7 @@ int uvm_uart_begin(HARDWARE_UART *dev, char *UART_device)
 {
     //device
     if((dev->fd = open(UART_device, O_RDWR | O_NOCTTY)) < 0)  { //打开UART 
-        perror("Failed to open UART device.\n");  
+        log_error("Failed to open UART device: %s", strerror(errno));  
         return -1; 
     }
     uvm_uart_setBaudrate(dev, 115200);
@@ -35,7 +37,7 @@ Info:
 int uvm_uart_end(HARDWARE_UART dev)
 {
     if (close(dev.fd) != 0){
-        perror("Failed to close UART device.\n");
+        log_error("Failed to close UART device: %s", strerror(errno));
         return -1;
     }
     return 0;
@@ -112,19 +114,19 @@ int uvm_uart_setBaudrate(HARDWARE_UART *dev, uint32_t Baudrate)
         default:    baud = B9600;break;
 
     }
-    printf("Baud rate setting\r\n");
+    log_debug("Baud rate setting");
  	if(cfsetispeed(&dev->set, baud) != 0){
-        printf("Baud rate setting failed 1\r\n");
+        log_debug("Baud rate setting failed 1");
         return -1;
     }
 	if(cfsetospeed(&dev->set, baud) != 0){
-        printf("Baud rate setting failed 2\r\n");
+        log_debug("Baud rate setting failed 2");
         return -2;
     }
     err = tcsetattr(dev->fd, TCSANOW, &dev->set);
     if(err != 0){
-        perror("tcsetattr fd");
-        printf("Setting the terminal baud rate failed\r\n");
+        log_debug("tcsetattr fd: %s", strerror(errno));
+        log_error("Setting the terminal baud rate failed");
         return -3;
     }
     return 0;
@@ -204,8 +206,8 @@ int uvm_uart_Set(HARDWARE_UART *dev, int databits, int stopbits, int parity)
 {
     if(tcgetattr(dev->fd, &dev->set) != 0)
     {
-        perror("tcgetattr fd");
-        printf("Failed to get terminal parameters\r\n");
+        log_debug("tcgetattr fd: %s", strerror(errno));
+        log_error("Failed to get terminal parameters");
         return 0;
     }
    dev->set.c_cflag |= (CLOCAL | CREAD);        //Generally set flag
@@ -229,7 +231,7 @@ int uvm_uart_Set(HARDWARE_UART *dev, int databits, int stopbits, int parity)
         dev->set.c_cflag |= CS8;
         break;
     default:
-        fprintf(stderr, "Unsupported data size.\n");
+        log_error("Unsupported data size.");
         return 0;
     }
 
@@ -259,7 +261,7 @@ int uvm_uart_Set(HARDWARE_UART *dev, int databits, int stopbits, int parity)
         dev->set.c_iflag |= INPCK;          //disable pairty checking        
         break;    
     default:         
-        fprintf(stderr, "Unsupported parity.\n");        
+        log_error("Unsupported parity.");        
         return 0;        
     }
     switch(stopbits)        //Set stop bit  1   2
@@ -271,7 +273,7 @@ int uvm_uart_Set(HARDWARE_UART *dev, int databits, int stopbits, int parity)
             dev->set.c_cflag |= CSTOPB;    
             break;   
         default:     
-            fprintf(stderr, "Unsupported stopbits.\n");         
+            log_error("Unsupported stopbits.");
             return 0;     
     }    
     dev->set.c_cflag |= (CLOCAL | CREAD);
@@ -285,10 +287,10 @@ int uvm_uart_Set(HARDWARE_UART *dev, int databits, int stopbits, int parity)
     dev->set.c_cc[VMIN] = 1;        //
     if(tcsetattr(dev->fd, TCSANOW, &dev->set) != 0)   //Update the UART_Set and do it now  
     {
-        perror("tcsetattr fd");
-        printf("Setting terminal parameters failed\r\n");
+        log_debug("tcsetattr fd: %s", strerror(errno));
+        log_error("Setting terminal parameters failed");
         return 0;    
     }   
-    printf("Set terminal parameters successfully\r\n");
+    log_debug("Set terminal parameters successfully");
     return 1;
 }

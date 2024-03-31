@@ -16,7 +16,7 @@ void uvm_init (unsigned char debug_level)
     else
         log_set_level(debug_level);
 
-    if (uvm_cfg_init(uvm_config) != 0)
+    if (uvm_cfg_init(&uvm_config) != 0)
     {
         log_error("load config file failed.");
         exit(EXIT_FAILURE);
@@ -40,7 +40,7 @@ void uvm_deinit (void)
 {
     uvm_cal_stop_thread(&uvm_cal);
     uvm_motor_deinit();
-    uvm_cfg_delete(uvm_config);
+    uvm_cfg_delete(&uvm_config);
 }
 
 void uvm_loop (void)

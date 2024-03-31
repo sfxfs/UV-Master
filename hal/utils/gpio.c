@@ -1,3 +1,4 @@
+#include "log.h"
 #include <errno.h>
 #include <stdio.h>
 #include <string.h>
@@ -18,7 +19,7 @@ int uvm_gpio_export(uint32_t gpio)
     if (ret < 0)
         return ret;
     if (!access(file, F_OK)) {
-        printf("warning: gpio %d, file (%s) has exist\n", gpio, file);
+        log_warn("gpio %d, file (%s) has exist", gpio, file);
         return 0;
     }
     return write_sysfs_int("export", GPIO_SYSFS_PATH, gpio);

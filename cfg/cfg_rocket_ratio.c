@@ -1,10 +1,9 @@
-#include <stdio.h>
-#include <stdlib.h>
+#include "cfg_rocket_ratio.h"
 
 #include "cJSON.h"
 #include "s2j.h"
-
-#include "cfg_rocket_ratio.h"
+#include <stdio.h>
+#include <stdlib.h>
 
 static const rocket_ratio_params default_params = {
     .x = {

@@ -1,10 +1,9 @@
-#include <stdio.h>
-#include <stdlib.h>
+#include "cfg_others.h"
 
 #include "cJSON.h"
 #include "s2j.h"
-
-#include "cfg_others.h"
+#include <stdio.h>
+#include <stdlib.h>
 
 static others_params default_params = {
     .server_config = {

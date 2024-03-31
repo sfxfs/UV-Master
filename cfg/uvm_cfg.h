@@ -15,10 +15,10 @@ typedef struct
 } config_data;
 
 /* ess */
-void        uvm_cfg_delete(config_data data_s);
-int uvm_cfg_init  (config_data data_s);
-int uvm_cfg_read  (config_data data_s);
-int         uvm_cfg_write (config_data data_s);
+void    uvm_cfg_delete(config_data *data_s);
+int     uvm_cfg_init  (config_data *data_s);
+int     uvm_cfg_read  (config_data *data_s);
+int     uvm_cfg_write (config_data *data_s);
 
 /* add */
 // int uvm_cfg_read_cjson (void *cjson);

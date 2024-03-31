@@ -28,6 +28,7 @@
 # THE SOFTWARE.
 #
 ******************************************************************************/
+#include "log.h"
 #include <errno.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -53,14 +54,14 @@ static int _write_sysfs_int(const char *filename, const char *basedir, int val,
     sysfsfp = fopen(temp, "w");
     if (!sysfsfp) {
         ret = -errno;
-        fprintf(stderr, "failed to open %s\n", temp);
+        log_debug("failed to open %s", temp);
         goto error_free;
     }
 
     ret = fprintf(sysfsfp, "%d", val);
     if (ret < 0) {
         if (fclose(sysfsfp))
-            perror("_write_sysfs_int(): Failed to close dir");
+            log_debug("Failed to close dir: %s", strerror(errno));
 
         goto error_free;
     }
@@ -76,14 +77,14 @@ static int _write_sysfs_int(const char *filename, const char *basedir, int val,
         sysfsfp = fopen(temp, "r");
         if (!sysfsfp) {
             ret = -errno;
-            fprintf(stderr, "failed to open %s\n", temp);
+            log_debug("failed to open %s", temp);
             goto error_free;
         }
 
         if (fscanf(sysfsfp, "%d", &test) != 1) {
             ret = errno ? -errno : -ENODATA;
             if (fclose(sysfsfp))
-                perror("_write_sysfs_int(): Failed to close dir");
+                log_debug("Failed to close dir: %s", strerror(errno));
 
             goto error_free;
         }
@@ -94,8 +95,7 @@ static int _write_sysfs_int(const char *filename, const char *basedir, int val,
         }
 
         if (test != val) {
-            fprintf(stderr,
-                "Possible failure in int write %d to %s/%s\n",
+            log_debug("Possible failure in int write %d to %s/%s",
                 val, basedir, filename);
             ret = -1;
         }
@@ -125,7 +125,7 @@ static int _write_sysfs_string(const char *filename, const char *basedir,
     char *temp = (char *)malloc(strlen(basedir) + strlen(filename) + 2);
 
     if (!temp) {
-        fprintf(stderr, "Memory allocation failed\n");
+        log_debug("Memory allocation failed");
         return -ENOMEM;
     }
 
@@ -136,14 +136,14 @@ static int _write_sysfs_string(const char *filename, const char *basedir,
     sysfsfp = fopen(temp, "w");
     if (!sysfsfp) {
         ret = -errno;
-        fprintf(stderr, "Could not open %s\n", temp);
+        log_debug("Could not open %s", temp);
         goto error_free;
     }
 
     ret = fprintf(sysfsfp, "%s", val);
     if (ret < 0) {
         if (fclose(sysfsfp))
-            perror("_write_sysfs_string(): Failed to close dir");
+            log_debug("Failed to close dir: %s", strerror(errno));
 
         goto error_free;
     }
@@ -157,14 +157,14 @@ static int _write_sysfs_string(const char *filename, const char *basedir,
         sysfsfp = fopen(temp, "r");
         if (!sysfsfp) {
             ret = -errno;
-            fprintf(stderr, "Could not open file to verify\n");
+            log_debug("Could not open file to verify");
             goto error_free;
         }
 
         if (fscanf(sysfsfp, "%s", temp) != 1) {
             ret = errno ? -errno : -ENODATA;
             if (fclose(sysfsfp))
-                perror("_write_sysfs_string(): Failed to close dir");
+                log_debug("Failed to close dir: %s", strerror(errno));
 
             goto error_free;
         }
@@ -175,9 +175,8 @@ static int _write_sysfs_string(const char *filename, const char *basedir,
         }
 
         if (strcmp(temp, val) != 0) {
-            fprintf(stderr,
-                "Possible failure in string write of %s "
-                "Should be %s written to %s/%s\n", temp, val,
+            log_debug("Possible failure in string write of %s "
+                "Should be %s written to %s/%s", temp, val,
                 basedir, filename);
             ret = -1;
         }
@@ -208,7 +207,7 @@ int read_sysfs_posint(const char *filename, const char *basedir)
     char *temp = (char *)malloc(strlen(basedir) + strlen(filename) + 2);
 
     if (!temp) {
-        fprintf(stderr, "Memory allocation failed");
+        log_debug("Memory allocation failed");
         return -ENOMEM;
     }
 
@@ -226,7 +225,7 @@ int read_sysfs_posint(const char *filename, const char *basedir)
     if (fscanf(sysfsfp, "%d\n", &ret) != 1) {
         ret = errno ? -errno : -ENODATA;
         if (fclose(sysfsfp))
-            perror("read_sysfs_posint(): Failed to close dir");
+            log_debug("Failed to close dir: %s", strerror(errno));
 
         goto error_free;
     }
@@ -247,7 +246,7 @@ int read_sysfs_float(const char *filename, const char *basedir, float *val)
     char *temp = (char *)malloc(strlen(basedir) + strlen(filename) + 2);
 
     if (!temp) {
-        fprintf(stderr, "Memory allocation failed");
+        log_debug("Memory allocation failed");
         return -ENOMEM;
     }
 
@@ -265,7 +264,7 @@ int read_sysfs_float(const char *filename, const char *basedir, float *val)
     if (fscanf(sysfsfp, "%f\n", val) != 1) {
         ret = errno ? -errno : -ENODATA;
         if (fclose(sysfsfp))
-            perror("read_sysfs_float(): Failed to close dir");
+            log_debug("Failed to close dir: %s", strerror(errno));
 
         goto error_free;
     }
@@ -286,7 +285,7 @@ int read_sysfs_string(const char *filename, const char *basedir, char *str)
     char *temp = (char *)malloc(strlen(basedir) + strlen(filename) + 2);
 
     if (!temp) {
-        fprintf(stderr, "Memory allocation failed");
+        log_debug("Memory allocation failed");
         return -ENOMEM;
     }
 
@@ -304,7 +303,7 @@ int read_sysfs_string(const char *filename, const char *basedir, char *str)
     if (fscanf(sysfsfp, "%s\n", str) != 1) {
         ret = errno ? -errno : -ENODATA;
         if (fclose(sysfsfp))
-            perror("read_sysfs_string(): Failed to close dir");
+            log_debug("Failed to close dir: %s", strerror(errno));
 
         goto error_free;
     }

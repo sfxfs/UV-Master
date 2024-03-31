@@ -1,10 +1,9 @@
-#include <stdio.h>
-#include <stdlib.h>
+#include "cfg_dev_ctl.h"
 
 #include "cJSON.h"
 #include "s2j.h"
-
-#include "cfg_dev_ctl.h"
+#include <stdio.h>
+#include <stdlib.h>
 
 static const dev_ctl_params default_params = {
     .arm_attr = {

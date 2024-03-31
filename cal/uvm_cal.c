@@ -1,7 +1,6 @@
 #include "uvm_cal.h"
 
 #include "log.h"
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -59,7 +58,10 @@ static char *on_recv(const char *data, int len, void *arg)
     /* build response */
     char *resp = calloc(jresp_len + HTTP_HEADER_BUF_SIZE, sizeof(char));
     sprintf(resp,
-            "HTTP/1.1 200 OK\r\nContent-Type: application/json; charset=UTF-8\r\nAccept: application/json\r\nContent-Length: %d\r\n\r\n%s",
+            "HTTP/1.1 200 OK\r\n"
+            "Content-Type: application/json; charset=UTF-8\r\n"
+            "Accept: application/json\r\n"
+            "Content-Length: %d\r\n\r\n%s",
             jresp_len, jresp);
 
     /* end up */

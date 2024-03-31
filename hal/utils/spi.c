@@ -1,3 +1,4 @@
+#include "log.h"
 #include <stdio.h>
 #include <fcntl.h>
 #include <stdlib.h>
@@ -19,7 +20,7 @@ int uvm_spi_init(HARDWARE_SPI *spi, char *dev, uint32_t mode, uint8_t bits, uint
    fd = open(dev, O_RDWR);
    if (fd < 0)
    {
-      printf("open %s error......\r\n",dev);
+      log_error("open %s error",dev);
       return -1;
    }
 
@@ -27,13 +28,13 @@ int uvm_spi_init(HARDWARE_SPI *spi, char *dev, uint32_t mode, uint8_t bits, uint
    ret = ioctl(fd, SPI_IOC_RD_MODE, &mode);
    if (ret == -1)
    {
-      printf("SPI_IOC_RD_MODE error......\n ");
+      log_error("SPI_IOC_RD_MODE error");
       goto fd_close;
    }
    ret = ioctl(fd, SPI_IOC_WR_MODE, &mode);
    if (ret == -1)
    {
-      printf("SPI_IOC_WR_MODE error......\n ");
+      log_error("SPI_IOC_WR_MODE error");
       goto fd_close;
    }
 
@@ -41,13 +42,13 @@ int uvm_spi_init(HARDWARE_SPI *spi, char *dev, uint32_t mode, uint8_t bits, uint
    ret = ioctl(fd, SPI_IOC_RD_BITS_PER_WORD, &bits);
    if (ret == -1)
    {
-      printf("SPI_IOC_RD_BITS_PER_WORD error......\n ");
+      log_error("SPI_IOC_RD_BITS_PER_WORD error");
       goto fd_close;
    }
    ret = ioctl(fd, SPI_IOC_WR_BITS_PER_WORD, &bits);
    if (ret == -1)
    {
-      printf("SPI_IOC_WR_BITS_PER_WORD error......\n ");
+      log_error("SPI_IOC_WR_BITS_PER_WORD error");
       goto fd_close;
    }
 
@@ -55,19 +56,19 @@ int uvm_spi_init(HARDWARE_SPI *spi, char *dev, uint32_t mode, uint8_t bits, uint
    ret = ioctl(fd, SPI_IOC_WR_MAX_SPEED_HZ, &speed);
    if (ret == -1)
    {
-      printf("SPI_IOC_WR_MAX_SPEED_HZ error......\n ");
+      log_error("SPI_IOC_WR_MAX_SPEED_HZ error");
       goto fd_close;
    }
    ret = ioctl(fd, SPI_IOC_RD_MAX_SPEED_HZ, &speed);
    if (ret == -1)
    {
-      printf("SPI_IOC_RD_MAX_SPEED_HZ error......\n ");
+      log_error("SPI_IOC_RD_MAX_SPEED_HZ error");
       goto fd_close;
    }
 
-   printf("spi mode: 0x%x\n", mode);
-   printf("bits per word: %d\n", bits);
-   printf("max speed: %d Hz (%d KHz)\n", speed, speed / 1000);
+   log_debug("spi mode: 0x%x", mode);
+   log_debug("bits per word: %d", bits);
+   log_debug("max speed: %d Hz (%d KHz)", speed, speed / 1000);
 
    spi->fd = fd;
    return fd;

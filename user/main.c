@@ -48,6 +48,9 @@ int main(int argc, char **argv)
             for (;;) {
                 uvm_loop();
             }
+        } else {
+            printf("error: fail to fork proccess...\n");
+            exit(EXIT_FAILURE);
         }
     } else {
         printf("                                _            \n"
@@ -79,6 +82,6 @@ int main(int argc, char **argv)
         }
     }
 
-    printf("error: uv-master app failed to create process\n");
+    printf("error: uv-master app failed to init\n");
     return -1;
 }

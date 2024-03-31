@@ -1,3 +1,4 @@
+#include "log.h"
 #include <stdio.h>
 #include <fcntl.h>
 #include <errno.h>
@@ -28,13 +29,13 @@ int uvm_i2c_init(char *dev)
     int fd = open(dev, O_RDWR);
     if (fd < 0)
     {
-        printf("IIC: Fail to open %s \r\n", dev);
+        log_error("IIC: Fail to open %s", dev);
         return -1;
     }
 
     if (ioctl(fd, I2C_TENBIT, 0) < 0) // 7-bit addr
     {
-        printf("IIC: Unable to set address type: %s\n", strerror(errno));
+        log_error("IIC: Unable to set address type: %s", strerror(errno));
         close(fd);
         return -2;
     }
@@ -52,7 +53,7 @@ int uvm_i2c_write(int fd, uint8_t addr, uint8_t reg, uint8_t len, uint8_t *val)
 {
     if (ioctl(fd, I2C_SLAVE, (int)addr) < 0)
     {
-        printf("IIC: Unable to select I2C device: %s\n", strerror(errno));
+        log_error("IIC: Unable to select I2C device: %s\n", strerror(errno));
         close(fd);
         return -1;
     }
@@ -69,7 +70,7 @@ int uvm_i2c_read(int fd, uint8_t addr, uint8_t reg, uint8_t len, uint8_t *val)
 {
     if (ioctl(fd, I2C_SLAVE, addr) < 0)
     {
-        printf("IIC: Unable to select I2C device: %s\n", strerror(errno));
+        log_error("IIC: Unable to select I2C device: %s", strerror(errno));
         return -1;
     }
 
@@ -87,7 +88,7 @@ int uvm_i2c_i2cdetect(int fd, uint8_t addr)
 {
     if (ioctl(fd, I2C_SLAVE, addr) < 0)
     {
-        printf("IIC: Unable to select I2C device: %s\n", strerror(errno));
+        log_error("IIC: Unable to select I2C device: %s", strerror(errno));
         return -1;
     }  
     return 0;
