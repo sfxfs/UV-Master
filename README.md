@@ -1,33 +1,63 @@
 # UV-Master
 
-本项目是适用于水下潜航器的控制程序，适用于嵌入式系统，并且具有高可移植性。
+本项目是基于嵌入式系统的高模块化、高移植性的水下机器人控制程序，采用抽象层分离逻辑与硬件，兼容多种控制平台。
 
-## 一、文件结构
+## 一、功能
 
-```shell
-.
-├── CMakeLists.txt
-├── LICENSE
-├── README.md
-├── cal	# 通信抽象层
-│   ├── uvm-cal.c
-│   └── uvm-cal.h # 供主控制程序调用的 API
-├── cfg # 配置管理系统
-│   └── cfg-file-tpl # 示例配置文件模板
-│       └── config.json
-├── exlibs # 第三方库
-├── hal # 硬件抽象层
-│   ├── app # 驱动应用
-│   ├── drv	# 驱动 API
-│   ├── intf # 驱动底层接口
-│   ├── uvm-hal.c
-│   └── uvm-hal.h # 供主控制程序调用的 API
-└── src # 主控制程序源代码
-    ├── CMakeLists.txt
-    ├── ctrl # 控制部分
-    ├── dev # 外设部分
-    ├── log # 日志系统
-    └── rpc # 远程调用的函数
-```
+1. 远程控制机器人
+2. 算法提供定向、定深功能
+3. 收集传感器数据
+4. 可选外设（灯、机械臂、声纳等）
+5. 网络OTA
 
-在移植本程序或更换硬件方案时只需要修改 `src` 之外的代码即可。
+## 二、项目结构
+
+<img src="./doc/diagram.png" alt="控制程序" style="zoom: 67%;" />
+
+### 通信抽象层（CAL）
+
+目前仅有 HTTP 服务端搭配 JsonRPC 协议一种方案。
+
+#### 接口
+
+tcp_server.c
+
+#### 驱动
+
+rpc_cjson.c
+
+#### 应用
+
+uvm_cal.c
+
+### 硬件抽象层（HAL）
+
+目前接口部分仅有 Linux 系统相关硬件驱动。
+
+#### 接口
+
+interface_xxx.c（内容为 utils 内各接口函数调用）
+
+#### 驱动
+
+driver_xxx.c
+
+#### 应用
+
+xxx.c
+
+### 配置管理器（CFG）
+
+目前仅有基于 Linux 文件系统下的配置管理。
+
+#### 接口
+
+uvm_cfg_intf.c
+
+#### 驱动
+
+cfg_xxx.c
+
+#### 应用
+
+uvm_cfg.c
