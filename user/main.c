@@ -10,27 +10,12 @@ extern void uvm_init(unsigned char debug_level);
 extern void uvm_deinit(void);
 extern void uvm_loop(void);
 
-pid_t child_pid;
-
-void restart_program()
-{
-    child_pid = fork();
-    if (child_pid == 0)
-    {
-        uvm_init(1);
-        for (;;)
-        {
-            uvm_loop();
-        }
-        exit(EXIT_FAILURE);
-    }
-}
+volatile pid_t child_pid;
 
 void child_signal_handler(int signum)
 {
     if (signum == SIGINT)
     {
-        printf("\ninfo: closing uv-master app...\n");
         uvm_deinit();
         printf("   __               __                \n"
                "  /  )             /  )              /\n"
@@ -42,11 +27,28 @@ void child_signal_handler(int signum)
     }
 }
 
+void restart_program()
+{
+    printf("\n\nerror: proccess shutdown, trying restart...\n\n");
+
+    child_pid = fork();
+    if (child_pid == 0)
+    {
+        signal(SIGINT, child_signal_handler);
+        uvm_init(1);
+        for (;;)
+        {
+            uvm_loop();
+        }
+        exit(EXIT_FAILURE);
+    }
+}
+
 void parent_signal_handler(int signum)
 {
     if (signum == SIGINT)
     {
-        printf("Received SIGINT signal. Cleaning up and exiting...\n");
+        printf("\ninfo: closing uv-master app...\n");
 
         // 向子进程发送SIGINT信号
         kill(child_pid, SIGINT);
@@ -124,12 +126,15 @@ int main(int argc, char **argv)
 
         // 等待子进程退出
         int status;
-        waitpid(child_pid, &status, 0);
-
-        if (WIFEXITED(status) || WIFSIGNALED(status))
+        for (;;)
         {
-            // 子进程崩溃或退出，执行重启操作
-            restart_program();
+            waitpid(child_pid, &status, 0);
+
+            if (WIFEXITED(status) || WIFSIGNALED(status))
+            {
+                // 子进程崩溃或退出，执行重启操作
+                restart_program();
+            }
         }
     }
 

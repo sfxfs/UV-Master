@@ -3,6 +3,7 @@
 #include <uvm_cal.h>
 #include "rpc/rpc_fun.h"
 #include "dev/motor.h"
+#include "term/terminal.h"
 
 #include <stdlib.h>
 
@@ -34,6 +35,7 @@ void uvm_init (unsigned char debug_level)
     }
     rpc_add_all_handler(&uvm_cal.rpc, &uvm_config);
     uvm_cal_start_thread(&uvm_cal);
+    terminal_start_thread();
 }
 
 void uvm_deinit (void)
