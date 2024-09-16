@@ -1,63 +1,63 @@
 # UV-Master
 
-本项目是基于嵌入式系统的高模块化、高移植性的水下机器人控制程序，采用抽象层分离逻辑与硬件，兼容多种控制平台。
+English | [简体中文](README_CN.md)
 
-## 一、功能
+This project is a highly modular and portable underwater robot control program based on embedded systems. It separates logic from hardware using an abstraction layer, is compatible with multiple control platforms, and has been successfully tested on hardware platforms based on Allwinner H3 and WCH CH32V307.
 
-1. 远程控制机器人
-2. 算法提供定向、定深功能
-3. 收集传感器数据
-4. 可选外设（灯、机械臂、声纳等）
-5. 网络OTA
+## I. Features
 
-## 二、项目结构
+1. Remote control of the robot
+2. Algorithms providing directional and depth control
+3. Sensor data collection
+4. Optional peripherals (lights, manipulator arms, sonar, etc.)
+5. Network OTA (Over-The-Air) updates
 
-<img src="./doc/diagram.png" alt="控制程序" style="zoom: 67%;" />
+## II. Project Structure
 
-### 通信抽象层（CAL）
+### Communication Abstraction Layer (CAL)
 
-目前仅有 HTTP 服务端搭配 JsonRPC 协议一种方案。
+Currently, only one solution is available, which involves an HTTP server coupled with the JsonRPC protocol.
 
-#### 接口
+#### Interfaces
 
-tcp_server.c
+- tcp_server.c
 
-#### 驱动
+#### Drivers
 
-rpc_cjson.c
+- rpc_cjson.c
 
-#### 应用
+#### Applications
 
-uvm_cal.c
+- uvm_cal.c
 
-### 硬件抽象层（HAL）
+### Hardware Abstraction Layer (HAL)
 
-目前接口部分仅有 Linux 系统相关硬件驱动。
+The interface part currently includes hardware drivers specific to Linux systems.
 
-#### 接口
+#### Interfaces
 
-interface_xxx.c（内容为 utils 内各接口函数调用）
+- interface_xxx.c (contains calls to various utility interface functions)
 
-#### 驱动
+#### Drivers
 
-driver_xxx.c
+- driver_xxx.c
 
-#### 应用
+#### Applications
 
-xxx.c
+- xxx.c
 
-### 配置管理器（CFG）
+### Configuration Manager (CFG)
 
-目前仅有基于 Linux 文件系统下的配置管理。
+Currently, configuration management is based on the Linux file system.
 
-#### 接口
+#### Interfaces
 
-uvm_cfg_intf.c
+- uvm_cfg_intf.c
 
-#### 驱动
+#### Drivers
 
-cfg_xxx.c
+- cfg_xxx.c
 
-#### 应用
+#### Applications
 
-uvm_cfg.c
+- uvm_cfg.c
