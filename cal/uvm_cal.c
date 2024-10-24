@@ -52,7 +52,9 @@ static char *on_recv(const char *data, int len, void *arg)
         len = 0;
 
     /* rpc process */
-    char *jresp = rpc_process(arg, body, len);
+    char *jresp = NULL;
+    if (0 != mjrpc_process(arg, body, &jresp))
+        return NULL;
     int jresp_len = strlen(jresp);
 
     /* build response */

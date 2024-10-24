@@ -26,6 +26,4 @@ target_include_directories(uvmaster PUBLIC
                             ../cal
                             ../cfg
                             ../hal
-                            ../3rd/clog
-                            ../3rd/cjson
                             )

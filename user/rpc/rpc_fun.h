@@ -4,6 +4,6 @@
 #include "uvm_cfg.h"
 #include "uvm_cal.h"
 
-int rpc_add_all_handler(rpc_handle_t *handle, config_data *cfg);
+int rpc_add_all_handler(mjrpc_handle_t *handle, config_data *cfg);
 
 #endif

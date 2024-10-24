@@ -37,9 +37,10 @@
 #include "interface_pca9685.h"
 
 #include "log.h"
-#include <gpio.h>
-#include <iic.h>
-#include <delay.h>
+#include "utils/gpio.h"
+#include "utils/iic.h"
+#include "utils/delay.h"
+
 #include <stdarg.h>
 
 #define PCA9685_I2C_DEV "/dev/i2c-0"

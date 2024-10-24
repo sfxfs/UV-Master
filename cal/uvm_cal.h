@@ -2,7 +2,7 @@
 #define UVM_CAL_H
 
 #include "tcp_server.h"
-#include "rpc_cjson.h"
+#include "mjsonrpc.h"
 
 #include <stdint.h>
 #include <pthread.h>
@@ -10,7 +10,7 @@
 typedef struct uvm_cal
 {
     jrpc_server_t *server;
-    rpc_handle_t rpc;
+    mjrpc_handle_t rpc;
     pthread_t server_tid;
 } uvm_cal_t;
 
