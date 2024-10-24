@@ -1,6 +1,9 @@
 #include "mode_manual.h"
 #include <pthread.h>
 #include "log.h"
+#include "dev/catcher.h"
+#include "dev/motor.h"
+#include <cfg_rocket_ratio.h>
 #include "rpc/control.h"
 #include "utils/delay.h"
 
@@ -84,6 +87,10 @@ static void *manual_ctrl_thread(void *arg)
                                                             g_rocket_raw.y,
                                                             g_rocket_raw.z,
                                                             g_rocket_raw.rot));
+        }
+        if (g_rocket_raw.catch != CATCH_NOACT)
+        {
+            uvm_catcher_write(&cfg->dev_ctl->arm_attr, g_rocket_raw.catch);
         }
     }
     return NULL;

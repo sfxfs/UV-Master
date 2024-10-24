@@ -3,6 +3,7 @@
 #include <uvm_cal.h>
 #include "ctrl/mode_manual.h"
 #include "rpc/rpc_fun.h"
+#include "dev/catcher.h"
 #include "dev/motor.h"
 #include "term/terminal.h"
 
@@ -23,6 +24,8 @@ void uvm_init (unsigned char debug_level)
 
     // if (uvm_motor_init(uvm_config.propeller) != 0)
     //     exit(EXIT_FAILURE);
+
+    uvm_catcher_init(&uvm_config.dev_ctl->arm_attr);
 
     if (uvm_cal_init(&uvm_cal, uvm_config.others->server_config.port) != 0)
     {

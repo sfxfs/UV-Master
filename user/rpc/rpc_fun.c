@@ -1,5 +1,6 @@
 #include "rpc_fun.h"
 
+#include "log.h"
 #include "control.h"
 #include "cJSON.h"
 #include <stdio.h>
@@ -94,7 +95,7 @@ cJSON *empty_handler(mjrpc_ctx_t *ctx, cJSON *params, cJSON *id)
     return cJSON_CreateNull();
 }
 
-cJSON *manual_ctrl(mjrpc_ctx_t *ctx, cJSON *params, cJSON *id)
+cJSON *move_handler(mjrpc_ctx_t *ctx, cJSON *params, cJSON *id)
 {
     rpc_manual_ctrl((config_data *)ctx->data,
                         cjson_value_analysis_double(params, "x"),
@@ -104,15 +105,22 @@ cJSON *manual_ctrl(mjrpc_ctx_t *ctx, cJSON *params, cJSON *id)
     return cJSON_CreateNull();
 }
 
+cJSON *catch_handler(mjrpc_ctx_t *ctx, cJSON *params, cJSON *id)
+{
+    if (params == NULL) return cJSON_CreateNull();
+    catch_ctrl(params->child->valuedouble);
+    return cJSON_CreateNull();
+}
+
 int rpc_add_all_handler(mjrpc_handle_t *handle, config_data *cfg)
 {
     int ret = 0;
     ret += mjrpc_add_method(handle, info_handler, "get_info", NULL);
-    ret += mjrpc_add_method(handle, empty_handler, "catch", NULL);
+    ret += mjrpc_add_method(handle, catch_handler, "catch", NULL);
     ret += mjrpc_add_method(handle, empty_handler, "light", NULL);
     ret += mjrpc_add_method(handle, empty_handler, "set_direction_locked", NULL);
     ret += mjrpc_add_method(handle, empty_handler, "set_depth_locked", NULL);
 
-    ret += mjrpc_add_method(handle, manual_ctrl, "move", NULL);
+    ret += mjrpc_add_method(handle, move_handler, "move", NULL);
     return ret;
 }

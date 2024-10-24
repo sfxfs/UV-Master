@@ -11,16 +11,16 @@ static const dev_ctl_params default_params = {
         .enabled = false,
         .nMax = 500,
         .pMax = 2500,
-        .reset = 1500,
-        .step = 100,
+        .reset = 1000,
+        .step = 5,
     },
     .light_attr = {
         .channel = 7,
         .enabled = false,
         .nMax = 500,
         .pMax = 2500,
-        .reset = 1500,
-        .step = 100,
+        .reset = 1000,
+        .step = 5,
     },
 };
 
