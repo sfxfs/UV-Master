@@ -96,11 +96,11 @@ cJSON *empty_handler(mjrpc_ctx_t *ctx, cJSON *params, cJSON *id)
 
 cJSON *manual_ctrl(mjrpc_ctx_t *ctx, cJSON *params, cJSON *id)
 {
-    if (rpc_manual_ctrl((config_data *)ctx->data, cjson_value_analysis_double(params, "x"), cjson_value_analysis_double(params, "y"), cjson_value_analysis_double(params, "z"), cjson_value_analysis_double(params, "rot")) != 0)
-    {
-        ctx->error_code = JRPC_INTERNAL_ERROR;
-        ctx->error_message = strdup("Write to pwm controller failed.");
-    }
+    rpc_manual_ctrl((config_data *)ctx->data,
+                        cjson_value_analysis_double(params, "x"),
+                        cjson_value_analysis_double(params, "y"),
+                        cjson_value_analysis_double(params, "z"),
+                        cjson_value_analysis_double(params, "rot"));
     return cJSON_CreateNull();
 }
 
@@ -113,6 +113,6 @@ int rpc_add_all_handler(mjrpc_handle_t *handle, config_data *cfg)
     ret += mjrpc_add_method(handle, empty_handler, "set_direction_locked", NULL);
     ret += mjrpc_add_method(handle, empty_handler, "set_depth_locked", NULL);
 
-    ret += mjrpc_add_method(handle, manual_ctrl, "move", cfg);
+    ret += mjrpc_add_method(handle, manual_ctrl, "move", NULL);
     return ret;
 }

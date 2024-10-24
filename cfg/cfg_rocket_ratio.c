@@ -8,8 +8,8 @@
 static const rocket_ratio_params default_params = {
     .x = {
         .enabled = true,
-        .deadzone_p = 0.0000005,
-        .deadzone_n = - 0.0000005,
+        .deadzone_p = 0.0001,
+        .deadzone_n = - 0.0001,
         .front_right = {
             .enabled = true,
             .reversed = false,
@@ -49,8 +49,8 @@ static const rocket_ratio_params default_params = {
     },
     .y = {
         .enabled = true,
-        .deadzone_p = 0.0000005,
-        .deadzone_n = - 0.0000005,
+        .deadzone_p = 0.0001,
+        .deadzone_n = - 0.0001,
         .front_right = {
             .enabled = true,
             .reversed = false,
@@ -90,8 +90,8 @@ static const rocket_ratio_params default_params = {
     },
     .z = {
         .enabled = true,
-        .deadzone_p = 0.0000005,
-        .deadzone_n = - 0.0000005,
+        .deadzone_p = 0.0001,
+        .deadzone_n = - 0.0001,
         .front_right = {
             .enabled = false,
             .reversed = false,
@@ -131,8 +131,8 @@ static const rocket_ratio_params default_params = {
     },
     .r = {
         .enabled = true,
-        .deadzone_p = 0.0000005,
-        .deadzone_n = - 0.0000005,
+        .deadzone_p = 0.0001,
+        .deadzone_n = - 0.0001,
         .front_right = {
             .enabled = true,
             .reversed = false,
