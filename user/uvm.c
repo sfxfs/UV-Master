@@ -22,8 +22,8 @@ void uvm_init (unsigned char debug_level)
     if (uvm_cfg_init(&uvm_config) != 0)
         exit(EXIT_FAILURE);
 
-    // if (uvm_motor_init(uvm_config.propeller) != 0)
-    //     exit(EXIT_FAILURE);
+    if (uvm_motor_init(uvm_config.propeller) != 0)
+        exit(EXIT_FAILURE);
 
     uvm_catcher_init(&uvm_config.dev_ctl->arm_attr);
 

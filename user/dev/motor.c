@@ -75,7 +75,7 @@ static int per_motor_write(propeller_attr *attr, float power_percent)
         else
             return 0;
     }
-    return 0;
+    return -1;
 }
 
 int uvm_motor_write(propeller_params *cfg, motor_power_req req)
