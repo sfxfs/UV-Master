@@ -83,6 +83,8 @@
 	"rocket_ratio_params":	{
 		"x":	{
 			"enabled":	true,
+			"deadzone_p":	5e-07,
+			"deadzone_n":	-5e-07,
 			"front_right":	{
 				"enabled":	true,
 				"reversed":	false,
@@ -122,6 +124,8 @@
 		},
 		"y":	{
 			"enabled":	true,
+			"deadzone_p":	5e-07,
+			"deadzone_n":	-5e-07,
 			"front_right":	{
 				"enabled":	true,
 				"reversed":	false,
@@ -161,6 +165,8 @@
 		},
 		"z":	{
 			"enabled":	true,
+			"deadzone_p":	5e-07,
+			"deadzone_n":	-5e-07,
 			"front_right":	{
 				"enabled":	false,
 				"reversed":	false,
@@ -200,6 +206,8 @@
 		},
 		"r":	{
 			"enabled":	true,
+			"deadzone_p":	5e-07,
+			"deadzone_n":	-5e-07,
 			"front_right":	{
 				"enabled":	true,
 				"reversed":	false,

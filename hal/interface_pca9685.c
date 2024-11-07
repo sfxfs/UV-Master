@@ -43,8 +43,8 @@
 
 #include <stdarg.h>
 
-#define PCA9685_I2C_DEV "/dev/i2c-0"
-#define PCA9685_GPIO_NUM 203 // PG11 = ( 7 - 1) * 32 + 11
+#define PCA9685_I2C_DEV "/dev/i2c-1"
+#define PCA9685_GPIO_NUM 17 // PG11 = ( 7 - 1) * 32 + 11
 
 static int pca9685_fd;
 

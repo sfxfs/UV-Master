@@ -1,9 +1,9 @@
 #ifndef _UVM_SRC_CTRL_MANUAL_H_
 #define _UVM_SRC_CTRL_MANUAL_H_
 
-#include "dev/motor.h"
-#include <cfg_rocket_ratio.h>
+#include "uvm_cfg.h"
 
-motor_power_req uvm_manual_ctrl(rocket_ratio_params *config, double x, double y, double z, double r);
+int manual_ctrl_start_thread (config_data *cfg);
+int manual_ctrl_stop_thread ();
 
 #endif
